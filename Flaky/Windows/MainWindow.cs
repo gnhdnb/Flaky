@@ -30,7 +30,7 @@ namespace Flaky
 			Draw();
 		}
 
-		public Action OnTextChange
+		public Action<string> OnTextChange
 		{
 			get
 			{

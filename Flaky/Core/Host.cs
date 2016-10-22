@@ -7,19 +7,21 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class Host
+	internal class Host : IDisposable
 	{
 		private string Code { get; set; }
 		private Compiler Compiler { get; }
 		private WaveOut Device { get; }
 		private WaveAdapter Adapter { get; }
+		private WaveRecorder Recorder { get; }
 
 		internal Host()
 		{
 			Compiler = new Compiler();
 			Device = new WaveOut();
 			Adapter = new WaveAdapter();
-			Device.Init(Adapter);
+			Recorder = new WaveRecorder(Adapter, @"D:\temp\flaky.wav");
+			Device.Init(Recorder);
 		}
 
 		internal bool Recompile(string code)
@@ -42,6 +44,12 @@ namespace Flaky
 		internal void Stop()
 		{
 			Device.Stop();
+		}
+
+		public void Dispose()
+		{
+			Device.Dispose();
+			Recorder.Dispose();
 		}
 	}
 }

@@ -27,12 +27,12 @@ namespace ConsoleDraw.Inputs
 				return text;
 			} 
 			set {
+				if (OnChange != null && text != value)
+					OnChange(value);
+
 				text = value;
 
 				SplitText = CreateSplitText();
-
-				if (OnChange != null && text != value)
-					OnChange(text);
 			}
 		}
 		private String TextWithoutNewLine { get { return RemoveNewLine(Text); } }
@@ -230,7 +230,7 @@ namespace ConsoleDraw.Inputs
 				if(lines.Count > i)
 					line = ' ' + RemoveNewLine(lines[i]).PadRight(Width - 1, ' ');
 
-				WindowManager.WirteText(line, i + Xpostion - Offset, Ypostion, TextColour, BackgroundColour);
+				WindowManager.WriteText(line, i + Xpostion - Offset, Ypostion, TextColour, BackgroundColour);
 			}
 			   
 			if (Selected)
@@ -244,7 +244,7 @@ namespace ConsoleDraw.Inputs
 			if(linesPerPixel > 0)
 			  postion = (int)Math.Floor(cursorDisplayX / linesPerPixel);
 
-			WindowManager.WirteText("■", Xpostion + postion, Ypostion + Width, ConsoleColor.DarkGray, ConsoleColor.White);
+			WindowManager.WriteText("■", Xpostion + postion, Ypostion + Width, ConsoleColor.DarkGray, ConsoleColor.White);
 		}
 
 		private List<String> CreateSplitText()

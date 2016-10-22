@@ -13,32 +13,39 @@ namespace Flaky
 		{
 			var code = Load();
 
-			var host = new Host();
-
-			host.Recompile(code);
-			//host.Play();
-
-			WindowManager.UpdateWindow(Console.LargestWindowWidth, Console.LargestWindowHeight);
-			WindowManager.SetWindowTitle("F L A K Y");
-
-			//Start Program
-			var window = new MainWindow();
-			window.OnKey += (sender, key) =>
+			using (var host = new Host())
 			{
-				if (key.Key == ConsoleKey.F5)
-					host.Recompile(window.GetText());
-			};
 
-			window.SetText(code);
+				host.Recompile(code);
+				host.Play();
 
-			window.OnTextChange = () =>
-			{
-				Save(window.GetText());
-			};
+				//WindowManager.UpdateWindow(Console.LargestWindowWidth, Console.LargestWindowHeight);
+				WindowManager.SetupWindow();
+				WindowManager.SetWindowTitle("F L A K Y");
 
-			window.MainLoop();
+				var window = new MainWindow();
+				window.OnKey += (sender, key) =>
+				{
+					if (key.Key == ConsoleKey.F5)
+						host.Recompile(window.GetText());
 
-			host.Stop();
+					if (key.Key == ConsoleKey.F10)
+					{
+						window.Exit = true;
+					}
+				};
+
+				window.SetText(code);
+
+				window.OnTextChange = (text) =>
+				{
+					Save(text);
+				};
+
+				window.MainLoop();
+
+				host.Stop();
+			}
 		}
 
 		public static void Save(string text)

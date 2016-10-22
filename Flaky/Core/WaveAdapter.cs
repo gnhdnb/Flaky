@@ -16,6 +16,7 @@ namespace Flaky
 		public WaveAdapter()
 		{
 			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
+			source = 0;
 		}
 
 		public void ChangePlayer(IPlayer player)
