@@ -10,53 +10,70 @@ namespace Flaky
 	{
 		private readonly Source time;
 		private readonly Source sound;
-		private readonly float[] buffer;
-		private const int sampleRate = 44100;
-		private const int capacity = sampleRate * 10;
-		private int position;
-		private long sample;
 
+		private class State
+		{
+			internal readonly int sampleRate = 44100;
+			internal readonly int capacity;
+			internal readonly float[] buffer;
+			internal int position;
+			internal long sample;
+
+			public State()
+			{
+				capacity = sampleRate * 10;
+				buffer = new float[capacity];
+			}
+		}
 
 		public Delay(Source sound, Source time)
 		{
 			this.time = time;
 			this.sound = sound;
-			
-			buffer = new float[capacity];
+		}
+
+		public Delay(Source sound, Source time, string id) : base(id)
+		{
+			this.time = time;
+			this.sound = sound;
 		}
 
 		public override Sample Play(IContext context)
 		{
+			var state = GetOrCreate<State>(context);
+
 			var soundValue = sound.Play(context).Value;
 
-			var delta = context.Sample - sample;
-			sample = context.Sample;
+			var delta = context.Sample - state.sample;
+			state.sample = context.Sample;
 
-			position += (int)delta;
+			state.position += (int)delta;
 
-			while (position >= capacity)
-				position -= capacity;
+			while (state.position >= state.capacity)
+				state.position -= state.capacity;
 
-			var writePosition = GetWritePosition(context);
+			var writePosition = GetWritePosition(context, state);
 
-			buffer[writePosition] = buffer[writePosition] / 2 + soundValue;
+			var result = state.buffer[state.position] / 2 + soundValue;
 
-			return new Sample { Value = buffer[position] / 2 + soundValue };
+			state.buffer[writePosition] = result;
+
+			return new Sample { Value = result };
 		}
 
-		public int GetWritePosition(IContext context)
+		private int GetWritePosition(IContext context, State state)
 		{
-			var timeValue = (int)(time.Play(context).Value * sampleRate);
+			var timeValue = (int)(time.Play(context).Value * state.sampleRate);
 
 			if (timeValue <= 0)
-				return position;
-			if (timeValue >= capacity)
-				timeValue = capacity - 2;
+				return state.position;
+			if (timeValue >= state.capacity)
+				timeValue = state.capacity - 2;
 
-			var writePosition = position + timeValue;
+			var writePosition = state.position + timeValue;
 
-			while (writePosition >= capacity)
-				writePosition -= capacity;
+			while (writePosition >= state.capacity)
+				writePosition -= state.capacity;
 
 			return writePosition;
 		}

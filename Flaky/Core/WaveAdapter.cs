@@ -11,7 +11,7 @@ namespace Flaky
 	{
 		private WaveFormat waveFormat;
 		private Source source;
-		private long sample;
+		private readonly ContextController controller = new ContextController();
 
 		public WaveAdapter()
 		{
@@ -44,9 +44,9 @@ namespace Flaky
 		{
 			for (int n = 0; n < sampleCount; n++)
 			{
-				var value = source.Play(new Context { Sample = sample }).Value;
+				var value = source.Play(new Context(controller)).Value;
 				buffer[n + offset] = value;
-				sample++;
+				controller.NextSample();
 			}
 
 			return sampleCount;

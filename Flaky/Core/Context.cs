@@ -8,6 +8,19 @@ namespace Flaky
 {
 	internal struct Context : IContext
 	{
-		public long Sample { get; set; }
+		private readonly ContextController controller;
+
+		public long Sample { get; }
+
+		internal TState GetOrCreateState<TState>(string id) where TState : class, new()
+		{
+			return controller.GetOrCreateState<TState>(id);
+		}
+
+		internal Context(ContextController controller)
+		{
+			Sample = controller.Sample;
+			this.controller = controller;
+		}
 	}
 }

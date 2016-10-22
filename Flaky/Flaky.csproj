@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Core\Compiler.cs" />
     <Compile Include="Core\Context.cs" />
+    <Compile Include="Core\ContextController.cs" />
     <Compile Include="Core\Host.cs" />
     <Compile Include="Core\WaveAdapter.cs" />
     <Compile Include="Core\WaveRecorder.cs" />
@@ -79,11 +80,12 @@
     <Compile Include="Sources\Envelopes\AD.cs" />
     <Compile Include="Sources\IContext.cs" />
     <Compile Include="Sources\IPlayer.cs" />
-    <Compile Include="Sources\Notes\Arpegiator.cs" />
+    <Compile Include="Sources\Notes\Arp.cs" />
     <Compile Include="Sources\Notes\Note.cs" />
     <Compile Include="Sources\Notes\PlayingNote.cs" />
     <Compile Include="Sources\Sample.cs" />
-    <Compile Include="Sources\Waveform\SinWave.cs" />
+    <Compile Include="Sources\Waveform\Osc.cs" />
+    <Compile Include="Sources\Waveform\DoublePendulum.cs" />
     <Compile Include="Windows\MainWindow.cs" />
   </ItemGroup>
   <ItemGroup>
