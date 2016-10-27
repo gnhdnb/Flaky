@@ -15,12 +15,12 @@ namespace Flaky
 		private WaveAdapter Adapter { get; }
 		private WaveRecorder Recorder { get; }
 
-		internal Host()
+		internal Host(string outputWaveFilePath)
 		{
 			Compiler = new Compiler();
 			Device = new WaveOut();
 			Adapter = new WaveAdapter();
-			Recorder = new WaveRecorder(Adapter, @"D:\temp\flaky.wav");
+			Recorder = new WaveRecorder(Adapter, outputWaveFilePath);
 			Device.Init(Recorder);
 		}
 

@@ -13,17 +13,23 @@ namespace Flaky
 	public class MainWindow : FullWindow
 	{
 		public TextArea textArea;
-		public Label fileLabel;
+		public Label label;
+		public Label recompileHelp;
+		public Label exitHelp;
 
 		public MainWindow()
 			: base(0, 0, Console.WindowWidth, Console.WindowHeight, null)
 		{
-			fileLabel = new Label("F L A K Y", 2, 60, "fileLabel", this);
+			label = new Label("F L A K Y", 2, 58, "label", this);
+			recompileHelp = new Label("F5 RECOMPILE", 2, 2, "recompileHelp", this);
+			exitHelp = new Label("F10 EXIT", 2, 16, "exitHelp", this);
 
 			textArea = new TextArea(3, 1, Console.WindowWidth - 3, Console.WindowHeight - 5, "textArea", this);
 			textArea.BackgroundColour = ConsoleColor.DarkBlue;
 
-			Inputs.Add(fileLabel);
+			Inputs.Add(label);
+			Inputs.Add(recompileHelp);
+			Inputs.Add(exitHelp);
 			Inputs.Add(textArea);
 
 			CurrentlySelected = textArea;

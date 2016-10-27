@@ -3,6 +3,7 @@ using NAudio.Wave;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace Flaky
@@ -13,7 +14,7 @@ namespace Flaky
 		{
 			var code = Load();
 
-			using (var host = new Host())
+			using (var host = new Host(GetOutputWaveFilePath()))
 			{
 
 				host.Recompile(code);
@@ -48,9 +49,9 @@ namespace Flaky
 			}
 		}
 
-		public static void Save(string text)
+		private static void Save(string text)
 		{
-			using (var file = File.Open(@"D:\temp\flaky.cs", FileMode.Create))
+			using (var file = File.Open(GetTemporaryCodeFilePath(), FileMode.Create))
 			using (var writer = new StreamWriter(file))
 			{
 				writer.Write(text);
@@ -58,13 +59,45 @@ namespace Flaky
 			}
 		}
 
-		public static string Load()
+		private static string Load()
 		{
-			using (var file = File.Open(@"D:\temp\flaky.cs", FileMode.Open))
+			var codeFilePath = GetTemporaryCodeFilePath();
+
+			if (!File.Exists(codeFilePath))
+				return GetBasicTemplate();
+
+			using (var file = File.Open(codeFilePath, FileMode.Open))
 			using (var reader = new StreamReader(file))
 			{
 				return reader.ReadToEnd();
 			}
+		}
+
+		private static string GetBasicTemplate()
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+			var resourceName = "Flaky.Resources.template.cs";
+
+			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+			using (StreamReader reader = new StreamReader(stream))
+			{
+				return reader.ReadToEnd();
+			}
+		}
+
+		private static string GetTemporaryCodeFilePath()
+		{
+			return Path.Combine(GetLocation(), "temp.cs");
+		}
+
+		private static string GetOutputWaveFilePath()
+		{
+			return Path.Combine(GetLocation(), "flaky.wav");
+		}
+
+		private static string GetLocation()
+		{
+			return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 		}
 	}
 }

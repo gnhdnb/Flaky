@@ -61,7 +61,7 @@ namespace Flaky
 					ms.Seek(0, SeekOrigin.Begin);
 					Assembly assembly = Assembly.Load(ms.ToArray());
 
-					Type type = assembly.GetType("RoslynCompileSample.Player");
+					Type type = assembly.GetType("Flaky.Player");
 					result.Player = (IPlayer)Activator.CreateInstance(type);
 				}
 			}
