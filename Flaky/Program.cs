@@ -20,7 +20,6 @@ namespace Flaky
 				host.Recompile(code);
 				host.Play();
 
-				//WindowManager.UpdateWindow(Console.LargestWindowWidth, Console.LargestWindowHeight);
 				WindowManager.SetupWindow();
 				WindowManager.SetWindowTitle("F L A K Y");
 

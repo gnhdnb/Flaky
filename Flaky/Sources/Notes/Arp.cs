@@ -49,7 +49,7 @@ namespace Flaky
 
 			var lengthValue = length.Play(context).Value;
 
-			if (state.CurrentNote.Note == null || state.CurrentNote.PlayTime(context) > lengthValue)
+			if (state.CurrentNote.Note == null || state.CurrentNote.CurrentTime(context) > lengthValue)
 			{
 				state.CurrentNote = NextNote(context, state);
 				return state.CurrentNote;

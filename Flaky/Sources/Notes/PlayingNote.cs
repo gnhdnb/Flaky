@@ -22,14 +22,14 @@ namespace Flaky
 			return new Sample { Value = n.note.ToFrequency() };
 		}
 
-		public float PlayTime(IContext context)
+		public float CurrentTime(IContext context)
 		{
 			float sampleRate = 44100;
 
-			return PlaySample(context) / sampleRate;
+			return CurrentSample(context) / sampleRate;
 		}
 
-		public long PlaySample(IContext context)
+		public long CurrentSample(IContext context)
 		{
 			return context.Sample - startSample;
 		}

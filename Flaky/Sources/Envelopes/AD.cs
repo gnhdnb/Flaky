@@ -39,8 +39,8 @@ namespace Flaky
 			if (decayValue < 0)
 				return new Sample { Value = 0 };
 
-			var attackLeft = attackValue - note.PlayTime(context);
-			var decayLeft = attackValue + decayValue - note.PlayTime(context);
+			var attackLeft = attackValue - note.CurrentTime(context);
+			var decayLeft = attackValue + decayValue - note.CurrentTime(context);
 
 			if (attackLeft >= 0)
 			{

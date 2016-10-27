@@ -22,7 +22,7 @@ namespace Flaky
 		{
 			var note = noteSource.GetNote(context);
 
-			var result = reader.Read(note.PlaySample(context));
+			var result = reader.Read(note.CurrentSample(context));
 
 			return new Sample { Value = result ?? 0 };
 		}
