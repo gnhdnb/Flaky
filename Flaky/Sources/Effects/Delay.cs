@@ -77,5 +77,10 @@ namespace Flaky
 
 			return writePosition;
 		}
+
+		internal override void Initialize(IContext context)
+		{
+			Initialize(context, time, sound);
+		}
 	}
 }

@@ -26,7 +26,12 @@ namespace Flaky
 		{
 			float sampleRate = 44100;
 
-			return (context.Sample - startSample) / sampleRate;
+			return PlaySample(context) / sampleRate;
+		}
+
+		public long PlaySample(IContext context)
+		{
+			return context.Sample - startSample;
 		}
 
 		public Note Note

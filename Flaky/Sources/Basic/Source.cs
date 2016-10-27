@@ -33,7 +33,11 @@ namespace Flaky
 			this.id = id;
 		}
 
-		internal TState GetOrCreate<TState>(IContext context) where TState : class, new()
+		public abstract Sample Play(IContext context);
+
+		internal abstract void Initialize(IContext context);
+
+		protected TState GetOrCreate<TState>(IContext context) where TState : class, new()
 		{
 			if (StateContainer == null)
 			{
@@ -46,8 +50,18 @@ namespace Flaky
 			return ((StateContainer<TState>)StateContainer).State;
 		}
 
-		public abstract Sample Play(IContext context);
+		protected TFactory Get<TFactory>(IContext context) where TFactory : class
+		{
+			return ((Context)context).Get<TFactory>();
+		}
 
+		protected void Initialize(IContext context, params Source[] sources)
+		{
+			foreach (var source in sources)
+			{
+				source.Initialize(context);
+			}
+		}
 
 		public static implicit operator Source(float d)
 		{

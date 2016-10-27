@@ -16,12 +16,15 @@ namespace Flaky
 		public WaveAdapter()
 		{
 			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
+			controller.Register<IWaveReaderFactory>(new WaveReaderFactory());
 			source = 0;
 		}
 
 		public void ChangePlayer(IPlayer player)
 		{
-			source = player.CreateSource();
+			var source = player.CreateSource();
+			source.Initialize(new Context(controller));
+			this.source = source;
 		}
 
 		public WaveFormat WaveFormat

@@ -67,5 +67,10 @@ namespace Flaky
 
 			return new PlayingNote(notes[state.Index], context.Sample);
 		}
+
+		internal override void Initialize(IContext context)
+		{
+			Initialize(context, length);
+		}
 	}
 }

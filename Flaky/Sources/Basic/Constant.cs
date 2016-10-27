@@ -19,5 +19,10 @@ namespace Flaky
 		{
 			return new Sample { Value = value };
 		}
+
+		internal override void Initialize(IContext context)
+		{
+			// do nothing
+		}
 	}
 }

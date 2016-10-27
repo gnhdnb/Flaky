@@ -67,7 +67,11 @@
     <Compile Include="Core\Context.cs" />
     <Compile Include="Core\ContextController.cs" />
     <Compile Include="Core\Host.cs" />
+    <Compile Include="Core\IWaveReader.cs" />
+    <Compile Include="Core\IWaveReaderFactory.cs" />
     <Compile Include="Core\WaveAdapter.cs" />
+    <Compile Include="Core\WaveReader.cs" />
+    <Compile Include="Core\WaveReaderFactory.cs" />
     <Compile Include="Core\WaveRecorder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="Sources\Sample.cs" />
     <Compile Include="Sources\Waveform\Osc.cs" />
     <Compile Include="Sources\Waveform\DoublePendulum.cs" />
+    <Compile Include="Sources\Waveform\Sampler.cs" />
     <Compile Include="Windows\MainWindow.cs" />
   </ItemGroup>
   <ItemGroup>

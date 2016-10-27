@@ -10,6 +10,7 @@ namespace Flaky
 	{
 		private long sample;
 		private readonly Dictionary<StateKey, object> states = new Dictionary<StateKey, object>();
+		private readonly Dictionary<Type, object> factories = new Dictionary<Type, object>();
 
 		internal long Sample { get { return sample; } }
 
@@ -21,6 +22,16 @@ namespace Flaky
 				states[key] = new TState();
 
 			return (TState)states[key];
+		}
+
+		internal TFactory Get<TFactory>() where TFactory : class
+		{
+			return (TFactory)factories[typeof(TFactory)];
+		}
+
+		internal void Register<TFactory>(TFactory factory)
+		{
+			factories[typeof(TFactory)] = factory;
 		}
 
 		internal void NextSample()

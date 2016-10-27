@@ -17,6 +17,11 @@ namespace Flaky
 			return controller.GetOrCreateState<TState>(id);
 		}
 
+		internal TFactory Get<TFactory>() where TFactory : class
+		{
+			return controller.Get<TFactory>();
+		}
+
 		internal Context(ContextController controller)
 		{
 			Sample = controller.Sample;

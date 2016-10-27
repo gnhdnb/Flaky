@@ -101,5 +101,10 @@ namespace Flaky
 
 			return new Sample { Value = (float)((l1 * Math.Sin(theta1) + l2 * Math.Sin(theta2)) / (l1 + l2)) };
 		}
+
+		internal override void Initialize(IContext context)
+		{
+			Initialize(context, l1Source, l2Source, m1Source, m2Source, gSource);
+		}
 	}
 }

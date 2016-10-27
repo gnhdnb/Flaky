@@ -21,5 +21,10 @@ namespace Flaky
 		{
 			return new Sample { Value = a.Play(context).Value - b.Play(context).Value };
 		}
+
+		internal override void Initialize(IContext context)
+		{
+			Initialize(context, a, b);
+		}
 	}
 }
