@@ -12,6 +12,13 @@ namespace Flaky
 		private readonly Dictionary<StateKey, object> states = new Dictionary<StateKey, object>();
 		private readonly Dictionary<Type, object> factories = new Dictionary<Type, object>();
 
+		internal ContextController(int sampleRate)
+		{
+			SampleRate = sampleRate;
+		}
+
+		internal int SampleRate { get; private set; }
+
 		internal long Sample { get { return sample; } }
 
 		internal TState GetOrCreateState<TState>(string id) where TState : class, new()

@@ -24,9 +24,7 @@ namespace Flaky
 
 		public float CurrentTime(IContext context)
 		{
-			float sampleRate = 44100;
-
-			return CurrentSample(context) / sampleRate;
+			return CurrentSample(context) / (float)context.SampleRate;
 		}
 
 		public long CurrentSample(IContext context)

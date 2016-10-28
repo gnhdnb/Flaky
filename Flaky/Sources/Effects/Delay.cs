@@ -13,14 +13,18 @@ namespace Flaky
 
 		private class State
 		{
-			internal readonly int sampleRate = 44100;
-			internal readonly int capacity;
-			internal readonly float[] buffer;
+			internal int sampleRate { get; private set; }
+			internal int capacity { get; private set; }
+			internal float[] buffer { get; private set; }
 			internal int position;
 			internal long sample;
 
-			public State()
+			internal void Initialize(IContext context)
 			{
+				if (buffer != null)
+					return;
+
+				sampleRate = context.SampleRate;
 				capacity = sampleRate * 10;
 				buffer = new float[capacity];
 			}
@@ -80,6 +84,10 @@ namespace Flaky
 
 		internal override void Initialize(IContext context)
 		{
+			var state = GetOrCreate<State>(context);
+
+			state.Initialize(context);
+
 			Initialize(context, time, sound);
 		}
 	}

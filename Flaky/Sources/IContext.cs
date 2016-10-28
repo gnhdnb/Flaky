@@ -9,5 +9,6 @@ namespace Flaky
 	public interface IContext
 	{
 		long Sample { get; }
+		int SampleRate { get; }
 	}
 }

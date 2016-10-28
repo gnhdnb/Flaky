@@ -11,11 +11,12 @@ namespace Flaky
 	{
 		private WaveFormat waveFormat;
 		private Source source;
-		private readonly ContextController controller = new ContextController();
+		private readonly ContextController controller;
 
 		public WaveAdapter()
 		{
-			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 1);
+			controller = new ContextController(44100);
+			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(controller.SampleRate, 1);
 			controller.Register<IWaveReaderFactory>(new WaveReaderFactory());
 			source = 0;
 		}

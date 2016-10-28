@@ -12,6 +12,8 @@ namespace Flaky
 
 		public long Sample { get; }
 
+		public int SampleRate { get; private set; }
+
 		internal TState GetOrCreateState<TState>(string id) where TState : class, new()
 		{
 			return controller.GetOrCreateState<TState>(id);
@@ -25,6 +27,7 @@ namespace Flaky
 		internal Context(ContextController controller)
 		{
 			Sample = controller.Sample;
+			SampleRate = controller.SampleRate;
 			this.controller = controller;
 		}
 	}

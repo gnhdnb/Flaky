@@ -39,7 +39,7 @@ namespace Flaky
 		{
 			var state = GetOrCreate<State>(context);
 
-			int sampleRate = 44100;
+			int sampleRate = context.SampleRate;
 
 			float amplitude = Amplitude.Play(context).Value;
 			float frequency = Frequency.Play(context).Value;
