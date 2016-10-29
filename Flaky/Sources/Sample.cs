@@ -8,6 +8,20 @@ namespace Flaky
 {
 	public struct Sample
 	{
-		public float Value { get; set; }
+		public float Left;
+		public float Right;
+
+		public float Value
+		{
+			get
+			{
+				return (Left + Right) / 2;
+			}
+			set
+			{
+				Left = value;
+				Right = value;
+			}
+		}
 	}
 }

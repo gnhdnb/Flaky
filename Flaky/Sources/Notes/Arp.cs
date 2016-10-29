@@ -24,11 +24,12 @@ namespace Flaky
 	{
 		private Note[] notes;
 		private Source length;
+		private State state;
 
 		private class State
 		{
-			public int Index { get; set; }
-			public PlayingNote CurrentNote { get; set; }
+			public int index;
+			public PlayingNote currentNote;
 		}
 
 		public Arp(IEnumerable<Note> notes, Source length)
@@ -45,31 +46,30 @@ namespace Flaky
 
 		public override PlayingNote GetNote(IContext context)
 		{
-			var state = GetOrCreate<State>(context);
-
 			var lengthValue = length.Play(context).Value;
 
-			if (state.CurrentNote.Note == null || state.CurrentNote.CurrentTime(context) > lengthValue)
+			if (state.currentNote.Note == null || state.currentNote.CurrentTime(context) > lengthValue)
 			{
-				state.CurrentNote = NextNote(context, state);
-				return state.CurrentNote;
+				state.currentNote = NextNote(context, state);
+				return state.currentNote;
 			}
 
-			return state.CurrentNote;
+			return state.currentNote;
 		}
 
 		private PlayingNote NextNote(IContext context, State state)
 		{
-			state.Index++;
+			state.index++;
 
-			if (state.Index >= notes.Length)
-				state.Index = 0;
+			if (state.index >= notes.Length)
+				state.index = 0;
 
-			return new PlayingNote(notes[state.Index], context.Sample);
+			return new PlayingNote(notes[state.index], context.Sample);
 		}
 
 		internal override void Initialize(IContext context)
 		{
+			state = GetOrCreate<State>(context);
 			Initialize(context, length);
 		}
 	}

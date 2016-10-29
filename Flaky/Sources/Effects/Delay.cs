@@ -10,12 +10,13 @@ namespace Flaky
 	{
 		private readonly Source time;
 		private readonly Source sound;
+		private State state;
 
 		private class State
 		{
-			internal int sampleRate { get; private set; }
-			internal int capacity { get; private set; }
-			internal float[] buffer { get; private set; }
+			internal int sampleRate;
+			internal int capacity;
+			internal Sample[] buffer;
 			internal int position;
 			internal long sample;
 
@@ -26,7 +27,7 @@ namespace Flaky
 
 				sampleRate = context.SampleRate;
 				capacity = sampleRate * 10;
-				buffer = new float[capacity];
+				buffer = new Sample[capacity];
 			}
 		}
 
@@ -44,9 +45,7 @@ namespace Flaky
 
 		public override Sample Play(IContext context)
 		{
-			var state = GetOrCreate<State>(context);
-
-			var soundValue = sound.Play(context).Value;
+			var soundValue = sound.Play(context);
 
 			var delta = context.Sample - state.sample;
 			state.sample = context.Sample;
@@ -58,11 +57,17 @@ namespace Flaky
 
 			var writePosition = GetWritePosition(context, state);
 
-			var result = state.buffer[state.position] / 2 + soundValue;
+			var delay = state.buffer[state.position];
+
+			var result = new Sample
+			{
+				Left = delay.Left / 2 + soundValue.Left,
+				Right = delay.Right / 2 + soundValue.Right
+			};
 
 			state.buffer[writePosition] = result;
 
-			return new Sample { Value = result };
+			return result;
 		}
 
 		private int GetWritePosition(IContext context, State state)
@@ -84,7 +89,7 @@ namespace Flaky
 
 		internal override void Initialize(IContext context)
 		{
-			var state = GetOrCreate<State>(context);
+			state = GetOrCreate<State>(context);
 
 			state.Initialize(context);
 

@@ -12,6 +12,7 @@ namespace Flaky
 		private string Code { get; set; }
 		private Compiler Compiler { get; }
 		private WaveOut Device { get; }
+		private Channel Channel { get; }
 		private WaveAdapter Adapter { get; }
 		private WaveRecorder Recorder { get; }
 
@@ -19,7 +20,8 @@ namespace Flaky
 		{
 			Compiler = new Compiler();
 			Device = new WaveOut();
-			Adapter = new WaveAdapter();
+			Channel = new Channel();
+			Adapter = new WaveAdapter(Channel);
 			Recorder = new WaveRecorder(Adapter, outputWaveFilePath);
 			Device.Init(Recorder);
 		}
@@ -32,7 +34,7 @@ namespace Flaky
 			if (!result.Success)
 				return false;
 
-			Adapter.ChangePlayer(result.Player);
+			Channel.ChangePlayer(result.Player);
 			return true;
 		}
 
@@ -50,6 +52,7 @@ namespace Flaky
 		{
 			Device.Dispose();
 			Recorder.Dispose();
+			Channel.Dispose();
 		}
 	}
 }

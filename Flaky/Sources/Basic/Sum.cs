@@ -19,7 +19,14 @@ namespace Flaky
 
 		public override Sample Play(IContext context)
 		{
-			return new Sample { Value = a.Play(context).Value + b.Play(context).Value };
+			var aValue = a.Play(context);
+			var bValue = b.Play(context);
+
+			return new Sample
+			{
+				Left = aValue.Left + bValue.Left,
+				Right = aValue.Right + bValue.Right,
+			};
 		}
 
 		internal override void Initialize(IContext context)

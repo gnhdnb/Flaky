@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Flaky
@@ -10,22 +11,12 @@ namespace Flaky
 	public class WaveAdapter : IWaveProvider
 	{
 		private WaveFormat waveFormat;
-		private Source source;
-		private readonly ContextController controller;
+		private readonly Channel channel;
 
-		public WaveAdapter()
+		internal WaveAdapter(Channel channel)
 		{
-			controller = new ContextController(44100);
-			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(controller.SampleRate, 1);
-			controller.Register<IWaveReaderFactory>(new WaveReaderFactory());
-			source = 0;
-		}
-
-		public void ChangePlayer(IPlayer player)
-		{
-			var source = player.CreateSource();
-			source.Initialize(new Context(controller));
-			this.source = source;
+			this.channel = channel;
+			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(channel.SampleRate, 2);
 		}
 
 		public WaveFormat WaveFormat
@@ -46,14 +37,20 @@ namespace Flaky
 
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
-			for (int n = 0; n < sampleCount; n++)
+			float[] internalBuffer = channel.ReadNextBatch();
+
+			if (sampleCount != internalBuffer.Length)
+				throw new InvalidOperationException("Buffer size mismatch.");
+
+			if (internalBuffer != null)
 			{
-				var value = source.Play(new Context(controller)).Value;
-				buffer[n + offset] = value;
-				controller.NextSample();
+				for(int i = 0; i< internalBuffer.Length; i++)
+				{
+					buffer[i + offset] = internalBuffer[i];
+				}
 			}
 
-			return sampleCount;
+			return internalBuffer.Length;
 		}
 	}
 }

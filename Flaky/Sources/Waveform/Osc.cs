@@ -26,19 +26,18 @@ namespace Flaky
 			Amplitude = amplitude;
 		}
 
-		public Source Frequency { get; set; }
-		public Source Amplitude { get; set; }
+		private Source Frequency;
+		private Source Amplitude;
+		private State state;
 
 		private class State
 		{
-			internal long Sample { get; set; }
-			internal double Phase { get; set; }
+			internal long sample;
+			internal double phase;
 		}
 
 		public override Sample Play(IContext context)
 		{
-			var state = GetOrCreate<State>(context);
-
 			int sampleRate = context.SampleRate;
 
 			float amplitude = Amplitude.Play(context).Value;
@@ -50,18 +49,19 @@ namespace Flaky
 			if(frequency > sampleRate / 2)
 				frequency = sampleRate / 2;
 
-			var delta = context.Sample - state.Sample;
-			state.Sample = context.Sample;
-			state.Phase += (frequency / sampleRate) * delta;
+			var delta = context.Sample - state.sample;
+			state.sample = context.Sample;
+			state.phase += (frequency / sampleRate) * delta;
 
-			while (state.Phase > 1)
-				state.Phase -= 1;
+			while (state.phase > 1)
+				state.phase -= 1;
 
-			return new Sample { Value = (float)(amplitude * Math.Sin(2 * Math.PI * state.Phase)) };
+			return new Sample { Value = (float)(amplitude * Math.Sin(2 * Math.PI * state.phase)) };
 		}
 
 		internal override void Initialize(IContext context)
 		{
+			state = GetOrCreate<State>(context);
 			Initialize(context, Frequency, Amplitude);
 		}
 	}
