@@ -16,10 +16,9 @@ namespace Flaky
 		private readonly Semaphore buffersCounter = new Semaphore(0, 3);
 		private bool disposed = false;
 
-		internal Channel(int sampleRate)
+		internal Channel(int sampleRate, Configuration configuration)
 		{
-			controller = new ContextController(sampleRate);
-			controller.Register<IWaveReaderFactory>(new WaveReaderFactory());
+			controller = new ContextController(sampleRate, configuration);
 			source = null;
 			worker = new Thread(Play);
 			worker.Start();

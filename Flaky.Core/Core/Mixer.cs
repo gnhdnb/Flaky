@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class Mixer : IDisposable
+	public class Mixer : IDisposable
 	{
 		private Channel[] channels;
 		private const int sampleRate = 44100;
 
-		internal Mixer(int channelsCount)
+		public Mixer(int channelsCount, Configuration configuration)
 		{
 			if (channelsCount <= 0 || channelsCount > 8)
 				throw new ArgumentOutOfRangeException(nameof(channelsCount));
 
 			channels = Enumerable
 				.Range(0, channelsCount)
-				.Select(i => new Channel(sampleRate))
+				.Select(i => new Channel(sampleRate, configuration))
 				.ToArray();
 		}
 
-		internal int SampleRate
+		public int SampleRate
 		{
 			get
 			{
@@ -30,7 +30,7 @@ namespace Flaky
 			}
 		}
 
-		internal float[] ReadNextBatch()
+		public float[] ReadNextBatch()
 		{
 			var buffers = channels
 				.Select(c => c.ReadNextBatch())
@@ -48,7 +48,7 @@ namespace Flaky
 			return buffers[0];
 		}
 
-		internal void ChangePlayer(int channel, IPlayer player)
+		public void ChangePlayer(int channel, IPlayer player)
 		{
 			channels[channel].ChangePlayer(player);
 		}

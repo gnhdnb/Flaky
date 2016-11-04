@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Sources", "Flaky.Sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Interfaces", "Flaky.Interfaces\Flaky.Interfaces.csproj", "{4CEA5444-F875-4561-82A3-77D467F37AE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Host", "Flaky.Host\Flaky.Host.csproj", "{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Adapters", "Flaky.Adapters\Flaky.Adapters.csproj", "{807D2E09-3C18-4DED-B582-ACE81FF3C54D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{4CEA5444-F875-4561-82A3-77D467F37AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CEA5444-F875-4561-82A3-77D467F37AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CEA5444-F875-4561-82A3-77D467F37AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{807D2E09-3C18-4DED-B582-ACE81FF3C54D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{807D2E09-3C18-4DED-B582-ACE81FF3C54D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{807D2E09-3C18-4DED-B582-ACE81FF3C54D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{807D2E09-3C18-4DED-B582-ACE81FF3C54D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

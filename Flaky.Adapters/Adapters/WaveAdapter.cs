@@ -13,7 +13,7 @@ namespace Flaky
 		private WaveFormat waveFormat;
 		private readonly Mixer mixer;
 
-		internal WaveAdapter(Mixer mixer)
+		public WaveAdapter(Mixer mixer)
 		{
 			this.mixer = mixer;
 			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(mixer.SampleRate, 2);

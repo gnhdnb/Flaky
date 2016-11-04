@@ -38,10 +38,6 @@
       <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.3.2\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
@@ -60,17 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Adapters\IWaveReader.cs" />
-    <Compile Include="Core\Adapters\IWaveReaderFactory.cs" />
-    <Compile Include="Core\Adapters\WaveAdapter.cs" />
-    <Compile Include="Core\Adapters\WaveReader.cs" />
-    <Compile Include="Core\Adapters\WaveReaderFactory.cs" />
-    <Compile Include="Core\Adapters\WaveRecorder.cs" />
+    <Compile Include="Adapters\IWaveReader.cs" />
+    <Compile Include="Adapters\IWaveReaderFactory.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Core\Channel.cs" />
     <Compile Include="Core\Compiler.cs" />
     <Compile Include="Core\Context.cs" />
     <Compile Include="Core\ContextController.cs" />
-    <Compile Include="Core\Host.cs" />
     <Compile Include="Core\Mixer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

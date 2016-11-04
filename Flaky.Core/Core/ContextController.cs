@@ -8,13 +8,14 @@ namespace Flaky
 {
 	internal class ContextController
 	{
-		private long sample;
+		private readonly Configuration configuration;
 		private readonly Dictionary<StateKey, object> states = new Dictionary<StateKey, object>();
-		private readonly Dictionary<Type, object> factories = new Dictionary<Type, object>();
+		private long sample;
 
-		internal ContextController(int sampleRate)
+		internal ContextController(int sampleRate, Configuration configuration)
 		{
 			SampleRate = sampleRate;
+			this.configuration = configuration;
 		}
 
 		internal int SampleRate { get; private set; }
@@ -33,12 +34,7 @@ namespace Flaky
 
 		internal TFactory Get<TFactory>() where TFactory : class
 		{
-			return (TFactory)factories[typeof(TFactory)];
-		}
-
-		internal void Register<TFactory>(TFactory factory)
-		{
-			factories[typeof(TFactory)] = factory;
+			return configuration.Get<TFactory>();
 		}
 
 		internal void NextSample()

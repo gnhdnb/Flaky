@@ -21,15 +21,14 @@ namespace Flaky
 
 		private readonly MetadataReference[] references;
 
-		public Compiler()
+		public Compiler(Assembly sourcesAssembly)
 		{
-			string assemblyName = Path.GetRandomFileName();
-
 			references = new MetadataReference[]
 			{
 				MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
 				MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
-				MetadataReference.CreateFromFile(Assembly.GetExecutingAssembly().Location)
+				MetadataReference.CreateFromFile(typeof(IPlayer).Assembly.Location),
+				MetadataReference.CreateFromFile(sourcesAssembly.Location)
 			};
 		}
 

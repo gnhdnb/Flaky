@@ -5,7 +5,7 @@ namespace Flaky
 {
 public class Player : IPlayer
 {
-public override Source CreateSource()
+public override ISource CreateSource()
 {
 var arp = new Arp(new Note[] { 0, 3, 7, 14, 17, 19 }, 0.5f + new Osc(0.2f, 0.4f), "arp");
 var arp2 = new Arp(new Note[] { 17, 14, 7, 3, 0 }, 0.6f + new Osc(0.33f, 0.5f) + 2, "arp2");

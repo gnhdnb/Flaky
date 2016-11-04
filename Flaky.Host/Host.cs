@@ -18,9 +18,13 @@ namespace Flaky
 
 		public Host(int channelsCount, string outputWaveFilePath)
 		{
-			Compiler = new Compiler();
+			var configuration = new Configuration();
+
+			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory());
+
+			Compiler = new Compiler(typeof(Source).Assembly);
 			Device = new WaveOut();
-			Mixer = new Mixer(channelsCount);
+			Mixer = new Mixer(channelsCount, configuration);
 			Adapter = new WaveAdapter(Mixer);
 			Recorder = new WaveRecorder(Adapter, outputWaveFilePath);
 			Device.Init(Recorder);
