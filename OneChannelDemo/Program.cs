@@ -1,5 +1,4 @@
 ﻿using ConsoleDraw;
-using NAudio.Wave;
 using System;
 using System.IO;
 using System.Linq;
