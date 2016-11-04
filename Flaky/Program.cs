@@ -14,10 +14,10 @@ namespace Flaky
 		{
 			var code = Load();
 
-			using (var host = new Host(GetOutputWaveFilePath()))
+			using (var host = new Host(1, GetOutputWaveFilePath()))
 			{
 
-				host.Recompile(code);
+				host.Recompile(0, code);
 				host.Play();
 
 				WindowManager.SetupWindow();
@@ -27,7 +27,7 @@ namespace Flaky
 				window.OnKey += (sender, key) =>
 				{
 					if (key.Key == ConsoleKey.F5)
-						host.Recompile(window.GetText());
+						host.Recompile(0, window.GetText());
 
 					if (key.Key == ConsoleKey.F10)
 					{
@@ -75,7 +75,7 @@ namespace Flaky
 		private static string GetBasicTemplate()
 		{
 			var assembly = Assembly.GetExecutingAssembly();
-			var resourceName = "Flaky.Resources.template.cs";
+			var resourceName = "Flaky.Resources.Template.cs";
 
 			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
 			using (StreamReader reader = new StreamReader(stream))

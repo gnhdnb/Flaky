@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using NAudio.Midi;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,32 +10,30 @@ namespace Flaky
 {
 	internal class Host : IDisposable
 	{
-		private string Code { get; set; }
 		private Compiler Compiler { get; }
 		private WaveOut Device { get; }
-		private Channel Channel { get; }
+		private Mixer Mixer { get; }
 		private WaveAdapter Adapter { get; }
 		private WaveRecorder Recorder { get; }
 
-		internal Host(string outputWaveFilePath)
+		internal Host(int channelsCount, string outputWaveFilePath)
 		{
 			Compiler = new Compiler();
 			Device = new WaveOut();
-			Channel = new Channel();
-			Adapter = new WaveAdapter(Channel);
+			Mixer = new Mixer(channelsCount);
+			Adapter = new WaveAdapter(Mixer);
 			Recorder = new WaveRecorder(Adapter, outputWaveFilePath);
 			Device.Init(Recorder);
 		}
 
-		internal bool Recompile(string code)
+		internal bool Recompile(int channel, string code)
 		{
-			Code = code;
-			var result = Compiler.Compile(Code);
+			var result = Compiler.Compile(code);
 
 			if (!result.Success)
 				return false;
 
-			Channel.ChangePlayer(result.Player);
+			Mixer.ChangePlayer(channel, result.Player);
 			return true;
 		}
 
@@ -52,7 +51,7 @@ namespace Flaky
 		{
 			Device.Dispose();
 			Recorder.Dispose();
-			Channel.Dispose();
+			Mixer.Dispose();
 		}
 	}
 }

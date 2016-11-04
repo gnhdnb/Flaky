@@ -11,12 +11,12 @@ namespace Flaky
 	public class WaveAdapter : IWaveProvider
 	{
 		private WaveFormat waveFormat;
-		private readonly Channel channel;
+		private readonly Mixer mixer;
 
-		internal WaveAdapter(Channel channel)
+		internal WaveAdapter(Mixer mixer)
 		{
-			this.channel = channel;
-			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(channel.SampleRate, 2);
+			this.mixer = mixer;
+			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(mixer.SampleRate, 2);
 		}
 
 		public WaveFormat WaveFormat
@@ -37,7 +37,7 @@ namespace Flaky
 
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
-			float[] internalBuffer = channel.ReadNextBatch();
+			float[] internalBuffer = mixer.ReadNextBatch();
 
 			if (sampleCount != internalBuffer.Length)
 				throw new InvalidOperationException("Buffer size mismatch.");

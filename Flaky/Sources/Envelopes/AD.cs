@@ -57,7 +57,7 @@ namespace Flaky
 
 		internal override void Initialize(IContext context)
 		{
-			Initialize(context, attack, decay);
+			Initialize(context, source, attack, decay);
 		}
 	}
 }

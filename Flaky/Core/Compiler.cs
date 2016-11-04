@@ -13,7 +13,14 @@ namespace Flaky
 {
 	internal class Compiler
 	{
+#if DEBUG
+		private const OptimizationLevel optimizationLevel = OptimizationLevel.Debug;
+#else
+		private const OptimizationLevel optimizationLevel = OptimizationLevel.Release;
+#endif
+
 		private readonly MetadataReference[] references;
+
 		public Compiler()
 		{
 			string assemblyName = Path.GetRandomFileName();
@@ -36,7 +43,9 @@ namespace Flaky
 				assemblyName,
 				syntaxTrees: new[] { syntaxTree },
 				references: references,
-				options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+				options: new CSharpCompilationOptions(
+					OutputKind.DynamicallyLinkedLibrary, 
+					optimizationLevel: optimizationLevel));
 
 			var result = new CompilationResult();
 

@@ -6,25 +6,10 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IStateContainer
-	{
-
-	}
-
-	internal class StateContainer<TState> : IStateContainer where TState : class, new()
-	{
-		internal TState State { get; set; }
-
-		internal StateContainer(TState state) 
-		{
-			State = state;
-		}
-	}
-
 	public abstract class Source
 	{
 		private readonly string id;
-		private IStateContainer StateContainer { get; set; }
+		private IStateContainer stateContainer;
 
 		protected Source() { }
 
@@ -39,15 +24,15 @@ namespace Flaky
 
 		protected TState GetOrCreate<TState>(IContext context) where TState : class, new()
 		{
-			if (StateContainer == null)
+			if (stateContainer == null)
 			{
 				if (id == null)
-					StateContainer = new StateContainer<TState>(new TState());
+					stateContainer = new StateContainer<TState>(new TState());
 				else
-					StateContainer = new StateContainer<TState>(((Context)context).GetOrCreateState<TState>(id));
+					stateContainer = new StateContainer<TState>(((Context)context).GetOrCreateState<TState>(id));
 			}
 
-			return ((StateContainer<TState>)StateContainer).State;
+			return ((StateContainer<TState>)stateContainer).State;
 		}
 
 		protected TFactory Get<TFactory>(IContext context) where TFactory : class
@@ -91,6 +76,17 @@ namespace Flaky
 		public static Source operator *(Source a, Source b)
 		{
 			return new Multiply(a, b);
+		}
+
+		private interface IStateContainer { }
+		private class StateContainer<TState> : IStateContainer where TState : class, new()
+		{
+			internal TState State { get; set; }
+
+			internal StateContainer(TState state)
+			{
+				State = state;
+			}
 		}
 	}
 }
