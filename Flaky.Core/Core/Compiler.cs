@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class Compiler
+	public class Compiler
 	{
 #if DEBUG
 		private const OptimizationLevel optimizationLevel = OptimizationLevel.Debug;
@@ -78,7 +78,7 @@ namespace Flaky
 		}
 	}
 
-	internal class CompilationResult
+	public class CompilationResult
 	{
 		public bool Success { get; set; }
 		public string[] Messages { get; set; }

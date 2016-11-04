@@ -56,8 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapters\IWaveReader.cs" />
-    <Compile Include="Adapters\IWaveReaderFactory.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\Channel.cs" />
     <Compile Include="Core\Compiler.cs" />

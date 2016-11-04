@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class WaveReaderFactory : IWaveReaderFactory
+	internal interface IWaveReaderFactory
 	{
-		public IWaveReader Create(string fileName)
-		{
-			return new WaveReader(fileName);
-		}
+		IWaveReader Create(string fileName);
 	}
 }

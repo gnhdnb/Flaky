@@ -29,7 +29,7 @@ namespace Flaky
 				if (id == null)
 					stateContainer = new StateContainer<TState>(new TState());
 				else
-					stateContainer = new StateContainer<TState>(((Context)context).GetOrCreateState<TState>(id));
+					stateContainer = new StateContainer<TState>(((IFlakyContext)context).GetOrCreateState<TState>(id));
 			}
 
 			return ((StateContainer<TState>)stateContainer).State;
@@ -37,7 +37,7 @@ namespace Flaky
 
 		protected TFactory Get<TFactory>(IContext context) where TFactory : class
 		{
-			return ((Context)context).Get<TFactory>();
+			return ((IFlakyContext)context).Get<TFactory>();
 		}
 
 		protected void Initialize(IContext context, params Source[] sources)

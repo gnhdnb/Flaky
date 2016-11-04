@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Mixer : IDisposable
+	public class Mixer : IBufferedSource, IDisposable
 	{
 		private Channel[] channels;
 		private const int sampleRate = 44100;

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public interface IWaveReader
+	internal interface IBufferedSource
 	{
-		float? Read(long index);
+		float[] ReadNextBatch();
+		int SampleRate { get; }
 	}
 }

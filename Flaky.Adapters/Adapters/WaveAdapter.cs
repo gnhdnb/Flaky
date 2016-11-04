@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class WaveAdapter : IWaveProvider
+	internal class WaveAdapter : IWaveProvider
 	{
 		private WaveFormat waveFormat;
-		private readonly Mixer mixer;
+		private readonly IBufferedSource source;
 
-		public WaveAdapter(Mixer mixer)
+		public WaveAdapter(IBufferedSource source)
 		{
-			this.mixer = mixer;
-			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(mixer.SampleRate, 2);
+			this.source = source;
+			waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(source.SampleRate, 2);
 		}
 
 		public WaveFormat WaveFormat
@@ -37,7 +37,7 @@ namespace Flaky
 
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
-			float[] internalBuffer = mixer.ReadNextBatch();
+			float[] internalBuffer = source.ReadNextBatch();
 
 			if (sampleCount != internalBuffer.Length)
 				throw new InvalidOperationException("Buffer size mismatch.");

@@ -57,10 +57,6 @@
     <Compile Include="Sources\Waveform\Sampler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Flaky.Core\Flaky.Core.csproj">
-      <Project>{16d91bac-575e-4075-9697-9f49414c4171}</Project>
-      <Name>Flaky.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
       <Project>{4cea5444-f875-4561-82a3-77d467f37ae8}</Project>
       <Name>Flaky.Interfaces</Name>

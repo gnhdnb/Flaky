@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public struct Context : IContext
+	internal struct Context : IFlakyContext
 	{
 		private readonly ContextController controller;
 
