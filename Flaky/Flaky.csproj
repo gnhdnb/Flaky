@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{807D2E09-3C18-4DED-B582-ACE81FF3C54D}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{BB4E96D2-DC81-4C80-9447-A31611799C21}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Flaky.Adapters</RootNamespace>
-    <AssemblyName>Flaky.Adapters</AssemblyName>
+    <RootNamespace>Flaky</RootNamespace>
+    <AssemblyName>Flaky</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,10 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,20 +43,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Apc40\Apc40MixerAdapter.cs" />
-    <Compile Include="NAudio\WaveAdapter.cs" />
-    <Compile Include="NAudio\WaveReader.cs" />
-    <Compile Include="NAudio\WaveReaderFactory.cs" />
-    <Compile Include="NAudio\WaveRecorder.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Resources\Template1.cs" />
+    <EmbeddedResource Include="Resources\Template2.cs" />
+    <EmbeddedResource Include="Resources\Template3.cs" />
+    <EmbeddedResource Include="Resources\Template4.cs" />
+    <EmbeddedResource Include="Resources\Template5.cs" />
+    <EmbeddedResource Include="Resources\Template6.cs" />
+    <EmbeddedResource Include="Resources\Template7.cs" />
+    <EmbeddedResource Include="Resources\Template8.cs" />
+    <Compile Include="Windows\MainWindow.cs" />
+    <EmbeddedResource Include="Resources\Template0.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Apc40Controller\Apc40Controller.csproj">
       <Project>{eec8fca3-e893-4386-b9c5-27e2e0611454}</Project>
       <Name>Apc40Controller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConsoleDraw\ConsoleDraw.csproj">
+      <Project>{5978de85-3fb9-4bab-965f-95e4398309a2}</Project>
+      <Name>ConsoleDraw</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Flaky.Adapters\Flaky.Adapters.csproj">
+      <Project>{807d2e09-3c18-4ded-b582-ace81ff3c54d}</Project>
+      <Name>Flaky.Adapters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Flaky.Host\Flaky.Host.csproj">
+      <Project>{2f7aa2c3-ce12-4ec1-a6bc-df3bdab21d19}</Project>
+      <Name>Flaky.Host</Name>
     </ProjectReference>
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
       <Project>{4cea5444-f875-4561-82a3-77d467f37ae8}</Project>

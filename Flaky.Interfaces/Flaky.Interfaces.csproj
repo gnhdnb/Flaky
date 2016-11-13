@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internal\IBufferedSource.cs" />
+    <Compile Include="Public\IChannelVolume.cs" />
     <Compile Include="Internal\IFlakyContext.cs" />
+    <Compile Include="Public\IMixerController.cs" />
     <Compile Include="Internal\IWaveReader.cs" />
     <Compile Include="Internal\IWaveReaderFactory.cs" />
     <Compile Include="Public\IContext.cs" />

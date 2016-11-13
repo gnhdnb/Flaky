@@ -15,12 +15,18 @@ namespace Flaky
 		private Mixer Mixer { get; }
 		private WaveAdapter Adapter { get; }
 		private WaveRecorder Recorder { get; }
+		private IMixerController MixerController { get; }
 
-		public Host(int channelsCount, string outputWaveFilePath)
+		public Host(int channelsCount, string outputWaveFilePath, IMixerController mixerController = null)
 		{
 			var configuration = new Configuration();
 
 			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory());
+
+			MixerController = mixerController;
+
+			if (MixerController != null)
+				MixerController.OnMixerChange += OnMixerChange;
 
 			Compiler = new Compiler(typeof(Source).Assembly);
 			Device = new WaveOut();
@@ -56,6 +62,11 @@ namespace Flaky
 			Device.Dispose();
 			Recorder.Dispose();
 			Mixer.Dispose();
+		}
+
+		private void OnMixerChange(object sender, IChannelVolume volume)
+		{
+			Mixer.SetVolume(volume.Channel, volume.Value);
 		}
 	}
 }

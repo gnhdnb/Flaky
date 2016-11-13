@@ -53,6 +53,11 @@ namespace Flaky
 			channels[channel].ChangePlayer(player);
 		}
 
+		public void SetVolume(int channel, float volume)
+		{
+			channels[channel].SetVolume(volume);
+		}
+
 		public void Dispose()
 		{
 			foreach(var channel in channels)

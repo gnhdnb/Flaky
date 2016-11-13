@@ -70,6 +70,10 @@
       <Project>{2f7aa2c3-ce12-4ec1-a6bc-df3bdab21d19}</Project>
       <Name>Flaky.Host</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
+      <Project>{4cea5444-f875-4561-82a3-77d467f37ae8}</Project>
+      <Name>Flaky.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Template.cs" />
