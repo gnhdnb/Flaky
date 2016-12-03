@@ -15,7 +15,6 @@ namespace Flaky
 		private readonly Queue<float[]> buffers = new Queue<float[]>();
 		private readonly Semaphore buffersCounter = new Semaphore(0, 3);
 		private bool disposed = false;
-		private volatile float volume = 1;
 
 		internal Channel(int sampleRate, Configuration configuration)
 		{
@@ -38,11 +37,6 @@ namespace Flaky
 			var source = player.CreateSource();
 			source.Initialize(new Context(controller));
 			this.source = source;
-		}
-
-		public void SetVolume(float volume)
-		{
-			this.volume = volume;
 		}
 
 		internal float[] ReadNextBatch()
@@ -74,8 +68,8 @@ namespace Flaky
 					for (int n = 0; n < 13230; n += 2)
 					{
 						var value = source.Play(new Context(controller));
-						buffer[n] = value.Left * volume;
-						buffer[n + 1] = value.Right * volume;
+						buffer[n] = value.Left;
+						buffer[n + 1] = value.Right;
 						controller.NextSample();
 					}
 				}

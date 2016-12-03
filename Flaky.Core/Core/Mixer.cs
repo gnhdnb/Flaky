@@ -8,13 +8,19 @@ namespace Flaky
 {
 	public class Mixer : IBufferedSource, IDisposable
 	{
+		private const float volumeChangeSpeed = 0.000045f;
 		private Channel[] channels;
+		private volatile float[] expectedVolume;
+		private volatile float[] volume;
 		private const int sampleRate = 44100;
 
 		public Mixer(int channelsCount, Configuration configuration)
 		{
 			if (channelsCount <= 0 || channelsCount > 8)
 				throw new ArgumentOutOfRangeException(nameof(channelsCount));
+
+			volume = new float[channelsCount];
+			expectedVolume = new float[channelsCount];
 
 			channels = Enumerable
 				.Range(0, channelsCount)
@@ -39,13 +45,17 @@ namespace Flaky
 			if (buffers.Count == 1)
 				return buffers[0];
 
-			for(int i = 0; i < buffers[0].Length; i++)
-			for(int c = 1; c < buffers.Count; c++)
+			var result = new float[buffers[0].Length];
+
+			for (int i = 0; i < buffers[0].Length; i++)
+			for (int c = 0; c < buffers.Count; c++)
 			{
-				buffers[0][i] += buffers[c][i];
+				ChangeVolume(c);
+
+				result[i] += buffers[c][i] * volume[c];
 			}
 
-			return buffers[0];
+			return result;
 		}
 
 		public void ChangePlayer(int channel, IPlayer player)
@@ -55,7 +65,7 @@ namespace Flaky
 
 		public void SetVolume(int channel, float volume)
 		{
-			channels[channel].SetVolume(volume);
+			expectedVolume[channel] = volume;
 		}
 
 		public void Dispose()
@@ -64,6 +74,15 @@ namespace Flaky
 			{
 				channel.Dispose();
 			}
+		}
+
+		private void ChangeVolume(int channel)
+		{
+			if(volume[channel] - expectedVolume[channel] < -volumeChangeSpeed)
+				volume[channel] += volumeChangeSpeed;
+
+			if (volume[channel] - expectedVolume[channel] > volumeChangeSpeed)
+				volume[channel] -= volumeChangeSpeed;
 		}
 	}
 }
