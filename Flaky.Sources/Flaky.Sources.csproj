@@ -84,6 +84,7 @@
     <Compile Include="Sources\Effects\Delay.cs" />
     <Compile Include="Sources\Effects\Filter.cs" />
     <Compile Include="Sources\Effects\MatrixVerb.cs" />
+    <Compile Include="Sources\Effects\Overdrive.cs" />
     <Compile Include="Sources\Effects\Pan.cs" />
     <Compile Include="Sources\Envelopes\AD.cs" />
     <Compile Include="Sources\Notes\Arp.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Sources\Notes\PlayingNote.cs" />
     <Compile Include="Sources\Source.cs" />
     <Compile Include="Sources\Waveform\DoublePendulum.cs" />
+    <Compile Include="Sources\Waveform\Saw.cs" />
     <Compile Include="Sources\Waveform\Osc.cs" />
     <Compile Include="Sources\Waveform\Noise.cs" />
     <Compile Include="Sources\Waveform\Sampler.cs" />

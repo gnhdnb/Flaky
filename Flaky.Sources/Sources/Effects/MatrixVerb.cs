@@ -38,8 +38,8 @@ namespace Flaky
 			var viscosityValue = viscosity.Play(context);
 
 			var sample = source.Play(context);
-			value[1, 1] += sample.Left;
-			value[1, 8] += sample.Right;
+			value[1, 1] = sample.Left;
+			value[1, 8] = sample.Right;
 
 			for (int x = 1; x < sizex - 1; x++)
 			for (int y = 1; y < sizey - 1; y++)
@@ -50,7 +50,7 @@ namespace Flaky
 
 					velocity[x, y] += delta / viscosityValue.Value;
 
-					velocity[x, y] = velocity[x, y] / 1.0005f;
+					velocity[x, y] = velocity[x, y] / 1.0004f;
 				}
 
 			for (int x = 1; x < sizex - 1; x++)
@@ -61,8 +61,8 @@ namespace Flaky
 
 			return new Sample
 			{
-				Left = value[1, 1],
-				Right = value[1, 8]
+				Left = value[2, 1],
+				Right = value[2, 8]
 			};
 		}
 	}

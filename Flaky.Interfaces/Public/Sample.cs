@@ -59,5 +59,14 @@ namespace Flaky
 				Right = a.Right * b
 			};
 		}
+
+		public static implicit operator Sample(float value)
+		{
+			return new Sample
+			{
+				Left = value,
+				Right = value
+			};
+		}
 	}
 }
