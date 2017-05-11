@@ -7,10 +7,10 @@ public class Player : IPlayer
 {
 public override ISource CreateSource()
 {
-var arp = new Arp(new Note[] { 0, 3, 7, 14, 17, 19 }, 0.5f + new Osc(0.2f, 0.4f), "arp");
-var arp2 = new Arp(new Note[] { 17, 14, 7, 3, 0 }, 0.6f + new Osc(0.33f, 0.5f) + 2, "arp2");
-var arp3 = new Arp(new Note[] { 0, 3, 7 }, 2f, "arp3");
-var arp4 = new Arp(new Note[] { 5 }, 0.57f + new Osc(0.8f, 0.5f), "arp4");
+var arp = new Seq(new Note[] { 0, 3, 7, 14, 17, 19 }, 0.5f + new Osc(0.2f, 0.4f), "arp");
+var arp2 = new Seq(new Note[] { 17, 14, 7, 3, 0 }, 0.6f + new Osc(0.33f, 0.5f) + 2, "arp2");
+var arp3 = new Seq(new Note[] { 0, 3, 7 }, 2f, "arp3");
+var arp4 = new Seq(new Note[] { 5 }, 0.57f + new Osc(0.8f, 0.5f), "arp4");
 
 var osc3 = new Osc(arp3 * 0.25f, 0.2f, "fm") * new AD(arp3, 1, 1);
 var osc = new Osc(arp + osc3 * 800, 0.2f, "main") * new AD(arp, 0.01f, 0.09f);

@@ -19,8 +19,10 @@ namespace Flaky
 
 		public static implicit operator Sample(PlayingNote n)
 		{
-			return new Sample { Value = n.note.ToFrequency() };
+			return new Sample { Value = n.note?.ToFrequency() ?? 0 };
 		}
+
+		public bool IsSilent { get { return note == null; } }
 
 		public float CurrentTime(IContext context)
 		{

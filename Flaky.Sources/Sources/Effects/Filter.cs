@@ -25,9 +25,9 @@ namespace Flaky
 			this.cutoff = cutoff;
 			this.filterChainCutoffInput = new Hold();
 			this.filterChain = new OnePoleLPFilter(input, filterChainCutoffInput);
+			this.filterChain = new OnePoleHPFilter(filterChain, filterChainCutoffInput);
 			this.filterChain = new OnePoleLPFilter(filterChain, filterChainCutoffInput);
-			this.filterChain = new OnePoleLPFilter(filterChain, filterChainCutoffInput);
-			this.filterChain = new OnePoleLPFilter(filterChain, filterChainCutoffInput);
+			this.filterChain = new OnePoleHPFilter(filterChain, filterChainCutoffInput);
 			this.feedbackInput = new Hold();
 			this.feedbackChain = new OnePoleLPFilter(feedbackInput, 0.18f);
 		}

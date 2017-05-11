@@ -87,8 +87,9 @@
     <Compile Include="Sources\Effects\Overdrive.cs" />
     <Compile Include="Sources\Effects\Pan.cs" />
     <Compile Include="Sources\Envelopes\AD.cs" />
-    <Compile Include="Sources\Notes\Arp.cs" />
+    <Compile Include="Sources\Notes\Seq.cs" />
     <Compile Include="Sources\Notes\Note.cs" />
+    <Compile Include="Sources\Notes\NoteSource.cs" />
     <Compile Include="Sources\Notes\PlayingNote.cs" />
     <Compile Include="Sources\Source.cs" />
     <Compile Include="Sources\Waveform\DoublePendulum.cs" />

@@ -6,21 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public abstract class NoteSource : Source
-	{
-		protected NoteSource() : base() { }
-
-		protected NoteSource(string id) : base(id) { }
-
-		public abstract PlayingNote GetNote(IContext context);
-
-		public sealed override Sample Play(IContext context)
-		{
-			return GetNote(context);
-		}
-	}
-
-	public class Arp : NoteSource
+	public class Seq : NoteSource
 	{
 		private Note[] notes;
 		private Source length;
@@ -32,13 +18,13 @@ namespace Flaky
 			public PlayingNote currentNote;
 		}
 
-		public Arp(IEnumerable<Note> notes, Source length)
+		public Seq(IEnumerable<Note> notes, Source length)
 		{
 			this.notes = notes.ToArray();
 			this.length = length;
 		}
 
-		public Arp(IEnumerable<Note> notes, Source length, string id) : base(id)
+		public Seq(IEnumerable<Note> notes, Source length, string id) : base(id)
 		{
 			this.notes = notes.ToArray();
 			this.length = length;
@@ -48,7 +34,7 @@ namespace Flaky
 		{
 			var lengthValue = length.Play(context).Value;
 
-			if (state.currentNote.Note == null || state.currentNote.CurrentTime(context) > lengthValue)
+			if (state.currentNote.CurrentTime(context) > lengthValue)
 			{
 				state.currentNote = NextNote(context, state);
 				return state.currentNote;
