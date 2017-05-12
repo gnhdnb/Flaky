@@ -12,13 +12,18 @@ namespace Flaky
 		private readonly Dictionary<StateKey, object> states = new Dictionary<StateKey, object>();
 		private long sample;
 
-		internal ContextController(int sampleRate, Configuration configuration)
+		internal ContextController(int sampleRate, int bpm, Configuration configuration)
 		{
 			SampleRate = sampleRate;
+			this.BPM = bpm;
 			this.configuration = configuration;
 		}
 
 		internal int SampleRate { get; private set; }
+
+		internal int BPM { get; private set; }
+
+		internal int Beat { get; private set; }
 
 		internal long Sample { get { return sample; } }
 
@@ -40,6 +45,8 @@ namespace Flaky
 		internal void NextSample()
 		{
 			sample++;
+
+			Beat = (int)Math.Floor((sample / (double)SampleRate) * ((double)BPM / 60));
 		}
 
 		private struct StateKey

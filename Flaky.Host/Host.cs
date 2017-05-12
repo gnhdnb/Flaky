@@ -17,7 +17,7 @@ namespace Flaky
 		private WaveRecorder Recorder { get; }
 		private IMixerController MixerController { get; }
 
-		public Host(int channelsCount, string outputWaveFilePath, IMixerController mixerController = null)
+		public Host(int channelsCount, string outputWaveFilePath = null, IMixerController mixerController = null)
 		{
 			var configuration = new Configuration();
 
@@ -32,19 +32,27 @@ namespace Flaky
 			Device = new WaveOut();
 			Mixer = new Mixer(channelsCount, configuration);
 			Adapter = new WaveAdapter(Mixer);
-			Recorder = new WaveRecorder(Adapter, outputWaveFilePath);
-			Device.Init(Recorder);
+
+			if (outputWaveFilePath != null)
+			{
+				Recorder = new WaveRecorder(Adapter, outputWaveFilePath);
+				Device.Init(Recorder);
+			}
+			else
+			{
+				Device.Init(Adapter);
+			}
 		}
 
-		public bool Recompile(int channel, string code)
+		public string[] Recompile(int channel, string code)
 		{
 			var result = Compiler.Compile(code);
 
 			if (!result.Success)
-				return false;
+				return result.Messages;
 
 			Mixer.ChangePlayer(channel, result.Player);
-			return true;
+			return new string[0];
 		}
 
 		public void Play()
@@ -60,7 +68,7 @@ namespace Flaky
 		public void Dispose()
 		{
 			Device.Dispose();
-			Recorder.Dispose();
+			Recorder?.Dispose();
 			Mixer.Dispose();
 		}
 

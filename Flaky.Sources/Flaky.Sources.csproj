@@ -86,6 +86,7 @@
     <Compile Include="Sources\Effects\MatrixVerb.cs" />
     <Compile Include="Sources\Effects\Overdrive.cs" />
     <Compile Include="Sources\Effects\Pan.cs" />
+    <Compile Include="Sources\Effects\Repeater.cs" />
     <Compile Include="Sources\Envelopes\AD.cs" />
     <Compile Include="Sources\Notes\Seq.cs" />
     <Compile Include="Sources\Notes\Note.cs" />

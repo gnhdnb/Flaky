@@ -19,7 +19,7 @@ namespace Flaky
 
 		internal Channel(int sampleRate, Configuration configuration)
 		{
-			controller = new ContextController(sampleRate, configuration);
+			controller = new ContextController(sampleRate, 120, configuration);
 			source = null;
 			worker = new Thread(Play);
 			worker.Start();

@@ -8,7 +8,7 @@ namespace Flaky
 {
 	public class Noise : Source
 	{
-		private Random random = new Random();
+		private static Random random = new Random();
 
 		public override void Initialize(IContext context) { }
 

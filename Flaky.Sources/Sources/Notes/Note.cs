@@ -12,16 +12,23 @@ namespace Flaky
 		private readonly static double ratio = Math.Pow(2, 1d / 12d);
 		private const float a4 = 440;
 		private readonly float frequency;
+		private readonly float pitch;
 
 		public Note(int number)
 		{
 			this.number = number;
+			pitch = (float)Math.Pow(ratio, number);
 			frequency = (float)(a4 * Math.Pow(ratio, number));
 		}
 
 		internal float ToFrequency()
 		{
 			return frequency;
+		}
+
+		internal float ToPitch()
+		{
+			return pitch;
 		}
 
 		public static implicit operator Note(int d)
