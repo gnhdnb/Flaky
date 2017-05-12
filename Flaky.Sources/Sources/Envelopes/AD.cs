@@ -45,12 +45,12 @@ namespace Flaky
 			var attackLeft = attackValue - note.CurrentTime(context);
 			var decayLeft = attackValue + decayValue - note.CurrentTime(context);
 
-			if (attackLeft >= 0)
+			if (attackLeft > 0)
 			{
 				return new Sample { Value = (attackValue - attackLeft) / attackValue };
 			}
 
-			if (decayLeft >= 0)
+			if (decayLeft > 0)
 			{
 				return new Sample { Value = decayLeft / decayValue };
 			}

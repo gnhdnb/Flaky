@@ -15,7 +15,7 @@ namespace Flaky
 
 		public WaveReader(string fileName)
 		{
-			var fullPath = Path.Combine(GetLocation(), $"{fileName}.wav");
+			var fullPath = Path.Combine(GetLocation(), $@"samples\{fileName}.wav");
 			var reader = new WaveFileReader(fullPath);
 
 			List<float> sample = new List<float>();

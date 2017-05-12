@@ -81,6 +81,7 @@
     <Compile Include="Sources\Basic\Difference.cs" />
     <Compile Include="Sources\Basic\Multiply.cs" />
     <Compile Include="Sources\Basic\Sum.cs" />
+    <Compile Include="Sources\Effects\Chorus.cs" />
     <Compile Include="Sources\Effects\Delay.cs" />
     <Compile Include="Sources\Effects\Filter.cs" />
     <Compile Include="Sources\Effects\MatrixVerb.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Sources\Notes\PlayingNote.cs" />
     <Compile Include="Sources\Source.cs" />
     <Compile Include="Sources\Waveform\DoublePendulum.cs" />
+    <Compile Include="Sources\Waveform\DrumRack.cs" />
     <Compile Include="Sources\Waveform\Saw.cs" />
     <Compile Include="Sources\Waveform\Osc.cs" />
     <Compile Include="Sources\Waveform\Noise.cs" />

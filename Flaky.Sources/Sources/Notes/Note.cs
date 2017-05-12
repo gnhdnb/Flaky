@@ -31,6 +31,11 @@ namespace Flaky
 			return pitch;
 		}
 
+		internal int Number
+		{
+			get { return number; }
+		}
+
 		public static implicit operator Note(int d)
 		{
 			return new Note(d);
