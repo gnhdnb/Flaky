@@ -7,6 +7,7 @@ using ActiproSoftware.Windows.Themes;
 using Flaky;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -57,6 +58,8 @@ namespace WPF
 			Editor.FontSize = 14;
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, OnSaveExecuted, OnSaveCanExecute));
 
+			SetProcessPriority();
+
 			Host = new Host(1, @"c:\temp\flakyrec.wav");
 			var code = Load();
 			textBlock.Text = string.Join("\n", Host.Recompile(0, code));
@@ -64,6 +67,11 @@ namespace WPF
 			Editor.Text = code;
 
 			this.Closing += MainWindow_Closing;
+		}
+
+		private void SetProcessPriority()
+		{
+			Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 		}
 
 		private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

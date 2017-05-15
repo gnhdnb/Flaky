@@ -16,12 +16,14 @@ namespace Flaky
 		private readonly Semaphore buffersCounter = new Semaphore(0, 3);
 		private readonly Semaphore reverseBuffersCounter = new Semaphore(0, 3);
 		private bool disposed = false;
+		private int codeVersion = 0;
 
 		internal Channel(int sampleRate, Configuration configuration)
 		{
 			controller = new ContextController(sampleRate, 120, configuration);
 			source = null;
 			worker = new Thread(Play);
+			worker.Priority = ThreadPriority.Highest;
 			worker.Start();
 		}
 
@@ -36,7 +38,8 @@ namespace Flaky
 		public void ChangePlayer(IPlayer player)
 		{
 			var source = player.CreateSource();
-			source.Initialize(new Context(controller));
+			codeVersion++;
+			source.Initialize(new Context(controller, codeVersion));
 			this.source = source;
 		}
 

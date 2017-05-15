@@ -45,6 +45,7 @@ namespace Flaky
 			public PlayingNote currentNote;
 			public bool playing = false;
 			public float latestLength;
+			public int codeVersion;
 		}
 
 		public Seq(IEnumerable<int> notes, Source length) : this(notes.Select(n => (Note)n), length) { }
@@ -93,7 +94,7 @@ namespace Flaky
 
 		public override PlayingNote GetNote(IContext context)
 		{
-			if (!state.playing && context.Beat % 4 == 0)
+			if (!state.playing && context.Beat % 4 == 0 && context.MetronomeTick)
 				state.playing = true;
 
 			if (!state.playing)

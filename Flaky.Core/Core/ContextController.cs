@@ -10,6 +10,7 @@ namespace Flaky
 	{
 		private readonly Configuration configuration;
 		private readonly Dictionary<StateKey, object> states = new Dictionary<StateKey, object>();
+		private readonly Dictionary<StateKey, int> versions = new Dictionary<StateKey, int>();
 		private long sample;
 
 		internal ContextController(int sampleRate, int bpm, Configuration configuration)
@@ -24,15 +25,20 @@ namespace Flaky
 		internal int BPM { get; private set; }
 
 		internal int Beat { get; private set; }
+		internal bool MetronomeTick { get; private set; }
 
 		internal long Sample { get { return sample; } }
 
-		internal TState GetOrCreateState<TState>(string id) where TState : class, new()
+		internal int CodeVersion { get; set; }
+
+		internal TState GetOrCreateState<TState>(string id, int codeVersion) where TState : class, new()
 		{
 			var key = new StateKey(typeof(TState), id);
 
-			if (!states.ContainsKey(key))
+			if (!states.ContainsKey(key) || versions[key] < codeVersion - 1)
 				states[key] = new TState();
+
+			versions[key] = codeVersion;
 
 			return (TState)states[key];
 		}
@@ -46,7 +52,8 @@ namespace Flaky
 		{
 			sample++;
 
-			Beat = (int)Math.Floor((sample / (double)SampleRate) * ((double)BPM / 60));
+			MetronomeTick = (sample * BPM) % (SampleRate * 60) == 0;
+			Beat = (int)((sample * BPM) / (SampleRate * 60));
 		}
 
 		private struct StateKey
