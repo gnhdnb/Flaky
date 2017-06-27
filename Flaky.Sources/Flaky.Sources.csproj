@@ -79,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\Basic\Constant.cs" />
     <Compile Include="Sources\Basic\Difference.cs" />
+    <Compile Include="Sources\Basic\Hold.cs" />
     <Compile Include="Sources\Basic\Multiply.cs" />
     <Compile Include="Sources\Basic\Sum.cs" />
     <Compile Include="Sources\Effects\Chorus.cs" />

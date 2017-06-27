@@ -116,18 +116,6 @@ namespace Flaky
 
 			return resonanceInput / ((float)Math.Sqrt(Math.Abs(cutoff)) + 0.15f - cutoff * 0.25f);
 		}
-
-		private class Hold : Source
-		{
-			public Sample Sample { get; set; }
-
-			public override void Initialize(IContext context) { }
-
-			public override Sample Play(IContext context)
-			{
-				return Sample;
-			}
-		}
 	}
 
 	public class OnePoleLPFilter : OnePoleFilter

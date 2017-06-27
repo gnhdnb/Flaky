@@ -10,6 +10,9 @@ namespace Flaky
 	{
 		private readonly Source time;
 		private readonly Source sound;
+		private readonly Hold feedback;
+		private readonly Source transform;
+		private readonly Source dryWet;
 		private State state;
 
 		private class State
@@ -31,16 +34,22 @@ namespace Flaky
 			}
 		}
 
-		public Delay(Source sound, Source time)
-		{
-			this.time = time;
-			this.sound = sound;
-		}
+		public Delay(Source sound, Source time) : this(sound, time, null) { }
 
-		public Delay(Source sound, Source time, string id) : base(id)
+		public Delay(Source sound, Source time, string id) : this(sound, time, null, id) { }
+		public Delay(Source sound, Source time, Func<Source, Source> transform, string id) : this(sound, time, null, 0.5, id) { }
+
+		public Delay(Source sound, Source time, Func<Source, Source> transform, Source dryWet, string id) : base(id)
 		{
+			this.feedback = new Hold();
 			this.time = time;
 			this.sound = sound;
+			this.dryWet = dryWet;
+
+			if (transform != null)
+				this.transform = transform(feedback);
+			else
+				this.transform = feedback * 0.5;
 		}
 
 		public override Sample Play(IContext context)
@@ -59,15 +68,23 @@ namespace Flaky
 
 			var delay = state.buffer[state.position];
 
-			var result = new Sample
-			{
-				Left = delay.Left / 2 + soundValue.Left,
-				Right = delay.Right / 2 + soundValue.Right
-			};
+			feedback.Sample = delay;
+
+			var feedbackValue = transform.Play(context);
+
+			var result = feedbackValue + soundValue;
 
 			state.buffer[writePosition] = result;
 
-			return result;
+			var dryWetValue = dryWet.Play(context).Value;
+
+			if (dryWetValue < 0)
+				dryWetValue = 0;
+
+			if (dryWetValue > 1)
+				dryWetValue = 1;
+
+			return feedbackValue * dryWetValue + soundValue * (1 - dryWetValue);
 		}
 
 		private int GetWritePosition(IContext context, State state)
@@ -93,7 +110,7 @@ namespace Flaky
 
 			state.Initialize(context);
 
-			Initialize(context, time, sound);
+			Initialize(context, time, sound, transform, dryWet);
 		}
 	}
 }
