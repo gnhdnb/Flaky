@@ -36,7 +36,7 @@ namespace WPF
 
 			SetProcessPriority();
 
-			Host = new Host(1, @"c:\temp\flakyrec.wav");
+			Host = new Host(1, Path.Combine(GetLocation(), "flaky.wav"));
 			var code = Load();
 			textBlock.Text = string.Join("\n", Host.Recompile(0, code));
 			Host.Play();

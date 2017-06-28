@@ -114,11 +114,11 @@ namespace Flaky
 		{
 			if(length != null)
 			{
-				return length.Play(context).Value * ((float)context.BPM) / 120;
+				return length.Play(context).Value;
 			}
 			else
 			{
-				return ((float)context.BPM) / (15 * size);
+				return 60 / ((float)context.BPM * size / 16);
 			}
 		}
 
