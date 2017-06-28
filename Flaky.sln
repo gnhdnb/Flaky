@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Adapters", "Flaky.Ada
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apc40Controller", "Apc40Controller\Apc40Controller.csproj", "{EEC8FCA3-E893-4386-B9C5-27E2E0611454}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{9FFEE3C5-5A51-4F9F-90EB-9F48DE174AB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky", "Flaky\Flaky.csproj", "{9FFEE3C5-5A51-4F9F-90EB-9F48DE174AB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
