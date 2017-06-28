@@ -10,5 +10,8 @@ namespace Flaky
 	{
 		long Sample { get; }
 		int SampleRate { get; }
+		int Beat { get; }
+		bool MetronomeTick { get; }
+		int BPM { get; }
 	}
 }

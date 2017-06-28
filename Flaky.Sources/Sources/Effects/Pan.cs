@@ -39,18 +39,23 @@ namespace Flaky
 			if (widthValue > 2)
 				widthValue = 2;
 
-			var average = (soundValue.Left + soundValue.Right) / 2;
-
-			return new Sample
-			{
-				Left = (soundValue.Left * widthValue + average * (1 - widthValue)) * (1 - positionValue),
-				Right = (soundValue.Right * widthValue + average * (1 - widthValue)) * (1 + positionValue)
-			};
+			return Perform(soundValue, positionValue, widthValue);
 		}
 
 		public override void Initialize(IContext context)
 		{
 			Initialize(context, sound, position);
+		}
+
+		internal static Sample Perform(Sample sound, float position, float width)
+		{
+			var average = (sound.Left + sound.Right) / 2;
+
+			return new Sample
+			{
+				Left = (sound.Left * width + average * (1 - width)) * (1 - position),
+				Right = (sound.Right * width + average * (1 - width)) * (1 + position)
+			};
 		}
 	}
 }

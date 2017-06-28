@@ -1,7 +1,9 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +15,8 @@ namespace Flaky
 
 		public WaveReader(string fileName)
 		{
-			var reader = new WaveFileReader(fileName);
+			var fullPath = Path.Combine(GetLocation(), $@"samples\{fileName}.wav");
+			var reader = new WaveFileReader(fullPath);
 
 			List<float> sample = new List<float>();
 			float[] frame;
@@ -33,6 +36,11 @@ namespace Flaky
 				return sample[index];
 			else
 				return null;
+		}
+
+		private static string GetLocation()
+		{
+			return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 		}
 	}
 }

@@ -81,7 +81,7 @@ namespace Flaky
 		private interface IStateContainer { }
 		private class StateContainer<TState> : IStateContainer where TState : class, new()
 		{
-			internal TState State { get; set; }
+			internal TState State { get; }
 
 			internal StateContainer(TState state)
 			{

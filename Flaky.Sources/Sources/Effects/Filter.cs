@@ -6,7 +6,59 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class LPFilter : Source
+	public class LPFilter : MultiPoleFilter
+	{
+		public LPFilter(Source source, Source cutoff, Source resonance) : base(source, cutoff, resonance)
+		{
+		}
+
+		protected override Source CreateFilterChain(Source input, Source cutoff)
+		{
+			Source filterChain = new OnePoleLPFilter(input, cutoff);
+			filterChain = new OnePoleLPFilter(filterChain, cutoff);
+			filterChain = new OnePoleLPFilter(filterChain, cutoff);
+			filterChain = new OnePoleLPFilter(filterChain, cutoff);
+
+			return filterChain;
+		}
+	}
+
+	public class BPFilter : MultiPoleFilter
+	{
+		public BPFilter(Source source, Source cutoff, Source resonance) : base(source, cutoff, resonance)
+		{
+		}
+
+		protected override Source CreateFilterChain(Source input, Source cutoff)
+		{
+			Source filterChain = new OnePoleLPFilter(input, cutoff);
+			filterChain = new OnePoleHPFilter(filterChain, cutoff);
+			filterChain = new OnePoleLPFilter(filterChain, cutoff);
+			filterChain = new OnePoleHPFilter(filterChain, cutoff);
+
+			return filterChain;
+		}
+	}
+
+	public class HPFilter : MultiPoleFilter
+	{
+		public HPFilter(Source source, Source cutoff, Source resonance) : base(source, cutoff, resonance)
+		{
+		}
+
+		protected override Source CreateFilterChain(Source input, Source cutoff)
+		{
+			Source filterChain = new OnePoleHPFilter(input, cutoff);
+			filterChain = new OnePoleHPFilter(filterChain, cutoff);
+			filterChain = new OnePoleHPFilter(filterChain, cutoff);
+			filterChain = new OnePoleHPFilter(filterChain, cutoff);
+
+			return filterChain;
+		}
+	}
+
+
+	public abstract class MultiPoleFilter : Source
 	{
 		private Hold input;
 		private Hold filterChainCutoffInput;
@@ -17,20 +69,19 @@ namespace Flaky
 		private Source cutoff;
 		private Source feedbackChain;
 
-		public LPFilter(Source source, Source cutoff, Source resonance)
+		public MultiPoleFilter(Source source, Source cutoff, Source resonance)
 		{
 			this.resonance = resonance;
 			this.source = source;
 			this.input = new Hold();
 			this.cutoff = cutoff;
 			this.filterChainCutoffInput = new Hold();
-			this.filterChain = new OnePoleLPFilter(input, filterChainCutoffInput);
-			this.filterChain = new OnePoleHPFilter(filterChain, filterChainCutoffInput);
-			this.filterChain = new OnePoleLPFilter(filterChain, filterChainCutoffInput);
-			this.filterChain = new OnePoleHPFilter(filterChain, filterChainCutoffInput);
+			this.filterChain = CreateFilterChain(input, filterChainCutoffInput);
 			this.feedbackInput = new Hold();
 			this.feedbackChain = new OnePoleLPFilter(feedbackInput, 0.18f);
 		}
+
+		protected abstract Source CreateFilterChain(Source input, Source cutoff);
 
 		public override void Initialize(IContext context)
 		{
@@ -64,18 +115,6 @@ namespace Flaky
 				resonanceInput = 1;
 
 			return resonanceInput / ((float)Math.Sqrt(Math.Abs(cutoff)) + 0.15f - cutoff * 0.25f);
-		}
-
-		private class Hold : Source
-		{
-			public Sample Sample { get; set; }
-
-			public override void Initialize(IContext context) { }
-
-			public override Sample Play(IContext context)
-			{
-				return Sample;
-			}
 		}
 	}
 
