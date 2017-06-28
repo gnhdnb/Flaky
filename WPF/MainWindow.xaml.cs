@@ -1,10 +1,6 @@
-﻿using ActiproSoftware.Text;
-using ActiproSoftware.Text.Implementation;
-using ActiproSoftware.Text.Languages.DotNet.Implementation;
-using ActiproSoftware.Windows.Controls.SyntaxEditor;
-using ActiproSoftware.Windows.Controls.SyntaxEditor.Highlighting;
-using ActiproSoftware.Windows.Themes;
-using Flaky;
+﻿using Flaky;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Xml;
 
 namespace WPF
 {
@@ -33,29 +30,8 @@ namespace WPF
 		{
 			InitializeComponent();
 
-			ThemeManager.CurrentTheme = "MetroDark";
+			LoadTheme();
 
-			Editor.Document.Language = LoadLanguage();
-			Editor.Document.Language.RegisterLineCommenter(new LineBasedLineCommenter() { StartDelimiter = "//" });
-			Editor.IsLineNumberMarginVisible = true;
-			Editor.IsOutliningMarginVisible = true;
-			Editor.AreIndentationGuidesVisible = true;
-			Editor.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
-			Editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
-
-			var classificationTypes = AmbientHighlightingStyleRegistry.Instance.ClassificationTypes.ToArray();
-			foreach (var classificationType in classificationTypes)
-				AmbientHighlightingStyleRegistry.Instance.Unregister(classificationType);
-
-			new DisplayItemClassificationTypeProvider().RegisterAll();
-			new DotNetClassificationTypeProvider().RegisterAll();
-
-			using (var stream = LoadFile(@"dark.vssettings"))
-			{
-				AmbientHighlightingStyleRegistry.Instance.ImportHighlightingStyles(stream);
-			}
-
-			Editor.FontSize = 14;
 			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, OnSaveExecuted, OnSaveCanExecute));
 
 			SetProcessPriority();
@@ -64,9 +40,22 @@ namespace WPF
 			var code = Load();
 			textBlock.Text = string.Join("\n", Host.Recompile(0, code));
 			Host.Play();
-			Editor.Text = code;
+			textEditor.Text = code;
 
 			this.Closing += MainWindow_Closing;
+		}
+
+		private void LoadTheme()
+		{
+			using (Stream s = LoadFile("CSharp-Dark-Mode.xshd"))
+			{
+				using (XmlTextReader reader = new XmlTextReader(s))
+				{
+					textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+					textEditor.TextArea.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFC8C8C8"));
+					textEditor.ShowLineNumbers = true;
+				}
+			}
 		}
 
 		private void SetProcessPriority()
@@ -82,26 +71,20 @@ namespace WPF
 		private static void OnSaveCanExecute(object sender, CanExecuteRoutedEventArgs e)
 		{
 			MainWindow control = (MainWindow)sender;
-			e.CanExecute = control.Editor.Document.IsModified;
+			e.CanExecute = control.textEditor.IsModified;
 		}
 
 		private static void OnSaveExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
 			MainWindow control = (MainWindow)sender;
 
-			control.textBlock.Text = string.Join("\n", control.Host.Recompile(0, control.Editor.Text));
-			Save(control.Editor.Text);
+			control.textBlock.Text = string.Join("\n", control.Host.Recompile(0, control.textEditor.Text));
+			Save(control.textEditor.Text);
 
-			control.Editor.Document.IsModified = false;
+			control.textEditor.IsModified = false;
 		}
 
 		private readonly Host Host;
-
-		private static ISyntaxLanguage LoadLanguage()
-		{
-			SyntaxLanguageDefinitionSerializer serializer = new SyntaxLanguageDefinitionSerializer();
-			return serializer.LoadFromStream(LoadFile("CSharp.langdef"));
-		}
 
 		private static Stream LoadFile(string fileName)
 		{

@@ -8,7 +8,19 @@
         mc:Ignorable="d"
         Title="F L A K Y" Height="700" Width="700" WindowState="Maximized" Background="DimGray" WindowStyle="None">
 	<Grid>
-		<syntaxeditor:SyntaxEditor HorizontalAlignment="STRETCH" Margin="10,10,10,143" VerticalAlignment="STRETCH" Height="AUTO" Width="AUTO" Text="tratatatata" Name="Editor"/>
+		<avalonEdit:TextEditor
+			xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+			Name="textEditor"
+			SyntaxHighlighting="C#"
+			FontFamily="Consolas"
+			FontSize="14pt"
+			HorizontalAlignment="STRETCH" 
+			Margin="10,10,10,143" 
+			VerticalAlignment="STRETCH" 
+			Height="AUTO" 
+			Width="AUTO"
+			Background="#FF1E1E1E"
+		/>
 		<TextBlock x:Name="textBlock" HorizontalAlignment="STRETCH" VerticalAlignment="Bottom" Margin="10,0,10,10" TextWrapping="Wrap" Text="" Background="#FF1E1E1E" Foreground="#FFA60000" Height="128" Width="AUTO"/>
 	</Grid>
 </Window>
