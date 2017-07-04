@@ -112,5 +112,10 @@ namespace Flaky
 
 			Initialize(context, time, sound, transform, dryWet);
 		}
-	}
+
+        public override void Dispose()
+        {
+            Dispose(time, sound, transform, dryWet);
+        }
+    }
 }

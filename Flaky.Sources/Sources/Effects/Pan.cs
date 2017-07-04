@@ -44,10 +44,15 @@ namespace Flaky
 
 		public override void Initialize(IContext context)
 		{
-			Initialize(context, sound, position);
+			Initialize(context, sound, position, width);
 		}
 
-		internal static Sample Perform(Sample sound, float position, float width)
+        public override void Dispose()
+        {
+            Dispose(sound, position, width);
+        }
+
+        internal static Sample Perform(Sample sound, float position, float width)
 		{
 			var average = (sound.Left + sound.Right) / 2;
 

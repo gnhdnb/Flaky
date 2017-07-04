@@ -16,5 +16,7 @@ namespace Flaky
 		{
 			return Sample;
 		}
-	}
+
+        public override void Dispose() { }
+    }
 }

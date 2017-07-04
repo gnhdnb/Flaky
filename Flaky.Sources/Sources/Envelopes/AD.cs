@@ -62,5 +62,10 @@ namespace Flaky
 		{
 			Initialize(context, source, attack, decay);
 		}
-	}
+
+        public override void Dispose()
+        {
+            Dispose(source, attack, decay);
+        }
+    }
 }

@@ -145,7 +145,12 @@ namespace Flaky
 				Initialize(context, length);
 		}
 
-		private static Note[] ParseSequence(string sequence)
+        public override void Dispose()
+        {
+            Dispose(length);
+        }
+
+        private static Note[] ParseSequence(string sequence)
 		{
 			List<Note> result = new List<Note>();
 

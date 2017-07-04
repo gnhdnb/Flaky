@@ -23,10 +23,15 @@ namespace Flaky
 
 		public override void Initialize(IContext context)
 		{
-			Initialize(context, source, overdrive);
+			Initialize(context, source, overdrive, lpnoise, hpnoise);
 		}
 
-		public override Sample Play(IContext context)
+        public override void Dispose()
+        {
+            Dispose(source, overdrive, lpnoise, hpnoise);
+        }
+
+        public override Sample Play(IContext context)
 		{
 			var sample = source.Play(context).Value;
 			var overdriveValue =

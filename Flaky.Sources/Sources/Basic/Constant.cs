@@ -24,5 +24,10 @@ namespace Flaky
 		{
 			// do nothing
 		}
-	}
+
+        public override void Dispose()
+        {
+            // do nothing
+        }
+    }
 }

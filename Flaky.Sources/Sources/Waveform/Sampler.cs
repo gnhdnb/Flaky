@@ -57,7 +57,12 @@ namespace Flaky
 
 			reader = factory.Create(sample);
 
-			Initialize(context, noteSource);
+			Initialize(context, noteSource, pitchSource);
 		}
-	}
+
+        public override void Dispose()
+        {
+            Dispose(noteSource, pitchSource);
+        }
+    }
 }

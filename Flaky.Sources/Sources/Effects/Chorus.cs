@@ -37,6 +37,7 @@ namespace Flaky
 				lfo3 = new LFO(110);
 				lfo4 = new LFO(170);
 			}
+
 		}
 
 		public override Sample Play(IContext context)
@@ -105,7 +106,12 @@ namespace Flaky
 			Initialize(context, source);
 		}
 
-		internal class LFO
+        public override void Dispose()
+        {
+            Dispose(source);
+        }
+
+        internal class LFO
 		{
 			private double value = 0;
 			private int amount;

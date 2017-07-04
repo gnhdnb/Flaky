@@ -56,7 +56,9 @@ namespace Flaky
 			}
 		}
 
-		public override Sample Play(IContext context)
+        public override void Dispose() { }
+
+        public override Sample Play(IContext context)
 		{
 			if (time == 0)
 				state.CurrentValue = FinalValue;

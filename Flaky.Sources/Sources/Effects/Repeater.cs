@@ -84,5 +84,10 @@ namespace Flaky
 
 			Initialize(context, source, feed);
 		}
-	}
+
+        public override void Dispose()
+        {
+            Dispose(source, feed);
+        }
+    }
 }

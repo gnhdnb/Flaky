@@ -47,5 +47,10 @@ namespace Flaky
 
 			Initialize(context, noteSource);
 		}
-	}
+
+        public override void Dispose()
+        {
+            Dispose(noteSource);
+        }
+    }
 }

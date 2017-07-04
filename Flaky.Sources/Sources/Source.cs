@@ -48,7 +48,17 @@ namespace Flaky
 			}
 		}
 
-		public static implicit operator Source(float d)
+        public abstract void Dispose();
+
+        protected void Dispose(params Source[] sources)
+        {
+            foreach (var source in sources)
+            {
+                source.Dispose();
+            }
+        }
+
+        public static implicit operator Source(float d)
 		{
 			return new Constant(d);
 		}

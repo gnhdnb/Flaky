@@ -12,7 +12,11 @@ namespace Flaky
 		{
 		}
 
-		public override Sample Play(IContext context)
+        public override void Dispose()
+        { 
+        }
+
+        public override Sample Play(IContext context)
 		{
 			if (context.MetronomeTick) {
 				if (context.Beat % 4 == 0)

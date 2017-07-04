@@ -10,7 +10,8 @@ namespace Flaky
 	internal class Channel : IDisposable
 	{
 		private ISource source;
-		private readonly ContextController controller;
+        private ISource sourceToDispose;
+        private readonly ContextController controller;
 		private readonly Thread worker;
 		private readonly Queue<float[]> buffers = new Queue<float[]>();
 		private readonly Semaphore buffersCounter = new Semaphore(0, 3);
@@ -37,10 +38,17 @@ namespace Flaky
 
 		public void ChangePlayer(IPlayer player)
 		{
-			var source = player.CreateSource();
+            if (sourceToDispose != null)
+            {
+                sourceToDispose.Dispose();
+                sourceToDispose = null;
+            }
+
+            var source = player.CreateSource();
 			codeVersion++;
 			source.Initialize(new Context(controller, codeVersion));
-			this.source = source;
+            sourceToDispose = this.source;
+            this.source = source;
 		}
 
 		internal float[] ReadNextBatch()

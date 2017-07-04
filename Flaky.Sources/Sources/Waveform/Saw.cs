@@ -70,5 +70,10 @@ namespace Flaky
 			state = GetOrCreate<State>(context);
 			Initialize(context, Frequency, Amplitude);
 		}
-	}
+
+        public override void Dispose()
+        {
+            Dispose(Frequency, Amplitude);
+        }
+    }
 }

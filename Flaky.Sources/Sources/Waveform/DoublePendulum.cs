@@ -106,5 +106,10 @@ namespace Flaky
 		{
 			Initialize(context, l1Source, l2Source, m1Source, m2Source, gSource);
 		}
-	}
+
+        public override void Dispose()
+        {
+            Dispose(l1Source, l2Source, m1Source, m2Source, gSource);
+        }
+    }
 }
