@@ -1,2 +1,2 @@
 # Flaky
-C# sound synthesis tool.
+C# live coding tool.
