@@ -100,9 +100,15 @@ namespace Flaky
 		{
 			if (disposed)
 				return;
-
 			disposed = true;
+
 			worker.Join();
-		}
+
+            if (sourceToDispose != null)
+                sourceToDispose.Dispose();
+
+            if (source != null)
+                source.Dispose();
+        }
 	}
 }

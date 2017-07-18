@@ -84,6 +84,10 @@
     <Compile Include="Sources\Basic\Sum.cs" />
     <Compile Include="Sources\Effects\Chorus.cs" />
     <Compile Include="Sources\Effects\Delay.cs" />
+    <Compile Include="Sources\Effects\Fourier\Fourier.cs" />
+    <Compile Include="Sources\Effects\Fourier\MDCT.cs" />
+    <Compile Include="Sources\Effects\Fourier\OffsetArray.cs" />
+    <Compile Include="Sources\Effects\Fourier\WindowFunction.cs" />
     <Compile Include="Sources\Effects\Filter.cs" />
     <Compile Include="Sources\Effects\MatrixVerb.cs" />
     <Compile Include="Sources\Effects\Overdrive.cs" />

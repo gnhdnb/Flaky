@@ -54,7 +54,8 @@ namespace Flaky
         {
             foreach (var source in sources)
             {
-                source.Dispose();
+                if(source != null)
+                    source.Dispose();
             }
         }
 
