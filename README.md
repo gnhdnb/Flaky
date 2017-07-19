@@ -1,2 +1,2 @@
 # Flaky
-C# live coding tool.
+C# live coding music tool.
