@@ -21,7 +21,7 @@ namespace Flaky
 					new Body
 					{
 						Mass = 1,
-						Position = new Vector(0, 1),
+						Position = new Vector(0, 0.3),
 						Velocity = new Vector(0, 0)
 					}
 				);
@@ -30,7 +30,7 @@ namespace Flaky
 					new Body
 					{
 						Mass = 0.5,
-						Position = new Vector(-0.6, -0.3),
+						Position = new Vector(-0.1, -0.1),
 						Velocity = new Vector(0, 0)
 					}
 				);
@@ -38,8 +38,8 @@ namespace Flaky
 			bodies.Add(
 					new Body
 					{
-						Mass = 0.3,
-						Position = new Vector(0.6, -0.3),
+						Mass = 0.7,
+						Position = new Vector(0.1, -0.1),
 						Velocity = new Vector(0, 0)
 					}
 				);
@@ -47,7 +47,7 @@ namespace Flaky
 
 		public override Sample Play(IContext context)
 		{
-			for(int i = 0; i < 100; i++)
+			for(int i = 0; i < 10; i++)
 			{
 				Step();
 			}
@@ -55,24 +55,44 @@ namespace Flaky
 			return new Sample
 			{
 				Left = (float)bodies[0].Position.X,
-				Right = (float)bodies[1].Position.X
+				Right = (float)bodies[0].Position.Y
 			};
 		}
 
 		private void Step()
 		{
-			const double k = 0.000000001;
+			const double k = 0.00001;
 
 			foreach(var body1 in bodies)
 				foreach (var body2 in bodies)
 					if(body1 != body2)
 					{
-						var force = k * body1.Mass * body2.Mass / (body2.Position - body1.Position).LengthSquare;
-						body2.Velocity += force * (body2.Position - body1.Position).Normalized;
+						var force1 = 10 * k * body1.Mass * body2.Mass / (body2.Position - body1.Position).LengthSquare;
+
+						if (double.IsNaN(force1))
+							force1 = 0;
+
+						body2.Velocity += force1 * (body2.Position - body1.Position).Normalized;
+						
 					}
 
 			foreach (var body in bodies)
+			{
+				var distanceFromCenter = (body.Position - new Vector(0, 0)).LengthSquare;
+
+				/*var force2 = distanceFromCenter > 1 ? 
+					k * distanceFromCenter
+					: 0;*/
+
+				var force2 = k * distanceFromCenter;
+
+				if (double.IsNaN(force2))
+					force2 = 0;
+
+				body.Velocity += force2 * (new Vector(0, 0) - body.Position).Normalized;
+
 				body.Position += body.Velocity;
+			}
 		}
 
 		private class Body

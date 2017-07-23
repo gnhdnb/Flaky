@@ -11,6 +11,7 @@ namespace Flaky
 		private NoteSource source;
 		private Source attack;
 		private Source decay;
+		private PlayingNote currentNote;
 
 		public AD(NoteSource source, Source decay)
 		{
@@ -30,6 +31,9 @@ namespace Flaky
 		{
 			var note = source.GetNote(context);
 
+			if (currentNote.Note == null || !note.IsSilent)
+				currentNote = note;
+
 			var attackValue = attack.Play(context).Value;
 			var decayValue = decay.Play(context).Value;
 
@@ -39,11 +43,11 @@ namespace Flaky
 			if (decayValue < 0)
 				return new Sample { Value = 0 };
 
-			if (note.IsSilent)
+			if (currentNote.IsSilent)
 				return 0;
 
-			var attackLeft = attackValue - note.CurrentTime(context);
-			var decayLeft = attackValue + decayValue - note.CurrentTime(context);
+			var attackLeft = attackValue - currentNote.CurrentTime(context);
+			var decayLeft = attackValue + decayValue - currentNote.CurrentTime(context);
 
 			if (attackLeft > 0)
 			{

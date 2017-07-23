@@ -44,7 +44,8 @@ namespace Flaky
 		{
 			foreach (var source in sources)
 			{
-				source.Initialize(context);
+				if(source != null)
+					source.Initialize(context);
 			}
 		}
 
