@@ -9,6 +9,7 @@ namespace Flaky.Sources
 {
 	public class Recorder : Source
 	{
+		private const int bufferSize = 44100;
 		private readonly Source[] sources;
 		private State state;
 		private Thread writer;
@@ -21,10 +22,17 @@ namespace Flaky.Sources
 
 			public void Init(int channelsCount)
 			{
-				if(Buffers != null)
-				{
-					Buffers.RemoveRange()
-				}
+				if (Buffers == null)
+					Buffers = new List<Sample[]>();
+
+				if (Buffers.Count > channelsCount)
+					Buffers.RemoveRange(Buffers.Count - 1, channelsCount - Buffers.Count);
+
+				if (Buffers.Count < channelsCount)
+					Buffers.AddRange(
+						Enumerable
+							.Range(0, channelsCount - Buffers.Count)
+							.Select(n => new Sample[bufferSize]));
 			}
 		}
 
@@ -46,7 +54,15 @@ namespace Flaky.Sources
 
 		public override Sample Play(IContext context)
 		{
-			
+			state.Init(sources.Length);
+
+			for(int channel = 0; channel < sources.Length; channel++)
+			{
+				var sample = sources[channel].Play(context);
+
+				state.Buffers[channel][state.Position] = sample;
+				state.Position++;
+			}
 		}
 	}
 }
