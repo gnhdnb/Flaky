@@ -49,18 +49,18 @@ namespace Flaky
 			}
 		}
 
-        public abstract void Dispose();
+		public abstract void Dispose();
 
-        protected void Dispose(params Source[] sources)
-        {
-            foreach (var source in sources)
-            {
-                if(source != null)
-                    source.Dispose();
-            }
-        }
+		protected void Dispose(params Source[] sources)
+		{
+			foreach (var source in sources)
+			{
+				if(source != null)
+					source.Dispose();
+			}
+		}
 
-        public static implicit operator Source(float d)
+		public static implicit operator Source(float d)
 		{
 			return new Constant(d);
 		}

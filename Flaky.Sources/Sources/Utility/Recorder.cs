@@ -5,34 +5,42 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Flaky.Sources
+namespace Flaky
 {
 	public class Recorder : Source
 	{
 		private const int bufferSize = 44100;
 		private readonly Source[] sources;
+		private bool initialized = false;
 		private State state;
 		private Thread writer;
 
-		private class State
+		private class State : IDisposable
 		{
-			public List<Sample[]> Buffers { get; private set; }
+			public List<IWaveWriter> Writers { get; private set; }
 
 			public int Position { get; set; } = 0;
 
-			public void Init(int channelsCount)
+			public void Init(IWaveWriterFactory factory, IContext context, int channelsCount)
 			{
-				if (Buffers == null)
-					Buffers = new List<Sample[]>();
+				if (Writers == null)
+					Writers = new List<IWaveWriter>();
 
-				if (Buffers.Count > channelsCount)
-					Buffers.RemoveRange(Buffers.Count - 1, channelsCount - Buffers.Count);
+				if (Writers.Count > channelsCount)
+				{
+					Writers.RemoveRange(Writers.Count - 1, channelsCount - Writers.Count);
+				}
 
-				if (Buffers.Count < channelsCount)
-					Buffers.AddRange(
+				if (Writers.Count < channelsCount)
+					Writers.AddRange(
 						Enumerable
-							.Range(0, channelsCount - Buffers.Count)
-							.Select(n => new Sample[bufferSize]));
+							.Range(Writers.Count, channelsCount - Writers.Count)
+							.Select(n => factory.Create($"flaky channel {n}.wav", context.SampleRate)));
+			}
+
+			public void Dispose()
+			{
+				Writers?.ForEach(w => w?.Dispose());
 			}
 		}
 
@@ -54,15 +62,25 @@ namespace Flaky.Sources
 
 		public override Sample Play(IContext context)
 		{
-			state.Init(sources.Length);
+			if (!initialized)
+			{
+				var factory = Get<IWaveWriterFactory>(context);
+
+				state.Init(factory, context, sources.Length);
+
+				initialized = true;
+			}
+
+			Sample result = 0;
 
 			for(int channel = 0; channel < sources.Length; channel++)
 			{
 				var sample = sources[channel].Play(context);
-
-				state.Buffers[channel][state.Position] = sample;
-				state.Position++;
+				state.Writers[channel].Write(sample);
+				result += sample;
 			}
+
+			return result;
 		}
 	}
 }

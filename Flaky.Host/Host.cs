@@ -22,6 +22,7 @@ namespace Flaky
 			var configuration = new Configuration();
 
 			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory());
+			configuration.Register<IWaveWriterFactory>(new WaveWriterFactory());
 
 			MixerController = mixerController;
 
