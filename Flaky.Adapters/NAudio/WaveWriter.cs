@@ -11,13 +11,12 @@ namespace Flaky
 {
 	internal class WaveWriter : IWaveWriter
 	{
-		private readonly float[] sample;
 		private readonly WaveFileWriter writer;
 
 		public WaveWriter(string fileName, int sampleRate)
 		{
 			var fullPath = Path.Combine(GetLocation(), $@"{fileName}.wav");
-			var writer = new WaveFileWriter(File.OpenWrite(fullPath), WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 2));
+			writer = new WaveFileWriter(File.OpenWrite(fullPath), WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 2));
 		}
 
 		private static string GetLocation()

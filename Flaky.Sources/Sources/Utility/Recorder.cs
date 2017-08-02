@@ -44,7 +44,7 @@ namespace Flaky
 			}
 		}
 
-		public Recorder(params Source[] sources)
+		public Recorder(string id, params Source[] sources) : base(id)
 		{
 			this.sources = sources;
 		}
