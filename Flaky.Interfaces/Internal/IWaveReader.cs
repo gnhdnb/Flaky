@@ -8,6 +8,7 @@ namespace Flaky
 {
 	internal interface IWaveReader
 	{
-		float? Read(long index);
+		Sample? Read(long index);
+		long Length { get; }
 	}
 }

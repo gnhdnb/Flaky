@@ -47,7 +47,7 @@ namespace Flaky
 
 			state.LatestNoteSample = note.CurrentSample(context);
 
-			return new Sample { Value = result ?? 0 };
+			return result ?? 0;
 		}
 
 		public override void Initialize(IContext context)

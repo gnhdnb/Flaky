@@ -11,6 +11,9 @@ namespace Flaky
 		private readonly NoteSource feed;
 		private readonly Source source;
 		private State state;
+		private readonly float multiplier;
+		private readonly float dry;
+		private readonly float wet;
 
 		private class State
 		{
@@ -31,11 +34,26 @@ namespace Flaky
 			}
 		}
 
-		public Rep(Source source, NoteSource feed, string id) : base(id)
+		public Rep(Source source, NoteSource feed, float multiplier, float dry, float wet, string id) : base(id)
 		{
 			this.source = source;
 			this.feed = feed;
+
+			if (wet < 0)
+				wet = 0;
+
+			if (dry < 0)
+				dry = 0;
+
+			if (multiplier < 0)
+				multiplier = 0;
+
+			this.multiplier = multiplier;
+			this.wet = wet;
+			this.dry = dry;
 		}
+
+		public Rep(Source source, NoteSource feed, string id) : this(source, feed, 1, 1, 0.5f, id) { }
 
 		public override Sample Play(IContext context)
 		{
@@ -56,15 +74,15 @@ namespace Flaky
 
 			var readPosition = GetReadPosition(context, state, note);
 
-			return state.buffer[readPosition] * 0.5f + sound;
+			return state.buffer[readPosition] * wet + sound * dry;
 		}
 
 		private long GetReadPosition(IContext context, State state, PlayingNote note)
 		{
-			var sampleLength = (int)((2 - note.Note.ToPitch()) * context.SampleRate / 256 + 2);
+			var sampleLength = (int)(((2 - note.Note.ToPitch()) * context.SampleRate / 256 + 2) * multiplier);
 
-			if (sampleLength < 16)
-				sampleLength = 16;
+			if (sampleLength < 4)
+				sampleLength = 4;
 
 			var readPosition = state.position - note.CurrentSample(context) + note.CurrentSample(context) % sampleLength;
 

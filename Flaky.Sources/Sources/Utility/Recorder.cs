@@ -13,7 +13,6 @@ namespace Flaky
 		private readonly Source[] sources;
 		private bool initialized = false;
 		private State state;
-		private Thread writer;
 
 		private class State : IDisposable
 		{
@@ -35,7 +34,7 @@ namespace Flaky
 					Writers.AddRange(
 						Enumerable
 							.Range(Writers.Count, channelsCount - Writers.Count)
-							.Select(n => factory.Create($"flaky channel {n}.wav", context.SampleRate)));
+							.Select(n => factory.Create($"flaky channel {n}", context.SampleRate)));
 			}
 
 			public void Dispose()

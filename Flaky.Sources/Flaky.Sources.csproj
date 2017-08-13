@@ -105,6 +105,7 @@
     <Compile Include="Sources\Waveform\DoublePendulum.cs" />
     <Compile Include="Sources\Waveform\DrumRack.cs" />
     <Compile Include="Sources\Waveform\Metronome.cs" />
+    <Compile Include="Sources\Waveform\Looper.cs" />
     <Compile Include="Sources\Waveform\Saw.cs" />
     <Compile Include="Sources\Waveform\Osc.cs" />
     <Compile Include="Sources\Waveform\Noise.cs" />
