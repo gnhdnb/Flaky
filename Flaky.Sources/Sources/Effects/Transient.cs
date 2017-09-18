@@ -51,7 +51,7 @@ namespace Flaky
 				bool reset = false;
 
 				if (ampBuffer[ampPosition] >= 0
-					&& lastAmp > ampBuffer[ampPosition] * 2)
+					&& lastAmp > ampBuffer[ampPosition] * 1.3)
 					reset = true;
 
 				ampBuffer[ampPosition] = lastAmp;
