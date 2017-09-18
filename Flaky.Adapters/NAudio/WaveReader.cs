@@ -11,31 +11,51 @@ namespace Flaky
 {
 	internal class WaveReader : IWaveReader
 	{
-		private readonly float[] sample;
+		private readonly Sample[] sample;
 
 		public WaveReader(string fileName)
 		{
 			var fullPath = Path.Combine(GetLocation(), $@"samples\{fileName}.wav");
 			var reader = new WaveFileReader(fullPath);
 
-			List<float> sample = new List<float>();
+			List<Sample> sample = new List<Sample>();
 			float[] frame;
 			do
-			{
+			{ 
 				frame = reader.ReadNextSampleFrame();
-				if(frame != null)
-					sample.Add(frame[0]);
+				if (frame != null)
+				{
+					if(frame.Length >1)
+						sample.Add(new Sample {
+							Left = frame[0],
+							Right = frame[1]
+						});
+					else
+						sample.Add(new Sample
+						{
+							Left = frame[0],
+							Right = frame[0]
+						});
+				}
 			} while (frame != null);
 
 			this.sample = sample.ToArray();
 		}
 
-		public float? Read(long index)
+		public Sample? Read(long index)
 		{
 			if (index <= sample.LongLength)
 				return sample[index];
 			else
 				return null;
+		}
+
+		public long Length
+		{
+			get
+			{
+				return sample.LongLength;
+			}
 		}
 
 		private static string GetLocation()

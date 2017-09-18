@@ -32,10 +32,12 @@ namespace Flaky
 				capacity = sampleRate * 10;
 				buffer = new Sample[capacity];
 
-				lfo1 = new LFO(220);
-				lfo2 = new LFO(330);
-				lfo3 = new LFO(110);
-				lfo4 = new LFO(170);
+				var random = new Random();
+
+				lfo1 = new LFO(random.Next(330));
+				lfo2 = new LFO(random.Next(330));
+				lfo3 = new LFO(random.Next(330));
+				lfo4 = new LFO(random.Next(330));
 			}
 
 		}
@@ -111,11 +113,11 @@ namespace Flaky
             Dispose(source);
         }
 
-        internal class LFO
+		internal class LFO
 		{
 			private double value = 0;
 			private int amount;
-			private double delta = 0.003f;
+			private double delta = 0.009f;
 
 			public double Value
 			{

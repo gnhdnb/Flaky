@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IWaveReader
+	interface IWaveWriter : IDisposable
 	{
-		Sample? Read(long index);
-		long Length { get; }
+		void Write(Sample sample);
 	}
 }

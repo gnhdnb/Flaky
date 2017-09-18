@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class ContextController
+	internal class ContextController : IDisposable
 	{
 		private readonly Configuration configuration;
 		private readonly Dictionary<StateKey, object> states = new Dictionary<StateKey, object>();
@@ -54,6 +54,17 @@ namespace Flaky
 
 			MetronomeTick = (sample * BPM) % (SampleRate * 60) == 0;
 			Beat = (int)((sample * BPM) / (SampleRate * 60));
+		}
+
+		public void Dispose()
+		{
+			foreach(var state in states)
+			{
+				if(state.Value is IDisposable && state.Value != null)
+				{
+					(state.Value as IDisposable).Dispose();
+				}
+			}
 		}
 
 		private struct StateKey

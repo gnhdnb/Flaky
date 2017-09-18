@@ -36,7 +36,7 @@ namespace Flaky
 
 			var result = readers[index].Read(sample);
 
-			return new Sample { Value = result ?? 0 };
+			return result ?? 0;
 		}
 
 		public override void Initialize(IContext context)
