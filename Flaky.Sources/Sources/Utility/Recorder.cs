@@ -27,7 +27,12 @@ namespace Flaky
 
 				if (Writers.Count > channelsCount)
 				{
-					Writers.RemoveRange(channelsCount - 1, Writers.Count - channelsCount);
+					for(int i = channelsCount; i < Writers.Count; i++)
+					{
+						Writers[i].Dispose();
+					}
+
+					Writers.RemoveRange(channelsCount, Writers.Count - channelsCount);
 				}
 
 				if (Writers.Count < channelsCount)
