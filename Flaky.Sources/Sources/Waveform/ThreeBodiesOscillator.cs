@@ -9,47 +9,44 @@ namespace Flaky
 	public class ThreeBodiesOscillator : Source
 	{
 		private List<Body> bodies = new List<Body>();
+		private Source timeFactor;
+		private bool callForReset = false;
+
+		public ThreeBodiesOscillator()
+		{
+			timeFactor = 1.0f;
+		}
+
+		public ThreeBodiesOscillator(Source timeFactor)
+		{
+			this.timeFactor = timeFactor;
+		}
 
 		public override void Dispose()
 		{
-			
+			Dispose(timeFactor);
 		}
 
 		public override void Initialize(IContext context)
 		{
-			bodies.Add(
-					new Body
-					{
-						Mass = 1,
-						Position = new Vector(0, 0.3),
-						Velocity = new Vector(0, 0)
-					}
-				);
+			Reset();
 
-			bodies.Add(
-					new Body
-					{
-						Mass = 0.5,
-						Position = new Vector(-0.1, -0.1),
-						Velocity = new Vector(0, 0)
-					}
-				);
-
-			bodies.Add(
-					new Body
-					{
-						Mass = 0.7,
-						Position = new Vector(0.1, -0.1),
-						Velocity = new Vector(0, 0)
-					}
-				);
+			Initialize(context, timeFactor);
 		}
 
 		public override Sample Play(IContext context)
 		{
-			for(int i = 0; i < 10; i++)
+			float t = timeFactor.Play(context).Value;
+
+			for (int i = 0; i < 10; i++)
 			{
-				Step();
+				Step(t);
+
+				if (callForReset)
+				{
+					Reset();
+					callForReset = false;
+				}
 			}
 
 			return new Sample
@@ -59,9 +56,9 @@ namespace Flaky
 			};
 		}
 
-		private void Step()
+		private void Step(float timeFactor)
 		{
-			const double k = 0.00001;
+			double k = 0.01 * timeFactor;
 
 			foreach(var body1 in bodies)
 				foreach (var body2 in bodies)
@@ -91,8 +88,46 @@ namespace Flaky
 
 				body.Velocity += force2 * (new Vector(0, 0) - body.Position).Normalized;
 
-				body.Position += body.Velocity;
+				body.Position += k * body.Velocity;
+
+				if (body.IsInInvalidState)
+				{
+					callForReset = true;
+					return;
+				}
 			}
+		}
+
+		private void Reset()
+		{
+			bodies.Clear();
+
+			bodies.Add(
+					new Body
+					{
+						Mass = 1,
+						Position = new Vector(0, 0.3),
+						Velocity = new Vector(0, 0)
+					}
+				);
+
+			bodies.Add(
+					new Body
+					{
+						Mass = 0.5,
+						Position = new Vector(-0.1, -0.1),
+						Velocity = new Vector(0, 0)
+					}
+				);
+
+			bodies.Add(
+					new Body
+					{
+						Mass = 0.7,
+						Position = new Vector(0.1, -0.1),
+						Velocity = new Vector(0, 0)
+					}
+				);
 		}
 
 		private class Body
@@ -100,6 +135,11 @@ namespace Flaky
 			public double Mass;
 			public Vector Position;
 			public Vector Velocity;
+
+			public bool IsInInvalidState
+			{
+				get{ return Position.IsNan || Position.LengthSquare > 100; }
+			}
 		}
 
 		private struct Vector
@@ -134,6 +174,18 @@ namespace Flaky
 				get
 				{
 					return new Vector(X / Length, Y / Length);
+				}
+			}
+
+			public bool IsNan
+			{
+				get
+				{
+					return 
+						double.IsNaN(X) || 
+						double.IsNaN(Y) ||
+						double.IsInfinity(X) ||
+						double.IsInfinity(Y);
 				}
 			}
 
