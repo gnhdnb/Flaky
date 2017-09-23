@@ -100,7 +100,7 @@ namespace Flaky
 			if (!state.playing)
 				return state.currentNote;
 
-			if (state.currentNote.CurrentTime(context) > state.latestLength)
+			if (NextNoteRequired(context))
 			{
 				state.currentNote = NextNote(context, state);
 				state.latestLength = GetLength(context);
@@ -108,6 +108,21 @@ namespace Flaky
 			}
 
 			return state.currentNote;
+		}
+
+		private bool NextNoteRequired(IContext context)
+		{
+			if (length != null)
+			{
+				return state.currentNote.CurrentTime(context) > state.latestLength;
+			}
+			else
+			{
+				return
+					state.currentNote.CurrentSample(context) > 0 &&
+					context.Sample > 0 && 
+					context.Sample % ((16 * 60 * context.SampleRate) / (context.BPM * size)) == 0;
+			}
 		}
 
 		private float GetLength(IContext context)

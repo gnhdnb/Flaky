@@ -44,7 +44,7 @@ namespace Flaky
 
 		public Sample? Read(long index)
 		{
-			if (index <= sample.LongLength)
+			if (index < sample.LongLength)
 				return sample[index];
 			else
 				return null;
