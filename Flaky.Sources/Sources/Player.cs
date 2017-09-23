@@ -8,6 +8,20 @@ namespace Flaky
 {
 	public abstract class PlayerBase : IPlayer
 	{
+		protected Recorder Recorder(string id, params Source[] sources)
+			{ return new Recorder(id, sources); }
+		protected Looper Looper(string sample, string id)
+			{ return new Looper(sample, id); }
+		protected ThreeBodiesOscillator TBO()
+			{ return new ThreeBodiesOscillator(); }
+		protected ThreeBodiesOscillator TBO(Source timeFactor)
+			{ return new ThreeBodiesOscillator(timeFactor); }
+		protected Fourier Fourier(Source input, float effect)
+			{ return new Fourier(input, effect); }
+		protected Transient Trans(Source source, Source pitch, string id)
+			{ return new Transient(source, pitch, id); }
+		protected Transient Trans(Source source, Source pitch, Source sensitivity, string id)
+			{ return new Transient(source, pitch, sensitivity, id); }
 		protected Chr Chr(Source source, string id)
 			{ return new Chr(source, id); }
 		protected Delay Delay(Source sound, Source time)

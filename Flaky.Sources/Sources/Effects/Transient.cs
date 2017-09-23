@@ -10,7 +10,9 @@ namespace Flaky
 	{
 		private Source source;
 		private Source pitch;
+		private Source sensitivity;
 		private State state;
+		
 
 		private class State
 		{
@@ -37,9 +39,12 @@ namespace Flaky
 				writerPosition = 0;
 			}
 
-			public void WriteSample(Sample sample)
+			public void WriteSample(Sample sample, float sensitivity)
 			{
 				writerPosition++;
+
+				if (sensitivity > 1)
+					sensitivity = 1;
 
 				var currentAmp = Math.Abs(sample.Value);
 
@@ -51,7 +56,7 @@ namespace Flaky
 				bool reset = false;
 
 				if (ampBuffer[ampPosition] >= 0
-					&& lastAmp > ampBuffer[ampPosition] * 1.3)
+					&& lastAmp > ampBuffer[ampPosition] * (2 - sensitivity))
 					reset = true;
 
 				ampBuffer[ampPosition] = lastAmp;
@@ -97,10 +102,13 @@ namespace Flaky
 			}
 		}
 
-		public Transient(Source source, Source pitch, string id) : base(id)
+		public Transient(Source source, Source pitch, string id) : this(source, pitch, 0.7, id) { }
+
+		public Transient(Source source, Source pitch, Source sensitivity, string id) : base(id)
 		{
 			this.source = source;
 			this.pitch = pitch;
+			this.sensitivity = sensitivity;
 		}
 
 		public override void Dispose()
@@ -116,10 +124,11 @@ namespace Flaky
 
 		public override Sample Play(IContext context)
 		{
+			var sensitivityValue = sensitivity.Play(context);
 			var sourceValue = source.Play(context);
 			var pitchValue = pitch.Play(context);
 
-			state.WriteSample(sourceValue);
+			state.WriteSample(sourceValue, Math.Abs(sensitivityValue.Value));
 
 			return state.ReadSample(pitchValue.Value);
 		}

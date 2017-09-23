@@ -12,7 +12,7 @@ namespace Flaky
 {
 	public class Fourier : Source
 	{
-	 private const int framesCount = 8192;
+		private const int framesCount = 8192;
 		private Thread worker;
 		private Source input;
 		private BlockingCollection<Sample[]> inputQueue = new BlockingCollection<Sample[]>();
