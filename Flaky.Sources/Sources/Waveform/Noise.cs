@@ -12,9 +12,9 @@ namespace Flaky
 
 		public override void Initialize(IContext context) { }
 
-        public override void Dispose() { }
+		public override void Dispose() { }
 
-        public override Sample Play(IContext context)
+		public override Sample Play(IContext context)
 		{
 			return new Sample
 			{

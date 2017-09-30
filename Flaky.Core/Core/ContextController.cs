@@ -25,7 +25,7 @@ namespace Flaky
 		internal int BPM { get; private set; }
 
 		internal int Beat { get; private set; }
-		internal bool MetronomeTick { get; private set; }
+		internal bool MetronomeTick { get; private set; } = true;
 
 		internal long Sample { get { return sample; } }
 

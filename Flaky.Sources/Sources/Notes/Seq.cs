@@ -118,10 +118,7 @@ namespace Flaky
 			}
 			else
 			{
-				return
-					state.currentNote.CurrentSample(context) > 0 &&
-					context.Sample > 0 && 
-					context.Sample % ((16 * 60 * context.SampleRate) / (context.BPM * size)) == 0;
+				return context.Sample % ((16 * 60 * context.SampleRate) / (context.BPM * size)) == 0;
 			}
 		}
 
