@@ -11,6 +11,9 @@ namespace Flaky
 		private readonly string id;
 		private IStateContainer stateContainer;
 
+		private Sample latestSample;
+		private long latestSampleIndex = -1;
+
 		protected Source() { }
 
 		protected Source(string id)
@@ -20,7 +23,15 @@ namespace Flaky
 
 		public Sample Play(IContext context)
 		{
-			return NextSample(context);
+			if (context.Sample == latestSampleIndex)
+				return latestSample;
+
+			var result = NextSample(context);
+
+			latestSample = result;
+			latestSampleIndex = context.Sample;
+
+			return result;
 		}
 
 		protected abstract Sample NextSample(IContext context);
