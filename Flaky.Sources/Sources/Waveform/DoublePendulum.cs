@@ -78,7 +78,7 @@ namespace Flaky
 			theta2 += theta2d * dt;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var m1 = m1Source.Play(context).Value;
 			var m2 = m2Source.Play(context).Value;

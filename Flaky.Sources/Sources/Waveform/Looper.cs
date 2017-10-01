@@ -22,7 +22,7 @@ namespace Flaky
 			this.sample = sample;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var delta = 1;
 

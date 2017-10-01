@@ -93,7 +93,7 @@ namespace Flaky
             Dispose(cutoff, source, filterChain, resonance);
         }
 
-        public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var cutoffValue = cutoff.Play(context).Value;
 			filterChainCutoffInput.Sample = cutoffValue;
@@ -167,7 +167,7 @@ namespace Flaky
             Dispose(source, cutoff);
         }
 
-        public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var sample = source.Play(context);
 			var cutoffValue = cutoff.Play(context).Value;

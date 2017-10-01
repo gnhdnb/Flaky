@@ -46,7 +46,7 @@ namespace Flaky
 			outputQueue.Add(new Sample[framesCount]);
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var chunkSize = framesCount / 2;
 

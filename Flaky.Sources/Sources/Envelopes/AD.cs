@@ -27,7 +27,7 @@ namespace Flaky
 			this.decay = decay;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var note = source.GetNote(context);
 

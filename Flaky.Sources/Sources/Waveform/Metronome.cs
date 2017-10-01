@@ -16,7 +16,7 @@ namespace Flaky
         { 
         }
 
-        public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			if (context.MetronomeTick) {
 				if (context.Beat % 4 == 0)

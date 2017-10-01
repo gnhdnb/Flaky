@@ -14,7 +14,7 @@ namespace Flaky
 
 		public override void Dispose() { }
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			return new Sample
 			{

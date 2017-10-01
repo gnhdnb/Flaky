@@ -36,7 +36,7 @@ namespace Flaky
 			internal double phase;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			int sampleRate = context.SampleRate;
 
@@ -65,9 +65,9 @@ namespace Flaky
 			Initialize(context, Frequency, Amplitude);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(Frequency, Amplitude);
-        }
-    }
+		public override void Dispose()
+		{
+			Dispose(Frequency, Amplitude);
+		}
+	}
 }

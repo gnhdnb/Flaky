@@ -34,7 +34,7 @@ namespace Flaky
 			Initialize(context, timeFactor);
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			float t = timeFactor.Play(context).Value;
 

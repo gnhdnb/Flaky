@@ -38,7 +38,7 @@ namespace Flaky
             Dispose(source, viscosity);
         }
 
-        public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var viscosityValue = viscosity.Play(context);
 

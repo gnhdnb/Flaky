@@ -14,7 +14,7 @@ namespace Flaky
 
 		public abstract PlayingNote GetNote(IContext context);
 
-		public sealed override Sample Play(IContext context)
+		protected sealed override Sample NextSample(IContext context)
 		{
 			return GetNote(context);
 		}

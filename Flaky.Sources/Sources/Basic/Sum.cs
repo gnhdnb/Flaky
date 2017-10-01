@@ -17,7 +17,7 @@ namespace Flaky
 			this.b = b;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var aValue = a.Play(context);
 			var bValue = b.Play(context);

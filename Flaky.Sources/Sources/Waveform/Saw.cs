@@ -36,7 +36,7 @@ namespace Flaky
 			internal float position;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			int sampleRate = context.SampleRate;
 

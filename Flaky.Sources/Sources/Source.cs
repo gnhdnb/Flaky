@@ -18,7 +18,12 @@ namespace Flaky
 			this.id = id;
 		}
 
-		public abstract Sample Play(IContext context);
+		public Sample Play(IContext context)
+		{
+			return NextSample(context);
+		}
+
+		protected abstract Sample NextSample(IContext context);
 
 		public abstract void Initialize(IContext context);
 

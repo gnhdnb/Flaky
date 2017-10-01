@@ -21,7 +21,7 @@ namespace Flaky
 			this.width = width;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var positionValue = position.Play(context).Value;
 			var widthValue = width.Play(context).Value;

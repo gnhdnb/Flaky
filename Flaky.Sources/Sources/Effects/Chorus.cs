@@ -42,7 +42,7 @@ namespace Flaky
 
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var sound = source.Play(context);
 

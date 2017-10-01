@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Flaky
 {
 	public interface ISource : IDisposable
-    {
+	{
 		Sample Play(IContext context);
 		void Initialize(IContext context);
 	}

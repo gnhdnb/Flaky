@@ -52,7 +52,7 @@ namespace Flaky
 				this.transform = feedback * 0.5;
 		}
 
-		public override Sample Play(IContext context)
+		protected override Sample NextSample(IContext context)
 		{
 			var soundValue = sound.Play(context);
 
