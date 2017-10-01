@@ -46,6 +46,9 @@ namespace Flaky
 			if (frequency < 0)
 				frequency = 0;
 
+			if (frequency == 0)
+				return 0;
+
 			if(frequency > sampleRate / 2)
 				frequency = sampleRate / 2;
 

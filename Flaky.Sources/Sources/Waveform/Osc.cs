@@ -49,6 +49,9 @@ namespace Flaky
 			if(frequency > sampleRate / 2)
 				frequency = sampleRate / 2;
 
+			if (frequency == 0)
+				return 0;
+
 			var delta = context.Sample - state.sample;
 			state.sample = context.Sample;
 			state.phase += (frequency / sampleRate) * delta;
