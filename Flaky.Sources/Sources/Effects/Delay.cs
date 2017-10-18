@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Delay : Source
+	public class Delay : Source, IPipingSource
 	{
 		private readonly Source time;
-		private readonly Source sound;
+		private Source sound;
 		private readonly Hold feedback;
 		private readonly Source transform;
 		private readonly Source dryWet;
@@ -34,16 +34,13 @@ namespace Flaky
 			}
 		}
 
-		public Delay(Source sound, Source time) : this(sound, time, null) { }
+		internal Delay(Source time, string id) : this(time, null, id) { }
+		internal Delay(Source time, Func<Source, Source> transform, string id) : this(time, transform, 0.5, id) { }
 
-		public Delay(Source sound, Source time, string id) : this(sound, time, null, id) { }
-		public Delay(Source sound, Source time, Func<Source, Source> transform, string id) : this(sound, time, null, 0.5, id) { }
-
-		public Delay(Source sound, Source time, Func<Source, Source> transform, Source dryWet, string id) : base(id)
+		internal Delay(Source time, Func<Source, Source> transform, Source dryWet, string id) : base(id)
 		{
 			this.feedback = new Hold();
 			this.time = time;
-			this.sound = sound;
 			this.dryWet = dryWet;
 
 			if (transform != null)
@@ -113,9 +110,14 @@ namespace Flaky
 			Initialize(context, time, sound, transform, dryWet);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(time, sound, transform, dryWet);
-        }
-    }
+		public override void Dispose()
+		{
+			Dispose(time, sound, transform, dryWet);
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.sound = mainSource;
+		}
+	}
 }

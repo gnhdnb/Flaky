@@ -8,7 +8,7 @@ namespace Flaky
 {
 	public class LPFilter : MultiPoleFilter
 	{
-		public LPFilter(Source source, Source cutoff, Source resonance) : base(source, cutoff, resonance)
+		internal LPFilter(Source cutoff, Source resonance) : base(cutoff, resonance)
 		{
 		}
 
@@ -25,7 +25,7 @@ namespace Flaky
 
 	public class BPFilter : MultiPoleFilter
 	{
-		public BPFilter(Source source, Source cutoff, Source resonance) : base(source, cutoff, resonance)
+		internal BPFilter(Source cutoff, Source resonance) : base(cutoff, resonance)
 		{
 		}
 
@@ -42,7 +42,7 @@ namespace Flaky
 
 	public class HPFilter : MultiPoleFilter
 	{
-		public HPFilter(Source source, Source cutoff, Source resonance) : base(source, cutoff, resonance)
+		internal HPFilter(Source cutoff, Source resonance) : base(cutoff, resonance)
 		{
 		}
 
@@ -58,7 +58,7 @@ namespace Flaky
 	}
 
 
-	public abstract class MultiPoleFilter : Source
+	public abstract class MultiPoleFilter : Source, IPipingSource
 	{
 		private Hold input;
 		private Hold filterChainCutoffInput;
@@ -69,10 +69,9 @@ namespace Flaky
 		private Source cutoff;
 		private Source feedbackChain;
 
-		public MultiPoleFilter(Source source, Source cutoff, Source resonance)
+		internal MultiPoleFilter(Source cutoff, Source resonance)
 		{
 			this.resonance = resonance;
-			this.source = source;
 			this.input = new Hold();
 			this.cutoff = cutoff;
 			this.filterChainCutoffInput = new Hold();
@@ -88,10 +87,10 @@ namespace Flaky
 			Initialize(context, cutoff, source, filterChain, resonance);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(cutoff, source, filterChain, resonance);
-        }
+		public override void Dispose()
+		{
+			Dispose(cutoff, source, filterChain, resonance);
+		}
 
 		protected override Sample NextSample(IContext context)
 		{
@@ -121,11 +120,18 @@ namespace Flaky
 
 			return resonanceInput / ((float)Math.Sqrt(Math.Abs(cutoff)) + 0.15f - cutoff * 0.25f);
 		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.source = mainSource;
+		}
 	}
 
 	public class OnePoleLPFilter : OnePoleFilter
 	{
-		public OnePoleLPFilter(Source source, Source cutoff) : base(source, cutoff) { }
+		internal OnePoleLPFilter(Source source, Source cutoff) : base(source, cutoff) { }
+
+		internal OnePoleLPFilter(Source cutoff) : base(cutoff) { }
 
 		protected override Sample GetResult(Sample lp, Sample hp)
 		{
@@ -135,7 +141,8 @@ namespace Flaky
 
 	public class OnePoleHPFilter : OnePoleFilter
 	{
-		public OnePoleHPFilter(Source source, Source cutoff) : base(source, cutoff) { }
+		internal OnePoleHPFilter(Source source, Source cutoff) : base(source, cutoff) { }
+		internal OnePoleHPFilter(Source cutoff) : base(cutoff) { }
 
 		protected override Sample GetResult(Sample lp, Sample hp)
 		{
@@ -143,7 +150,7 @@ namespace Flaky
 		}
 	}
 
-	public abstract class OnePoleFilter : Source
+	public abstract class OnePoleFilter : Source, IPipingSource
 	{
 		private Source source;
 		private Source cutoff;
@@ -151,9 +158,14 @@ namespace Flaky
 		private Sample integratorState;
 		private Sample lp;
 
-		public OnePoleFilter(Source source, Source cutoff)
+		internal OnePoleFilter(Source source, Source cutoff)
 		{
 			this.source = source;
+			this.cutoff = cutoff;
+		}
+
+		internal OnePoleFilter(Source cutoff)
+		{
 			this.cutoff = cutoff;
 		}
 
@@ -162,10 +174,10 @@ namespace Flaky
 			Initialize(context, source, cutoff);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(source, cutoff);
-        }
+		public override void Dispose()
+		{
+			Dispose(source, cutoff);
+		}
 
 		protected override Sample NextSample(IContext context)
 		{
@@ -189,6 +201,11 @@ namespace Flaky
 			var output = input + integratorState;
 			integratorState = input + output;
 			return output;
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.source = mainSource;
 		}
 
 		protected abstract Sample GetResult(Sample lp, Sample hp);

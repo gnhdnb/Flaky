@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Pan : Source
+	public class Pan : Source, IPipingSource
 	{
 		private Source sound;
 		private Source position;
 		private Source width;
 
-		public Pan(Source sound, Source position) : this(sound, position, 1.0f) { }
+		internal Pan(Source position) : this(position, 1.0f) { }
 
-		public Pan(Source sound, Source position, Source width)
+		internal Pan(Source position, Source width)
 		{
-			this.sound = sound;
 			this.position = position;
 			this.width = width;
 		}
@@ -47,12 +46,12 @@ namespace Flaky
 			Initialize(context, sound, position, width);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(sound, position, width);
-        }
+		public override void Dispose()
+		{
+			Dispose(sound, position, width);
+		}
 
-        internal static Sample Perform(Sample sound, float position, float width)
+		internal static Sample Perform(Sample sound, float position, float width)
 		{
 			var average = (sound.Left + sound.Right) / 2;
 
@@ -61,6 +60,11 @@ namespace Flaky
 				Left = (sound.Left * width + average * (1 - width)) * (1 - position),
 				Right = (sound.Right * width + average * (1 - width)) * (1 + position)
 			};
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.sound = mainSource;
 		}
 	}
 }

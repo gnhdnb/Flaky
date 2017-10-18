@@ -96,6 +96,7 @@
     <Compile Include="Sources\Effects\Transient.cs" />
     <Compile Include="Sources\Envelopes\AD.cs" />
     <Compile Include="Sources\Envelopes\Fade.cs" />
+    <Compile Include="Sources\PipingSourceWrapper.cs" />
     <Compile Include="Sources\Notes\Seq.cs" />
     <Compile Include="Sources\Notes\Note.cs" />
     <Compile Include="Sources\Notes\NoteSource.cs" />

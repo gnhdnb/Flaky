@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Fourier : Source
+	public class Fourier : Source, IPipingSource
 	{
 		private const int framesCount = 8192;
 		private Thread worker;
@@ -33,7 +33,7 @@ namespace Flaky
 		private CancellationTokenSource disposing = new CancellationTokenSource();
 		private readonly int effect;
 
-		public Fourier(Source input, float effect)
+		internal Fourier(float effect)
 		{
 			if (effect < 0)
 				effect = 0;
@@ -41,7 +41,6 @@ namespace Flaky
 			if (effect > 1)
 				effect = 1;
 
-			this.input = input;
 			this.effect = (int)Math.Floor((framesCount - 1) * effect);
 			outputQueue.Add(new Sample[framesCount]);
 		}
@@ -151,6 +150,11 @@ namespace Flaky
 				output[i].Left = leftBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
 				output[i].Right = rightBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
 			}
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.input = mainSource;
 		}
 
 		public override void Dispose()

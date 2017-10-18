@@ -6,12 +6,21 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Osc : Source
+	public class Osc : Source, IPipingSource
 	{
-		public Osc()
+		internal Osc()
 		{
-			Frequency = 100;
-			Amplitude = 0.25f;
+			Amplitude = 1f;
+		}
+
+		internal Osc(Source amplitude)
+		{
+			Amplitude = amplitude;
+		}
+
+		internal Osc(Source amplitude, string id) : base(id)
+		{
+			Amplitude = amplitude;
 		}
 
 		public Osc(Source frequency, Source amplitude)
@@ -71,6 +80,11 @@ namespace Flaky
 		public override void Dispose()
 		{
 			Dispose(Frequency, Amplitude);
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			Frequency = mainSource;
 		}
 	}
 }

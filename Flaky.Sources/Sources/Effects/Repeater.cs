@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Rep : Source
+	public class Rep : Source, IPipingSource
 	{
 		private readonly NoteSource feed;
-		private readonly Source source;
+		private Source source;
 		private State state;
 		private readonly float multiplier;
 		private readonly float dry;
@@ -34,9 +34,8 @@ namespace Flaky
 			}
 		}
 
-		public Rep(Source source, NoteSource feed, float multiplier, float dry, float wet, string id) : base(id)
+		internal Rep(NoteSource feed, float multiplier, float dry, float wet, string id) : base(id)
 		{
-			this.source = source;
 			this.feed = feed;
 
 			if (wet < 0)
@@ -53,7 +52,7 @@ namespace Flaky
 			this.dry = dry;
 		}
 
-		public Rep(Source source, NoteSource feed, string id) : this(source, feed, 1, 1, 0.5f, id) { }
+		public Rep( NoteSource feed, string id) : this(feed, 1, 1, 0.5f, id) { }
 
 		protected override Sample NextSample(IContext context)
 		{
@@ -103,9 +102,14 @@ namespace Flaky
 			Initialize(context, source, feed);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(source, feed);
-        }
-    }
+		public override void Dispose()
+		{
+			Dispose(source, feed);
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.source = mainSource;
+		}
+	}
 }
