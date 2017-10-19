@@ -30,25 +30,15 @@ namespace Flaky
 			get { return (Source)pipingSource; }
 		}
 
-		public static Source operator >(Source a, PipingSourceWrapper b)
+		public static Source operator %(Source a, PipingSourceWrapper b)
 		{
 			b.SetMainSource(a);
 			return b.Source;
 		}
 
-		public static Source operator <(Source a, PipingSourceWrapper b)
+		public static Source operator %(float a, PipingSourceWrapper b)
 		{
-			return a > b;
-		}
-
-		public static Source operator >(float a, PipingSourceWrapper b)
-		{
-			return (Source)a > b;
-		}
-
-		public static Source operator <(float a, PipingSourceWrapper b)
-		{
-			return a > b;
+			return (Source)a % b;
 		}
 	}
 }
