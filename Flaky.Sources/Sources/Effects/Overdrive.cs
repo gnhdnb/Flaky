@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Overdrive : Source
+	public class Overdrive : Source, IPipingSource
 	{
 		private Source source;
 		private Source overdrive;
 		private Source lpnoise;
 		private Source hpnoise;
 
-		public Overdrive(Source source, Source overdrive)
+		internal Overdrive(Source overdrive)
 		{
-			this.source = source;
 			this.overdrive = overdrive;
 			this.lpnoise = new OnePoleLPFilter(new Noise(), 0.001f) * 100f;
 			this.hpnoise = new OnePoleHPFilter(new Noise(), 1) * 0.3f;
@@ -55,6 +54,11 @@ namespace Flaky
 		private float OD(float value)
 		{
 			return 2.5f * Math.Sign(value) * (1 - (float)Math.Pow(Math.E, -Math.Abs(value)));
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.source = mainSource;
 		}
 	}
 }

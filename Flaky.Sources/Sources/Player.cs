@@ -16,40 +16,38 @@ namespace Flaky
 			{ return new ThreeBodiesOscillator(); }
 		protected ThreeBodiesOscillator TBO(Source timeFactor)
 			{ return new ThreeBodiesOscillator(timeFactor); }
-		protected Fourier Fourier(Source input, float effect)
-			{ return new Fourier(input, effect); }
-		protected Transient Trans(Source source, Source pitch, string id)
-			{ return new Transient(source, pitch, id); }
-		protected Transient Trans(Source source, Source pitch, Source sensitivity, string id)
-			{ return new Transient(source, pitch, sensitivity, id); }
-		protected Chr Chr(Source source, string id)
-			{ return new Chr(source, id); }
-		protected Delay Delay(Source sound, Source time)
-			{ return new Delay(sound, time); }
-		protected Delay Delay(Source sound, Source time, string id)
-			{ return new Delay(sound, time, id); }
-		protected LPFilter LPFilter(Source source, Source cutoff, Source resonance)
-			{ return new LPFilter(source, cutoff, resonance); }
-		protected BPFilter BPFilter(Source source, Source cutoff, Source resonance)
-			{ return new BPFilter(source, cutoff, resonance); }
-		protected HPFilter HPFilter(Source source, Source cutoff, Source resonance)
-			{ return new HPFilter(source, cutoff, resonance); }
-		protected OnePoleLPFilter OnePoleLPFilter(Source source, Source cutoff)
-			{ return new OnePoleLPFilter(source, cutoff); }
-		protected OnePoleHPFilter OnePoleHPFilter(Source source, Source cutoff)
-			{ return new OnePoleHPFilter(source, cutoff); }
-		protected MatrixVerb MatrixVerb(Source source)
-			{ return new MatrixVerb(source); }
-		protected MatrixVerb MatrixVerb(Source source, Source viscosity)
-			{ return new MatrixVerb(source, viscosity); }
-		protected Overdrive Overdrive(Source source, Source overdrive)
-			{ return new Overdrive(source, overdrive); }
-		protected Pan Pan(Source sound, Source position)
-			{ return new Pan(sound, position); }
-		protected Pan Pan(Source sound, Source position, Source width)
-			{ return new Pan(sound, position, width); }
-		protected Rep Rep(Source source, NoteSource feed, string id)
-			{ return new Rep(source, feed, id); }
+		protected PipingSourceWrapper Fourier(float effect)
+			{ return Pipe(new Fourier(effect)); }
+		protected PipingSourceWrapper Trans(Source pitch, string id)
+			{ return Pipe(new Transient(pitch, id)); }
+		protected PipingSourceWrapper Trans(Source pitch, Source sensitivity, string id)
+			{ return Pipe(new Transient(pitch, sensitivity, id)); }
+		protected PipingSourceWrapper Chr(string id)
+			{ return Pipe(new Chr(id)); }
+		protected PipingSourceWrapper Delay(Source time, string id)
+			{ return Pipe(new Delay(time, id)); }
+		protected PipingSourceWrapper LPFilter(Source cutoff, Source resonance)
+			{ return Pipe(new LPFilter(cutoff, resonance)); }
+		protected PipingSourceWrapper BPFilter(Source cutoff, Source resonance)
+			{ return Pipe(new BPFilter(cutoff, resonance)); }
+		protected PipingSourceWrapper HPFilter(Source cutoff, Source resonance)
+			{ return Pipe(new HPFilter(cutoff, resonance)); }
+		protected PipingSourceWrapper OnePoleLPFilter(Source cutoff)
+			{ return Pipe(new OnePoleLPFilter(cutoff)); }
+		protected PipingSourceWrapper OnePoleHPFilter(Source cutoff)
+			{ return Pipe(new OnePoleHPFilter(cutoff)); }
+		protected PipingSourceWrapper MatrixVerb()
+			{ return Pipe(new MatrixVerb()); }
+		protected PipingSourceWrapper MatrixVerb(Source viscosity)
+			{ return Pipe(new MatrixVerb(viscosity)); }
+		protected PipingSourceWrapper Overdrive(Source overdrive)
+			{ return Pipe(new Overdrive(overdrive)); }
+		protected PipingSourceWrapper Pan(Source position)
+			{ return Pipe(new Pan(position)); }
+		protected PipingSourceWrapper Pan(Source position, Source width)
+			{ return Pipe(new Pan(position, width)); }
+		protected PipingSourceWrapper Rep(NoteSource feed, string id)
+			{ return Pipe(new Rep(feed, id)); }
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }
 		protected AD AD(NoteSource source, Source attack, Source decay)
@@ -94,19 +92,26 @@ namespace Flaky
 		protected Noise Noise()
 			{ return new Noise(); }
 
-		protected Osc Osc()
-			{ return new Osc(); }
-		protected Osc Osc(Source frequency, Source amplitude)
-			{ return new Osc(frequency, amplitude); }
-		protected Osc Osc(Source frequency, Source amplitude, string id)
-			{ return new Osc(frequency, amplitude, id); }
+		protected PipingSourceWrapper Osc()
+			{ return Pipe(new Osc()); }
+		protected PipingSourceWrapper Osc(Source amplitude)
+			{ return Pipe(new Osc(amplitude)); }
+		protected PipingSourceWrapper Osc(Source amplitude, string id)
+			{ return Pipe(new Osc(amplitude, id)); }
 
 		protected Sampler Sampler(string sample, NoteSource noteSource, string id)
 			{ return new Sampler(sample, noteSource, id); }
 
-		protected Saw Saw(Source frequency, Source amplitude)
-			{ return new Saw(frequency, amplitude); }
-		protected Saw Saw(Source frequency, Source amplitude, string id)
-			{ return new Saw(frequency, amplitude, id); }
+		protected PipingSourceWrapper Saw()
+			{ return Pipe(new Saw()); }
+		protected PipingSourceWrapper Saw(Source amplitude)
+			{ return Pipe(new Saw(amplitude)); }
+		protected PipingSourceWrapper Saw(Source amplitude, string id)
+			{ return Pipe(new Saw(amplitude, id)); }
+
+		private PipingSourceWrapper Pipe(IPipingSource source) 
+		{
+			return new PipingSourceWrapper(source);
+		}
 	}
 }

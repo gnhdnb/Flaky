@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Chr : Source
+	public class Chr : Source, IPipingSource
 	{
-		private readonly Source source;
+		private Source source;
 		private State state;
 
 		private class State
@@ -95,10 +95,7 @@ namespace Flaky
 			return position;
 		}
 
-		public Chr(Source source, string id) : base(id)
-		{
-			this.source = source;
-		}
+		internal Chr(string id) : base(id) { }
 
 		public override void Initialize(IContext context)
 		{
@@ -108,10 +105,15 @@ namespace Flaky
 			Initialize(context, source);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(source);
-        }
+		public override void Dispose()
+		{
+			Dispose(source);
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.source = mainSource;
+		}
 
 		internal class LFO
 		{

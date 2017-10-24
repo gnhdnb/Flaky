@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class MatrixVerb : Source
+	public class MatrixVerb : Source, IPipingSource
 	{
 		private const int sizex = 122;
 		private const int sizey = 10;
@@ -15,15 +15,13 @@ namespace Flaky
 		private Source source;
 		private Source viscosity;
 
-		public MatrixVerb(Source source)
+		internal MatrixVerb()
 		{
-			this.source = source;
 			this.viscosity = 30.0f;
 		}
 
-		public MatrixVerb(Source source, Source viscosity)
+		internal MatrixVerb(Source viscosity)
 		{
-			this.source = source;
 			this.viscosity = viscosity;
 		}
 
@@ -33,7 +31,7 @@ namespace Flaky
 			viscosity.Initialize(context);
 		}
 
-        public override void Dispose()
+		public override void Dispose()
         {
             Dispose(source, viscosity);
         }
@@ -69,6 +67,11 @@ namespace Flaky
 				Left = value[2, 1],
 				Right = value[2, 8]
 			};
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.source = mainSource;
 		}
 	}
 }

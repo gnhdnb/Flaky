@@ -6,23 +6,20 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Saw : Source
+	public class Saw : Source, IPipingSource
 	{
-		public Saw()
+		internal Saw()
 		{
-			Frequency = 100;
-			Amplitude = 0.25f;
+			Amplitude = 1;
 		}
 
-		public Saw(Source frequency, Source amplitude)
+		internal Saw(Source amplitude)
 		{
-			Frequency = frequency;
 			Amplitude = amplitude;
 		}
 
-		public Saw(Source frequency, Source amplitude, string id) : base(id)
+		internal Saw(Source amplitude, string id) : base(id)
 		{
-			Frequency = frequency;
 			Amplitude = amplitude;
 		}
 
@@ -74,9 +71,14 @@ namespace Flaky
 			Initialize(context, Frequency, Amplitude);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(Frequency, Amplitude);
-        }
-    }
+		public override void Dispose()
+		{
+			Dispose(Frequency, Amplitude);
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.Frequency = mainSource;
+		}
+	}
 }

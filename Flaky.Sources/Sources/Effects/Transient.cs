@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Transient : Source
+	public class Transient : Source, IPipingSource
 	{
 		private Source source;
 		private Source pitch;
@@ -102,11 +102,10 @@ namespace Flaky
 			}
 		}
 
-		public Transient(Source source, Source pitch, string id) : this(source, pitch, 0.7, id) { }
+		internal Transient(Source pitch, string id) : this(pitch, 0.7, id) { }
 
-		public Transient(Source source, Source pitch, Source sensitivity, string id) : base(id)
+		internal Transient(Source pitch, Source sensitivity, string id) : base(id)
 		{
-			this.source = source;
 			this.pitch = pitch;
 			this.sensitivity = sensitivity;
 		}
@@ -131,6 +130,11 @@ namespace Flaky
 			state.WriteSample(sourceValue, Math.Abs(sensitivityValue.Value));
 
 			return state.ReadSample(pitchValue.Value);
+		}
+
+		void IPipingSource.SetMainSource(Source mainSource)
+		{
+			this.source = mainSource;
 		}
 	}
 }
