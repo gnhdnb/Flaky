@@ -107,7 +107,7 @@ namespace Flaky
 			Dispose(source, feed);
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.source = mainSource;
 		}

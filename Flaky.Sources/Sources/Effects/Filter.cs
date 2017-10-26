@@ -121,7 +121,7 @@ namespace Flaky
 			return resonanceInput / ((float)Math.Sqrt(Math.Abs(cutoff)) + 0.15f - cutoff * 0.25f);
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.source = mainSource;
 		}
@@ -203,7 +203,7 @@ namespace Flaky
 			return output;
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.source = mainSource;
 		}

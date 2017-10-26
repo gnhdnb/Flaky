@@ -85,8 +85,12 @@ namespace Flaky
 
 		protected DoublePendulum DoublePendulum()
 			{ return new DoublePendulum(); }
-		protected DR DR(NoteSource noteSource, params string[] samples)
-			{ return new DR(noteSource, samples); }
+
+		protected PipingSourceWrapper<NoteSource> DR(params string[] samples)
+			{ return Pipe(new DR(samples)); }
+		protected PipingSourceWrapper<NoteSource> Sampler(string sample, string id)
+			{ return Pipe(new Sampler(sample, id)); }
+
 		protected Met Met()
 			{ return new Met(); }
 		protected Noise Noise()
@@ -99,9 +103,6 @@ namespace Flaky
 		protected PipingSourceWrapper Osc(Source amplitude, string id)
 			{ return Pipe(new Osc(amplitude, id)); }
 
-		protected Sampler Sampler(string sample, NoteSource noteSource, string id)
-			{ return new Sampler(sample, noteSource, id); }
-
 		protected PipingSourceWrapper Saw()
 			{ return Pipe(new Saw()); }
 		protected PipingSourceWrapper Saw(Source amplitude)
@@ -112,6 +113,11 @@ namespace Flaky
 		private PipingSourceWrapper Pipe(IPipingSource source) 
 		{
 			return new PipingSourceWrapper(source);
+		}
+
+		private PipingSourceWrapper<T> Pipe<T>(IPipingSource<T> source) where T : Source
+		{
+			return new PipingSourceWrapper<T>(source);
 		}
 	}
 }

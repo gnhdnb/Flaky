@@ -132,7 +132,7 @@ namespace Flaky
 			return state.ReadSample(pitchValue.Value);
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.source = mainSource;
 		}

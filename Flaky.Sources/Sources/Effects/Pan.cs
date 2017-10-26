@@ -62,7 +62,7 @@ namespace Flaky
 			};
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.sound = mainSource;
 		}

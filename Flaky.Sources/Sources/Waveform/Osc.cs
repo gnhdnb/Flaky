@@ -82,7 +82,7 @@ namespace Flaky
 			Dispose(Frequency, Amplitude);
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			Frequency = mainSource;
 		}

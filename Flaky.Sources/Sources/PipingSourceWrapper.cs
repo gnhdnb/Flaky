@@ -6,21 +6,23 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IPipingSource 
+	internal interface IPipingSource<T> where T : Source
 	{
-		void SetMainSource(Source mainSource);
+		void SetMainSource(T mainSource);
 	}
 
-	public sealed class PipingSourceWrapper
-	{
-		private readonly IPipingSource pipingSource;
+	internal interface IPipingSource : IPipingSource<Source> { }
 
-		internal PipingSourceWrapper(IPipingSource pipingSource) 
+	public class PipingSourceWrapper<T> where T: Source
+	{
+		private readonly IPipingSource<T> pipingSource;
+
+		internal PipingSourceWrapper(IPipingSource<T> pipingSource) 
 		{
 			this.pipingSource = pipingSource;
 		}
 
-		internal void SetMainSource(Source mainSource) 
+		internal void SetMainSource(T mainSource) 
 		{
 			pipingSource.SetMainSource(mainSource);
 		}
@@ -30,11 +32,16 @@ namespace Flaky
 			get { return (Source)pipingSource; }
 		}
 
-		public static Source operator %(Source a, PipingSourceWrapper b)
+		public static Source operator %(T a, PipingSourceWrapper<T> b)
 		{
 			b.SetMainSource(a);
 			return b.Source;
 		}
+	}
+
+	public class PipingSourceWrapper : PipingSourceWrapper<Source>
+	{
+		internal PipingSourceWrapper(IPipingSource pipingSource) : base(pipingSource) { }
 
 		public static Source operator %(float a, PipingSourceWrapper b)
 		{

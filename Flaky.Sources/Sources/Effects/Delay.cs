@@ -115,7 +115,7 @@ namespace Flaky
 			Dispose(time, sound, transform, dryWet);
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.sound = mainSource;
 		}

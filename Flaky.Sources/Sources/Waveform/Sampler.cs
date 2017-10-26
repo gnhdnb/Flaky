@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Sampler : Source
+	public class Sampler : Source, IPipingSource<NoteSource>
 	{
 		private readonly string sample;
-		private readonly NoteSource noteSource;
+		private NoteSource noteSource;
 		private readonly Source pitchSource;
 		private IWaveReader reader;
 		private State state;
@@ -20,10 +20,9 @@ namespace Flaky
 			public double LatestSamplerSample;
 		}
 
-		public Sampler(string sample, NoteSource noteSource, string id) : base(id)
+		internal Sampler(string sample, string id) : base(id)
 		{
 			this.sample = sample;
-			this.noteSource = noteSource;
 		}
 
 		protected override Sample NextSample(IContext context)
@@ -60,9 +59,14 @@ namespace Flaky
 			Initialize(context, noteSource, pitchSource);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(noteSource, pitchSource);
-        }
-    }
+		public override void Dispose()
+		{
+			Dispose(noteSource, pitchSource);
+		}
+
+		void IPipingSource<NoteSource>.SetMainSource(NoteSource mainSource)
+		{
+			this.noteSource = mainSource;
+		}
+	}
 }

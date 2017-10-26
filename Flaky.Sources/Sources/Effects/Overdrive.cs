@@ -56,7 +56,7 @@ namespace Flaky
 			return 2.5f * Math.Sign(value) * (1 - (float)Math.Pow(Math.E, -Math.Abs(value)));
 		}
 
-		void IPipingSource.SetMainSource(Source mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.source = mainSource;
 		}

@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class DR : Source
+	public class DR : Source, IPipingSource<NoteSource>
 	{
 		private string[] samples;
-		private readonly NoteSource noteSource;
+		private NoteSource noteSource;
 		private IWaveReader[] readers;
 
-		public DR(NoteSource noteSource, params string[] samples)
+		internal DR(params string[] samples)
 		{
 			this.samples = samples;
-			this.noteSource = noteSource;
 		}
 
 		protected override Sample NextSample(IContext context)
@@ -48,9 +47,14 @@ namespace Flaky
 			Initialize(context, noteSource);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(noteSource);
-        }
-    }
+		public override void Dispose()
+		{
+			Dispose(noteSource);
+		}
+
+		void IPipingSource<NoteSource>.SetMainSource(NoteSource mainSource)
+		{
+			this.noteSource = mainSource;
+		}
+	}
 }
