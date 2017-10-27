@@ -103,6 +103,7 @@
     <Compile Include="Sources\Notes\NoteSource.cs" />
     <Compile Include="Sources\Notes\PlayingNote.cs" />
     <Compile Include="Sources\Player.cs" />
+    <Compile Include="Sources\Sequence.cs" />
     <Compile Include="Sources\Source.cs" />
     <Compile Include="Sources\Utility\Recorder.cs" />
     <Compile Include="Sources\Waveform\DoublePendulum.cs" />

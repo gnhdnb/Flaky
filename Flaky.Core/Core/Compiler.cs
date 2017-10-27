@@ -21,6 +21,8 @@ namespace Flaky
 
 		private readonly MetadataReference[] references;
 
+		private readonly ClassTemplate classTemplate;
+
 		public Compiler(Assembly sourcesAssembly)
 		{
 			references = new MetadataReference[]
@@ -30,13 +32,15 @@ namespace Flaky
 				MetadataReference.CreateFromFile(typeof(IPlayer).Assembly.Location),
 				MetadataReference.CreateFromFile(sourcesAssembly.Location)
 			};
+
+			classTemplate = ClassTemplate.FromEmbededResource("Player.tmp");
 		}
 
 		public CompilationResult Compile(string code)
 		{
 			string assemblyName = Path.GetRandomFileName();
 
-			SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
+			SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(classTemplate.Render("Player", code));
 
 			CSharpCompilation compilation = CSharpCompilation.Create(
 				assemblyName,
@@ -75,6 +79,40 @@ namespace Flaky
 			}
 
 			return result;
+		}
+	}
+
+	internal class ClassTemplate
+	{
+		private string template;
+
+		internal ClassTemplate(string template)
+		{
+			this.template = template;
+		}
+
+		internal string Render(string className, string code)
+		{
+			return template.Replace("%CLASSNAME%", className).Replace("%CODE%", code);
+		}
+
+		internal static ClassTemplate FromEmbededResource(string resourceName)
+		{
+			return new ClassTemplate(LoadEmbededResource(resourceName));
+		}
+
+		private static string LoadEmbededResource(string fileName)
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+
+			var resources = assembly.GetManifestResourceNames();
+			var resourceName = resources.Single(r => r.EndsWith(fileName));
+
+			using (var stream = assembly.GetManifestResourceStream(resourceName))
+			using (var reader = new StreamReader(stream))
+			{
+				return reader.ReadToEnd();
+			}
 		}
 	}
 
