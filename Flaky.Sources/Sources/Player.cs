@@ -57,6 +57,8 @@ namespace Flaky
 		protected FO FO(float time, string id)
 			{ return new FO(time, id); }
 
+		protected PSeq PSeq(string sequence, int size, string id)
+			{ return new PSeq(sequence, size, id); }
 		protected SequenceWrapper Seq(string sequence)
 			{ return new SequenceWrapper(sequence); }
 		protected Seq Seq(IEnumerable<int> notes, Source length)

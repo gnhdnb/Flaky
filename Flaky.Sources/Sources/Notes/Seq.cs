@@ -116,7 +116,9 @@ namespace Flaky
 			return state.currentNote;
 		}
 
-		private bool NextNoteRequired(IContext context)
+		internal bool Playing { get { return state.playing; } }
+
+		internal bool NextNoteRequired(IContext context)
 		{
 			if (length != null)
 			{
