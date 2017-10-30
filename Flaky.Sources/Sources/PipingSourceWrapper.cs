@@ -13,33 +13,33 @@ namespace Flaky
 
 	internal interface IPipingSource : IPipingSource<Source> { }
 
-	public class PipingSourceWrapper<T> where T: Source
+	public class PipingSourceWrapper<TSource, TResult> where TSource: Source where TResult: Source
 	{
-		private readonly IPipingSource<T> pipingSource;
+		private readonly IPipingSource<TSource> pipingSource;
 
-		internal PipingSourceWrapper(IPipingSource<T> pipingSource) 
+		internal PipingSourceWrapper(IPipingSource<TSource> pipingSource) 
 		{
 			this.pipingSource = pipingSource;
 		}
 
-		internal void SetMainSource(T mainSource) 
+		internal void SetMainSource(TSource mainSource) 
 		{
 			pipingSource.SetMainSource(mainSource);
 		}
 
-		internal Source Source 
+		internal TResult Source 
 		{
-			get { return (Source)pipingSource; }
+			get { return (TResult)pipingSource; }
 		}
 
-		public static Source operator %(T a, PipingSourceWrapper<T> b)
+		public static TResult operator %(TSource a, PipingSourceWrapper<TSource, TResult> b)
 		{
 			b.SetMainSource(a);
 			return b.Source;
 		}
 	}
 
-	public class PipingSourceWrapper : PipingSourceWrapper<Source>
+	public class PipingSourceWrapper : PipingSourceWrapper<Source, Source>
 	{
 		internal PipingSourceWrapper(IPipingSource pipingSource) : base(pipingSource) { }
 

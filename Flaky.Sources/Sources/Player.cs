@@ -12,10 +12,15 @@ namespace Flaky
 			{ return new Recorder(id, sources); }
 		protected Looper Looper(string sample, string id)
 			{ return new Looper(sample, id); }
+
 		protected ThreeBodiesOscillator TBO()
 			{ return new ThreeBodiesOscillator(); }
 		protected ThreeBodiesOscillator TBO(Source timeFactor)
 			{ return new ThreeBodiesOscillator(timeFactor); }
+
+		protected DoublePendulum DoublePendulum()
+			{ return new DoublePendulum(); }
+
 		protected PipingSourceWrapper Fourier(float effect)
 			{ return Pipe(new Fourier(effect)); }
 		protected PipingSourceWrapper Trans(Source pitch, string id)
@@ -87,13 +92,13 @@ namespace Flaky
 		protected RSeq RSeq(IEnumerable<int> notes, int size, string id)
 			{ return new RSeq(notes, size, id); }
 
-		protected DoublePendulum DoublePendulum()
-			{ return new DoublePendulum(); }
+		protected PipingSourceWrapper<NoteSource, NoteSource> DSeq(int delay, string id)
+			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }
 
-		protected PipingSourceWrapper<NoteSource> DR(params string[] samples)
-			{ return Pipe(new DR(samples)); }
-		protected PipingSourceWrapper<NoteSource> Sampler(string sample, string id)
-			{ return Pipe(new Sampler(sample, id)); }
+		protected PipingSourceWrapper<NoteSource, Source> DR(params string[] samples)
+			{ return Pipe<NoteSource, Source>(new DR(samples)); }
+		protected PipingSourceWrapper<NoteSource, Source> Sampler(string sample, string id)
+			{ return Pipe<NoteSource, Source>(new Sampler(sample, id)); }
 
 		protected Met Met()
 			{ return new Met(); }
@@ -119,9 +124,11 @@ namespace Flaky
 			return new PipingSourceWrapper(source);
 		}
 
-		private PipingSourceWrapper<T> Pipe<T>(IPipingSource<T> source) where T : Source
+		private PipingSourceWrapper<TSource, TResult> Pipe<TSource, TResult>(IPipingSource<TSource> source) 
+			where TSource : Source
+			where TResult : Source
 		{
-			return new PipingSourceWrapper<T>(source);
+			return new PipingSourceWrapper<TSource, TResult>(source);
 		}
 	}
 }
