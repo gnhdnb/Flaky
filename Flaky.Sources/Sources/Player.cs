@@ -29,8 +29,14 @@ namespace Flaky
 			{ return Pipe(new Transient(pitch, sensitivity, id)); }
 		protected PipingSourceWrapper Chr(string id)
 			{ return Pipe(new Chr(id)); }
+
 		protected PipingSourceWrapper Delay(Source time, string id)
 			{ return Pipe(new Delay(time, id)); }
+		protected PipingSourceWrapper Delay(Source time, Func<Source, Source> transform, string id)
+			{ return Pipe(new Delay(time, transform, id)); }
+		protected PipingSourceWrapper Delay(Source time, Func<Source, Source> transform, Source dryWet, string id)
+			{ return Pipe(new Delay(time, transform, dryWet, id)); }
+
 		protected PipingSourceWrapper LPFilter(Source cutoff, Source resonance)
 			{ return Pipe(new LPFilter(cutoff, resonance)); }
 		protected PipingSourceWrapper BPFilter(Source cutoff, Source resonance)
@@ -118,6 +124,15 @@ namespace Flaky
 			{ return Pipe(new Saw(amplitude)); }
 		protected PipingSourceWrapper Saw(Source amplitude, string id)
 			{ return Pipe(new Saw(amplitude, id)); }
+
+		protected PipingSourceWrapper Sq()
+			{ return Pipe(new Sq()); }
+		protected PipingSourceWrapper Sq(Source amplitude)
+			{ return Pipe(new Sq(amplitude)); }
+		protected PipingSourceWrapper Sq(Source amplitude, Source pwm)
+			{ return Pipe(new Sq(amplitude, pwm)); }
+		protected PipingSourceWrapper Sq(Source amplitude, Source pwm, string id)
+			{ return Pipe(new Sq(amplitude, pwm, id)); }
 
 		private PipingSourceWrapper Pipe(IPipingSource source) 
 		{

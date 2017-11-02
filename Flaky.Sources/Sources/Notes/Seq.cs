@@ -174,17 +174,34 @@ namespace Flaky
 		{
 			List<Note> result = new List<Note>();
 
-			foreach(var key in sequence)
+			for(int i = 0; i < sequence.Length; i++)
 			{
-				if (key == '-')
+				var key = sequence[i].ToString();
+
+				if (key == "-")
 					result.Add(null);
 
-				if (keys.ContainsKey(key.ToString()))
-					result.Add(keys[key.ToString()]);
+				if (keys.ContainsKey(key))
+				{
+					var note = keys[key];
+
+					for(var j = i + 1; j < sequence.Length && modifiers.ContainsKey(sequence[j].ToString()); j++)
+					{
+						note += modifiers[sequence[j].ToString()];
+					}
+
+					result.Add(note);
+				}
 			}
 
 			return result.ToArray();
 		}
+
+		private readonly static Dictionary<string, int> modifiers = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+		{
+			{ "u", 12 },
+			{ "d", -12 },
+		};
 
 		private readonly static Dictionary<string, int> keys = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
 		{

@@ -60,6 +60,7 @@ namespace Flaky
 		{
 			state = GetOrCreate<State>(context);
 			state.Initialize(delay);
+			Initialize(context, source);
 		}
 
 		public void SetMainSource(NoteSource mainSource)
