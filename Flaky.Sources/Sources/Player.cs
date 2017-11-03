@@ -21,8 +21,8 @@ namespace Flaky
 		protected DoublePendulum DoublePendulum()
 			{ return new DoublePendulum(); }
 
-		protected PipingSourceWrapper Fourier(float effect)
-			{ return Pipe(new Fourier(effect)); }
+		protected PipingSourceWrapper Fourier(float effect, string id)
+			{ return Pipe(new Fourier(effect, id)); }
 		protected PipingSourceWrapper Trans(Source pitch, string id)
 			{ return Pipe(new Transient(pitch, id)); }
 		protected PipingSourceWrapper Trans(Source pitch, Source sensitivity, string id)

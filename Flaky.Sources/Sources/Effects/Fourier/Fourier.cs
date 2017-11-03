@@ -12,28 +12,133 @@ namespace Flaky
 {
 	public class Fourier : Source, IPipingSource
 	{
-		private const int framesCount = 8192;
-		private Thread worker;
 		private Source input;
-		private BlockingCollection<Sample[]> inputQueue = new BlockingCollection<Sample[]>();
-		private BlockingCollection<Sample[]> outputQueue = new BlockingCollection<Sample[]>();
-		private Sample[] latestOutputBuffer = new Sample[framesCount];
-		private Sample[] outputBuffer = new Sample[framesCount];
-		private Sample[] inputBuffer = new Sample[framesCount];
-		private Sample[] secondInputBuffer = new Sample[framesCount];
-		private int currentFrame = 0;
-		private float[] leftInputBuffer = new float[framesCount];
-		private float[] rightInputBuffer = new float[framesCount];
-		private float[] leftOutputBuffer = new float[framesCount];
-		private float[] rightOutputBuffer = new float[framesCount];
-		private Mdct leftForward = new Mdct(framesCount, true);
-		private Mdct rightForward = new Mdct(framesCount, true);
-		private Mdct leftBackward = new Mdct(framesCount, false);
-		private Mdct rightBackward = new Mdct(framesCount, false);
-		private CancellationTokenSource disposing = new CancellationTokenSource();
-		private readonly int effect;
+		private State state;
+		private readonly float effect;
 
-		internal Fourier(float effect)
+		private class State : IDisposable
+		{
+			public const int framesCount = 8192;
+			private int effect;
+			public Thread worker;
+			public BlockingCollection<Sample[]> inputQueue = new BlockingCollection<Sample[]>();
+			public BlockingCollection<Sample[]> outputQueue = new BlockingCollection<Sample[]>();
+			public Sample[] latestOutputBuffer = new Sample[framesCount];
+			public Sample[] outputBuffer = new Sample[framesCount];
+			public Sample[] inputBuffer = new Sample[framesCount];
+			public Sample[] secondInputBuffer = new Sample[framesCount];
+			public int currentFrame = 0;
+			public float[] leftInputBuffer = new float[framesCount];
+			public float[] rightInputBuffer = new float[framesCount];
+			public float[] leftOutputBuffer = new float[framesCount];
+			public float[] rightOutputBuffer = new float[framesCount];
+			public Mdct leftForward = new Mdct(framesCount, true);
+			public Mdct rightForward = new Mdct(framesCount, true);
+			public Mdct leftBackward = new Mdct(framesCount, false);
+			public Mdct rightBackward = new Mdct(framesCount, false);
+			public CancellationTokenSource disposing = new CancellationTokenSource();
+
+			public State()
+			{
+				worker = new Thread(ProcessNextBatch);
+				worker.Start();
+				outputQueue.Add(new Sample[framesCount]);
+			}
+
+			public void Initialize(float effect)
+			{
+				if (effect < 0)
+					effect = 0;
+
+				if (effect > 1)
+					effect = 1;
+
+				this.effect = (int)Math.Floor((framesCount - 1) * effect);
+			}
+
+			private void ProcessNextBatch()
+			{
+				try
+				{
+					while (true)
+					{
+						var samples = inputQueue.Take(disposing.Token);
+						ImportSamples(samples, leftInputBuffer, rightInputBuffer);
+						leftForward.Forward(leftInputBuffer, leftOutputBuffer);
+						rightForward.Forward(rightInputBuffer, rightOutputBuffer);
+
+						var leftThreshold = ThresholdPower(leftOutputBuffer);
+						var rightThreshold = ThresholdPower(rightOutputBuffer);
+
+						for (int i = 0; i < framesCount; i++)
+						{
+							if (Power(leftOutputBuffer[i]) > leftThreshold)
+								leftOutputBuffer[i] = 0;
+
+							if (Power(rightOutputBuffer[i]) > rightThreshold)
+								rightOutputBuffer[i] = 0;
+						}
+
+						leftBackward.Backward(leftOutputBuffer, leftInputBuffer);
+						rightBackward.Backward(rightOutputBuffer, rightInputBuffer);
+						ExportSamples(samples, leftInputBuffer, rightInputBuffer);
+						outputQueue.Add(samples);
+					}
+				}
+				catch (OperationCanceledException) { }
+			}
+
+			private float ThresholdPower(float[] buffer)
+			{
+				var orderedPower = buffer
+					.Select(v => Power(v))
+					.OrderBy(v => v)
+					.ToArray();
+
+				return orderedPower[framesCount - effect - 1];
+
+				var average = orderedPower.Average();
+
+				for (int i = 0; i < framesCount; i++)
+				{
+					if (orderedPower[i] > average)
+						return orderedPower[i];
+				}
+
+				return orderedPower.Last();
+			}
+
+			private float Power(float value)
+			{
+				return Math.Abs(value);
+			}
+
+			private void ImportSamples(Sample[] input, float[] leftBuffer, float[] rightBuffer)
+			{
+				for (int i = 0; i < framesCount; i++)
+				{
+					leftBuffer[i] = input[i].Left * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+					rightBuffer[i] = input[i].Right * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+				}
+			}
+
+			private void ExportSamples(Sample[] output, float[] leftBuffer, float[] rightBuffer)
+			{
+				for (int i = 0; i < framesCount; i++)
+				{
+					output[i].Left = leftBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+					output[i].Right = rightBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+				}
+			}
+
+			public void Dispose()
+			{
+				disposing.Cancel();
+				worker.Join();
+			}
+		}
+
+		internal Fourier(float effect, string id) : base(id)
 		{
 			if (effect < 0)
 				effect = 0;
@@ -41,30 +146,29 @@ namespace Flaky
 			if (effect > 1)
 				effect = 1;
 
-			this.effect = (int)Math.Floor((framesCount - 1) * effect);
-			outputQueue.Add(new Sample[framesCount]);
+			this.effect = effect;
 		}
 
 		protected override Sample NextSample(IContext context)
 		{
-			var chunkSize = framesCount / 2;
+			var chunkSize = State.framesCount / 2;
 
 			var inputSample = input.Play(context);
-			inputBuffer[chunkSize + currentFrame] = inputSample;
-			secondInputBuffer[currentFrame] = inputSample;
-			var outputSample = outputBuffer[currentFrame] + latestOutputBuffer[currentFrame + chunkSize];
+			state.inputBuffer[chunkSize + state.currentFrame] = inputSample;
+			state.secondInputBuffer[state.currentFrame] = inputSample;
+			var outputSample = state.outputBuffer[state.currentFrame] + state.latestOutputBuffer[state.currentFrame + chunkSize];
 
-			currentFrame++;
+			state.currentFrame++;
 
-			if(currentFrame >= chunkSize)
+			if(state.currentFrame >= chunkSize)
 			{
-				var bufferToEnqueue = inputBuffer;
-				inputBuffer = secondInputBuffer;
-				secondInputBuffer = latestOutputBuffer;
-				latestOutputBuffer = outputBuffer;
-				outputBuffer = outputQueue.Take();
-				inputQueue.Add(bufferToEnqueue);
-				currentFrame = 0;
+				var bufferToEnqueue = state.inputBuffer;
+				state.inputBuffer = state.secondInputBuffer;
+				state.secondInputBuffer = state.latestOutputBuffer;
+				state.latestOutputBuffer = state.outputBuffer;
+				state.outputBuffer = state.outputQueue.Take();
+				state.inputQueue.Add(bufferToEnqueue);
+				state.currentFrame = 0;
 			}
 
 			return outputSample;
@@ -72,84 +176,9 @@ namespace Flaky
 
 		public override void Initialize(IContext context)
 		{
-			worker = new Thread(ProcessNextBatch);
-			worker.Start();
+			state = GetOrCreate<State>(context);
+			state.Initialize(effect);
 			Initialize(context, input);
-		}
-
-		private void ProcessNextBatch()
-		{
-			try
-			{
-				while (true)
-				{
-					var samples = inputQueue.Take(disposing.Token);
-					ImportSamples(samples, leftInputBuffer, rightInputBuffer);
-					leftForward.Forward(leftInputBuffer, leftOutputBuffer);
-					rightForward.Forward(rightInputBuffer, rightOutputBuffer);
-
-					var leftThreshold = ThresholdPower(leftOutputBuffer);
-					var rightThreshold = ThresholdPower(rightOutputBuffer);
-
-					for (int i = 0; i < framesCount; i++)
-					{
-						if(Power(leftOutputBuffer[i]) > leftThreshold)
-							leftOutputBuffer[i] = 0;
-
-						if(Power(rightOutputBuffer[i]) > rightThreshold)
-							rightOutputBuffer[i] = 0;
-					}
-
-					leftBackward.Backward(leftOutputBuffer, leftInputBuffer);
-					rightBackward.Backward(rightOutputBuffer, rightInputBuffer);
-					ExportSamples(samples, leftInputBuffer, rightInputBuffer);
-					outputQueue.Add(samples);
-				}
-			}
-			catch (OperationCanceledException) { }
-		}
-
-		private float ThresholdPower(float[] buffer)
-		{
-			var orderedPower = buffer
-				.Select(v => Power(v))
-				.OrderBy(v => v)
-				.ToArray();
-
-			return orderedPower[framesCount - effect - 1];
-
-			var average = orderedPower.Average();
-
-			for(int i = 0; i < framesCount; i++)
-			{
-				if (orderedPower[i] > average)
-					return orderedPower[i];
-			}
-
-			return orderedPower.Last();
-		}
-
-		private float Power(float value)
-		{
-			return Math.Abs(value);
-		}
-
-		private void ImportSamples(Sample[] input, float[] leftBuffer, float[] rightBuffer)
-		{
-			for (int i = 0; i < framesCount; i++)
-			{
-				leftBuffer[i] = input[i].Left * WindowFunction.KaiserBesselDerived8192.GetValue(i);
-				rightBuffer[i] = input[i].Right * WindowFunction.KaiserBesselDerived8192.GetValue(i);
-			}
-		}
-
-		private void ExportSamples(Sample[] output, float[] leftBuffer, float[] rightBuffer)
-		{
-			for (int i = 0; i < framesCount; i++)
-			{
-				output[i].Left = leftBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
-				output[i].Right = rightBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
-			}
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)
@@ -159,8 +188,6 @@ namespace Flaky
 
 		public override void Dispose()
 		{
-			disposing.Cancel();
-			worker.Join();
 			Dispose(input);
 		}
 	}
