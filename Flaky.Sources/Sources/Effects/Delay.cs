@@ -39,7 +39,7 @@ namespace Flaky
 
 		internal Delay(Source time, Func<Source, Source> transform, Source dryWet, string id) : base(id)
 		{
-			this.feedback = new Hold();
+			this.feedback = new Hold($"{id}_feedbackHold");
 			this.time = time;
 			this.dryWet = dryWet;
 

@@ -13,11 +13,11 @@ namespace Flaky
 		private Source lpnoise;
 		private Source hpnoise;
 
-		internal Overdrive(Source overdrive)
+		internal Overdrive(Source overdrive, string id)
 		{
 			this.overdrive = overdrive;
-			this.lpnoise = new OnePoleLPFilter(new Noise(), 0.001f) * 100f;
-			this.hpnoise = new OnePoleHPFilter(new Noise(), 1) * 0.3f;
+			this.lpnoise = new OnePoleLPFilter(new Noise(), 0.001f, $"{id}_lpnoise") * 100f;
+			this.hpnoise = new OnePoleHPFilter(new Noise(), 1, $"{id}_hpnoise") * 0.3f;
 		}
 
 		public override void Initialize(IContext context)

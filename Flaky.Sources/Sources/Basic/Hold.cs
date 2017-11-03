@@ -8,15 +8,30 @@ namespace Flaky
 {
 	internal class Hold : Source
 	{
-		public Sample Sample { get; set; }
+		private class State
+		{
+			public Sample Sample { get; set; }
+		}
 
-		public override void Initialize(IContext context) { }
+		private State state;
+
+		public Sample Sample {
+			get { return state.Sample; }
+			set { state.Sample = value; }
+		}
+
+		public Hold(string id) : base(id) { }
+
+		public override void Initialize(IContext context)
+		{
+			state = GetOrCreate<State>(context);
+		}
 
 		protected override Sample NextSample(IContext context)
 		{
-			return Sample;
+			return state.Sample;
 		}
 
-        public override void Dispose() { }
-    }
+		public override void Dispose() { }
+	}
 }

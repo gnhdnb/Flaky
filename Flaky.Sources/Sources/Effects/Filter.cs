@@ -8,16 +8,16 @@ namespace Flaky
 {
 	public class LPFilter : MultiPoleFilter
 	{
-		internal LPFilter(Source cutoff, Source resonance) : base(cutoff, resonance)
+		internal LPFilter(Source cutoff, Source resonance, string id) : base(cutoff, resonance, id)
 		{
 		}
 
-		protected override Source CreateFilterChain(Source input, Source cutoff)
+		protected override Source CreateFilterChain(Source input, Source cutoff, string id)
 		{
-			Source filterChain = new OnePoleLPFilter(input, cutoff);
-			filterChain = new OnePoleLPFilter(filterChain, cutoff);
-			filterChain = new OnePoleLPFilter(filterChain, cutoff);
-			filterChain = new OnePoleLPFilter(filterChain, cutoff);
+			Source filterChain = new OnePoleLPFilter(input, cutoff, $"{id}_lp1");
+			filterChain = new OnePoleLPFilter(filterChain, cutoff, $"{id}_lp2");
+			filterChain = new OnePoleLPFilter(filterChain, cutoff, $"{id}_lp3");
+			filterChain = new OnePoleLPFilter(filterChain, cutoff, $"{id}_lp4");
 
 			return filterChain;
 		}
@@ -25,16 +25,16 @@ namespace Flaky
 
 	public class BPFilter : MultiPoleFilter
 	{
-		internal BPFilter(Source cutoff, Source resonance) : base(cutoff, resonance)
+		internal BPFilter(Source cutoff, Source resonance, string id) : base(cutoff, resonance, id)
 		{
 		}
 
-		protected override Source CreateFilterChain(Source input, Source cutoff)
+		protected override Source CreateFilterChain(Source input, Source cutoff, string id)
 		{
-			Source filterChain = new OnePoleLPFilter(input, cutoff);
-			filterChain = new OnePoleHPFilter(filterChain, cutoff);
-			filterChain = new OnePoleLPFilter(filterChain, cutoff);
-			filterChain = new OnePoleHPFilter(filterChain, cutoff);
+			Source filterChain = new OnePoleLPFilter(input, cutoff, $"{id}_lp1");
+			filterChain = new OnePoleHPFilter(filterChain, cutoff, $"{id}_hp2");
+			filterChain = new OnePoleLPFilter(filterChain, cutoff, $"{id}_lp3");
+			filterChain = new OnePoleHPFilter(filterChain, cutoff, $"{id}_hp4");
 
 			return filterChain;
 		}
@@ -42,16 +42,16 @@ namespace Flaky
 
 	public class HPFilter : MultiPoleFilter
 	{
-		internal HPFilter(Source cutoff, Source resonance) : base(cutoff, resonance)
+		internal HPFilter(Source cutoff, Source resonance, string id) : base(cutoff, resonance, id)
 		{
 		}
 
-		protected override Source CreateFilterChain(Source input, Source cutoff)
+		protected override Source CreateFilterChain(Source input, Source cutoff, string id)
 		{
-			Source filterChain = new OnePoleHPFilter(input, cutoff);
-			filterChain = new OnePoleHPFilter(filterChain, cutoff);
-			filterChain = new OnePoleHPFilter(filterChain, cutoff);
-			filterChain = new OnePoleHPFilter(filterChain, cutoff);
+			Source filterChain = new OnePoleHPFilter(input, cutoff, $"{id}_hp1");
+			filterChain = new OnePoleHPFilter(filterChain, cutoff, $"{id}_hp2");
+			filterChain = new OnePoleHPFilter(filterChain, cutoff, $"{id}_hp3");
+			filterChain = new OnePoleHPFilter(filterChain, cutoff, $"{id}_hp4");
 
 			return filterChain;
 		}
@@ -63,33 +63,34 @@ namespace Flaky
 		private Hold input;
 		private Hold filterChainCutoffInput;
 		private Hold feedbackInput;
-		private Source filterChain;
+		private Source feedbackChain;
+		private Source filterChain;		
+
 		private Source resonance;
 		private Source source;
 		private Source cutoff;
-		private Source feedbackChain;
 
-		internal MultiPoleFilter(Source cutoff, Source resonance)
+		internal MultiPoleFilter(Source cutoff, Source resonance, string id) : base(id)
 		{
 			this.resonance = resonance;
-			this.input = new Hold();
+			this.input = new Hold($"{id}_InputHold");
 			this.cutoff = cutoff;
-			this.filterChainCutoffInput = new Hold();
-			this.filterChain = CreateFilterChain(input, filterChainCutoffInput);
-			this.feedbackInput = new Hold();
-			this.feedbackChain = new OnePoleLPFilter(feedbackInput, 0.18f);
+			this.filterChainCutoffInput = new Hold($"{id}_FilterChainCutoffInputHold");
+			this.filterChain = CreateFilterChain(input, filterChainCutoffInput, id);
+			this.feedbackInput = new Hold($"{id}_FeedbackInputHold");
+			this.feedbackChain = new OnePoleLPFilter(feedbackInput, 0.18f, $"{id}_OnePoleFeedback");
 		}
 
-		protected abstract Source CreateFilterChain(Source input, Source cutoff);
+		protected abstract Source CreateFilterChain(Source input, Source cutoff, string id);
 
 		public override void Initialize(IContext context)
 		{
-			Initialize(context, cutoff, source, filterChain, resonance);
+			Initialize(context, cutoff, source, filterChain, feedbackChain, resonance);
 		}
 
 		public override void Dispose()
 		{
-			Dispose(cutoff, source, filterChain, resonance);
+			Dispose(cutoff, source, filterChain, feedbackChain, resonance);
 		}
 
 		protected override Sample NextSample(IContext context)
@@ -129,9 +130,9 @@ namespace Flaky
 
 	public class OnePoleLPFilter : OnePoleFilter
 	{
-		internal OnePoleLPFilter(Source source, Source cutoff) : base(source, cutoff) { }
+		internal OnePoleLPFilter(Source source, Source cutoff, string id) : base(source, cutoff, id) { }
 
-		internal OnePoleLPFilter(Source cutoff) : base(cutoff) { }
+		internal OnePoleLPFilter(Source cutoff, string id) : base(cutoff, id) { }
 
 		protected override Sample GetResult(Sample lp, Sample hp)
 		{
@@ -141,8 +142,8 @@ namespace Flaky
 
 	public class OnePoleHPFilter : OnePoleFilter
 	{
-		internal OnePoleHPFilter(Source source, Source cutoff) : base(source, cutoff) { }
-		internal OnePoleHPFilter(Source cutoff) : base(cutoff) { }
+		internal OnePoleHPFilter(Source source, Source cutoff, string id) : base(source, cutoff, id) { }
+		internal OnePoleHPFilter(Source cutoff, string id) : base(cutoff, id) { }
 
 		protected override Sample GetResult(Sample lp, Sample hp)
 		{
@@ -154,23 +155,28 @@ namespace Flaky
 	{
 		private Source source;
 		private Source cutoff;
+		private State state;
 
-		private Sample integratorState;
-		private Sample lp;
+		private class State
+		{
+			public Sample integratorState;
+			public Sample lp;
+		}
 
-		internal OnePoleFilter(Source source, Source cutoff)
+		internal OnePoleFilter(Source source, Source cutoff, string id) : base(id)
 		{
 			this.source = source;
 			this.cutoff = cutoff;
 		}
 
-		internal OnePoleFilter(Source cutoff)
+		internal OnePoleFilter(Source cutoff, string id) : base(id)
 		{
 			this.cutoff = cutoff;
 		}
 
 		public override void Initialize(IContext context)
 		{
+			state = GetOrCreate<State>(context);
 			Initialize(context, source, cutoff);
 		}
 
@@ -190,16 +196,16 @@ namespace Flaky
 			if (cutoffValue > 1)
 				cutoffValue = 1;
 
-			var hp = sample - lp;
-			lp = Integrate(hp * cutoffValue);
-			return GetResult(lp, hp);
+			var hp = sample - state.lp;
+			state.lp = Integrate(hp * cutoffValue);
+			return GetResult(state.lp, hp);
 		}
 
 		private Sample Integrate(Sample sample)
 		{
 			var input = sample / 2;
-			var output = input + integratorState;
-			integratorState = input + output;
+			var output = input + state.integratorState;
+			state.integratorState = input + output;
 			return output;
 		}
 

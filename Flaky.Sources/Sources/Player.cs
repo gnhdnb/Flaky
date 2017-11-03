@@ -37,22 +37,22 @@ namespace Flaky
 		protected PipingSourceWrapper Delay(Source time, Func<Source, Source> transform, Source dryWet, string id)
 			{ return Pipe(new Delay(time, transform, dryWet, id)); }
 
-		protected PipingSourceWrapper LPFilter(Source cutoff, Source resonance)
-			{ return Pipe(new LPFilter(cutoff, resonance)); }
-		protected PipingSourceWrapper BPFilter(Source cutoff, Source resonance)
-			{ return Pipe(new BPFilter(cutoff, resonance)); }
-		protected PipingSourceWrapper HPFilter(Source cutoff, Source resonance)
-			{ return Pipe(new HPFilter(cutoff, resonance)); }
-		protected PipingSourceWrapper OnePoleLPFilter(Source cutoff)
-			{ return Pipe(new OnePoleLPFilter(cutoff)); }
-		protected PipingSourceWrapper OnePoleHPFilter(Source cutoff)
-			{ return Pipe(new OnePoleHPFilter(cutoff)); }
+		protected PipingSourceWrapper LP(Source cutoff, Source resonance, string id)
+			{ return Pipe(new LPFilter(cutoff, resonance, id)); }
+		protected PipingSourceWrapper BP(Source cutoff, Source resonance, string id)
+			{ return Pipe(new BPFilter(cutoff, resonance, id)); }
+		protected PipingSourceWrapper HP(Source cutoff, Source resonance, string id)
+			{ return Pipe(new HPFilter(cutoff, resonance, id)); }
+		protected PipingSourceWrapper LP1(Source cutoff, string id)
+			{ return Pipe(new OnePoleLPFilter(cutoff, id)); }
+		protected PipingSourceWrapper HP1(Source cutoff, string id)
+			{ return Pipe(new OnePoleHPFilter(cutoff, id)); }
 		protected PipingSourceWrapper MatrixVerb()
 			{ return Pipe(new MatrixVerb()); }
 		protected PipingSourceWrapper MatrixVerb(Source viscosity)
 			{ return Pipe(new MatrixVerb(viscosity)); }
-		protected PipingSourceWrapper Overdrive(Source overdrive)
-			{ return Pipe(new Overdrive(overdrive)); }
+		protected PipingSourceWrapper Overdrive(Source overdrive, string id)
+			{ return Pipe(new Overdrive(overdrive, id)); }
 		protected PipingSourceWrapper Pan(Source position)
 			{ return Pipe(new Pan(position)); }
 		protected PipingSourceWrapper Pan(Source position, Source width)
