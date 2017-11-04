@@ -111,6 +111,9 @@ namespace Flaky
 		protected Noise Noise()
 			{ return new Noise(); }
 
+		protected PipingSourceWrapper SH(Source trigger, string id)
+			{ return Pipe(new SampleAndHold(trigger, id)); }
+
 		protected PipingSourceWrapper Osc()
 			{ return Pipe(new Osc()); }
 		protected PipingSourceWrapper Osc(Source amplitude)
