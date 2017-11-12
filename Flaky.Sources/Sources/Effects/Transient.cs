@@ -11,6 +11,7 @@ namespace Flaky
 		private Source source;
 		private Source pitch;
 		private Source sensitivity;
+		private Source trigger;
 		private State state;
 		
 
@@ -24,6 +25,7 @@ namespace Flaky
 			private int writerPosition = 0;
 			private int direction = 1;
 			private double lastAmp = 0;
+			private bool triggered = false;
 
 			public State()
 			{
@@ -39,7 +41,7 @@ namespace Flaky
 				writerPosition = 0;
 			}
 
-			public void WriteSample(Sample sample, float sensitivity)
+			public void WriteSample(Sample sample, float sensitivity, float trigger)
 			{
 				writerPosition++;
 
@@ -54,6 +56,15 @@ namespace Flaky
 				}
 
 				bool reset = false;
+
+				if (trigger <= 0)
+					triggered = false;
+
+				if (!triggered && trigger > 0)
+				{
+					triggered = true;
+					reset = true;
+				}
 
 				if (ampBuffer[ampPosition] >= 0
 					&& lastAmp > ampBuffer[ampPosition] * (2 - sensitivity))
@@ -110,6 +121,13 @@ namespace Flaky
 			this.sensitivity = sensitivity;
 		}
 
+		internal Transient(Source pitch, Source sensitivity, Source trigger, string id) : base(id)
+		{
+			this.pitch = pitch;
+			this.sensitivity = sensitivity;
+			this.trigger = trigger;
+		}
+
 		public override void Dispose()
 		{
 			Dispose(source, pitch);
@@ -118,7 +136,7 @@ namespace Flaky
 		public override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			Initialize(context, source, pitch);
+			Initialize(context, trigger, source, pitch);
 		}
 
 		protected override Sample NextSample(IContext context)
@@ -127,7 +145,12 @@ namespace Flaky
 			var sourceValue = source.Play(context);
 			var pitchValue = pitch.Play(context);
 
-			state.WriteSample(sourceValue, Math.Abs(sensitivityValue.Value));
+			float triggerValue = 0;
+
+			if (trigger != null)
+				triggerValue = trigger.Play(context).Value;
+
+			state.WriteSample(sourceValue, Math.Abs(sensitivityValue.Value), triggerValue);
 
 			return state.ReadSample(pitchValue.Value);
 		}
