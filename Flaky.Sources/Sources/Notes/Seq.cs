@@ -108,8 +108,17 @@ namespace Flaky
 
 			if (NextNoteRequired(context))
 			{
-				state.currentNote = NextNote(context, state);
-				state.latestLength = GetLength(context);
+				var nextNote = NextNote(context, state);
+
+				if(!nextNote.IsSilent)
+				{
+					state.currentNote = nextNote;
+					state.latestLength = GetLength(context);
+				} else
+				{
+					state.latestLength += GetLength(context);
+				}
+				
 				return state.currentNote;
 			}
 
