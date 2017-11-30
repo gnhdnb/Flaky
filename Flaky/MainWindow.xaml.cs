@@ -120,8 +120,20 @@ namespace WPF
 		{
 			var codeFilePath = GetTemporaryCodeFilePath();
 
+			if (!File.Exists(codeFilePath))
+				return GetDemoSong();
+
 			using (var file = File.Open(codeFilePath, FileMode.Open))
 			using (var reader = new StreamReader(file))
+			{
+				return reader.ReadToEnd();
+			}
+		}
+
+		private static string GetDemoSong()
+		{
+			using (Stream s = LoadFile("demo.flk"))
+			using (var reader = new StreamReader(s))
 			{
 				return reader.ReadToEnd();
 			}

@@ -1,0 +1,63 @@
+﻿var transientRetrigger = RSeq("1----", 24, "rs45");
+var seq1 = RSeq("0d3d5d7d ------", 48, "rs34");
+var seq2 = RSeq("0 3 5 7  ------", 24, "rs35");
+
+var sequence = (FM(seq1) + FM(seq2))
+% Overdrive(3, "od1")
+% Trans(3, 0f, AD(transientRetrigger, 0f, 0.1f), "t1")
+% HP1(0.08, "hp1");
+
+sequence = FX(sequence, "fx1", 0f, 0.6f) * 10;
+
+sequence = sequence % Trans(0.25f, 0f, AD(transientRetrigger, 0f, 0.1f), "t2");
+
+var pad = Pad(RSeq("0 3 5 7", 2, "rs36"), 4, "pad") * 0.1;
+pad += Pad(RSeq("0 3 5 7", 2, "rs37"), 4, "pad2") * 0.1;
+pad += Pad(RSeq("0dd 3dd 5dd 7dd", 2, "rs38"), 4, "pad3") * 0.1;
+pad = 
+FX(pad, "fx2", 0.15f, 0.6f) 
+% Pan(0, 1) * 5;
+pad = pad * FI(60, "padfi") + pad % Fourier(0.07f, "f1") * FO(60, "padfourierfo");
+
+return (sequence + pad) % HP1(0.001f, $"masterhp");
+
+Source FM(NoteSource n)
+{
+	var fm = (n * 0.5) % Osc(20);
+	
+	return (n + fm) 
+	% Osc(0.04)
+	* AD(n, 0f, 0.3f);
+}
+
+Source Pad(NoteSource src, Source lfoFreq, string id) 
+{
+	var tone = src * 0.5f * 0.75f;
+	
+	Source r = 
+		PadTone(tone, 1, 1, $"{id}a") % Overdrive(2, $"{id}ao")
+	+ PadTone(tone, 1.01f, 2.1, $"{id}b") % Pan(-0.4f) 
+	+ PadTone(tone, 0.99f, 3.1, $"{id}c") % Pan(0.4f);
+			
+	return r * 0.4f % LP1(lfoFreq * 2 % Saw(0.1, $"{id}_lfo") + 0.1, $"{id}_lp");
+}
+
+Source PadTone(Source tone, Source delta, Source freq, string id) 
+{
+	return tone * 2 * (delta + freq % Osc(0.02, $"{id}oscl")) % Saw(1, $"{id}0");
+}
+
+Source FX(Source src, string id, Source dry, float len)
+{
+	var osc = 1;
+	return src
+		% Delay(0.3f * osc, s => s * len, $"{id}_6d1")
+		% Delay(0.2f * osc, s => s * len, $"{id}_6d2")
+		% Chr($"{id}_chr602")
+		% Delay(0.54f * osc, s => s * len, $"{id}_6d3")
+		% Delay(0.33f * osc, s => s * len, $"{id}_6d4")
+		% Chr($"{id}_c6chr3")
+		% Pan(0, 1.5)
+		% HP1(0.06f, $"{id}_hpf")
+		+ src * dry;
+}

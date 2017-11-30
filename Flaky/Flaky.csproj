@@ -135,6 +135,7 @@
     </None>
     <AppDesigner Include="Properties\" />
     <EmbeddedResource Include="Resources\CSharp-Dark-Mode.xshd" />
+    <EmbeddedResource Include="Resources\demo.flk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
