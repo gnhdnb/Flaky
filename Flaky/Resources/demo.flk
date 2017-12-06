@@ -9,7 +9,7 @@ var sequence = (FM(seq1) + FM(seq2))
 
 sequence = FX(sequence, "fx1", 0f, 0.6f) * 10;
 
-sequence = sequence % Trans(0.25f, 0f, AD(transientRetrigger, 0f, 0.1f), "t2");
+sequence = sequence % Trans(0.25f, 0f, AD(transientRetrigger, 0f, 0.1f), "t2") * 3;
 
 var pad = Pad(RSeq("0 3 5 7", 2, "rs36"), 4, "pad") * 0.1;
 pad += Pad(RSeq("0 3 5 7", 2, "rs37"), 4, "pad2") * 0.1;

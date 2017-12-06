@@ -17,15 +17,16 @@ namespace Flaky
 
 		private class State
 		{
-			private const int bufferSize = 44100;
-			public Sample[] Buffer = new Sample[bufferSize];
 			private double[] ampBuffer = new double[441];
 			private int ampPosition = 0;
-			private float readerPosition = 0;
-			private int writerPosition = 0;
-			private int direction = 1;
 			private double lastAmp = 0;
 			private bool triggered = false;
+			private const int crossfadeInterval = 441;
+
+			private Buffer primary = new Buffer();
+			private Buffer secondary = new Buffer();
+
+			private float currentCrossfade = 1;
 
 			public State()
 			{
@@ -37,13 +38,17 @@ namespace Flaky
 
 			public void Reset()
 			{
-				readerPosition = 0;
-				writerPosition = 0;
+				var temp = primary;
+				primary = secondary;
+				secondary = temp;
+				primary.Reset();
+				currentCrossfade = 0;
 			}
 
 			public void WriteSample(Sample sample, float sensitivity, float trigger)
 			{
-				writerPosition++;
+				primary.MoveWriter();
+				secondary.MoveWriter();
 
 				if (sensitivity > 1)
 					sensitivity = 1;
@@ -74,42 +79,32 @@ namespace Flaky
 
 				lastAmp = lastAmp - 0.01 * lastAmp;
 
-				if (writerPosition >= bufferSize || reset)
+				if (primary.ShouldReset(crossfadeInterval) || reset)
 					Reset();
 
-				Buffer[writerPosition] = sample;
+				primary.Write(sample);
+				secondary.Write(sample);
 			}
 
 			public Sample ReadSample(float pitch)
 			{
-				readerPosition += direction * pitch;
+				primary.MoveReader(pitch);
+				secondary.MoveReader(pitch);
 
-				if (readerPosition < 0)
+				Crossfade();
+
+				return primary.Read() * currentCrossfade + secondary.Read() * (1 - currentCrossfade);
+			}
+
+			private void Crossfade()
+			{
+				if(currentCrossfade < 1)
 				{
-					readerPosition = -readerPosition;
-					direction = -direction;
+					currentCrossfade += 1 / (float)crossfadeInterval;
 				}
 
-				if (readerPosition > writerPosition)
-				{
-					readerPosition = writerPosition - (readerPosition - writerPosition);
-					direction = -direction;
-				}
-
-				if (readerPosition < 0)
-				{
-					readerPosition = 0;
-					direction = 1;
-				}
-
-				var previousPosition = Math.Floor(readerPosition);
-				var nextPosition = Math.Ceiling(readerPosition);
-
-				var delta = readerPosition - previousPosition;
-
-				return
-					Buffer[(int)previousPosition] * (1 - (float)delta)
-					 + Buffer[(int)nextPosition] * (float)delta;
+				if (currentCrossfade > 1)
+					currentCrossfade = 1;
 			}
 		}
 
@@ -158,6 +153,80 @@ namespace Flaky
 		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			this.source = mainSource;
+		}
+
+		private class Buffer
+		{
+			private const int bufferSize = 441000;
+			private Sample[] Samples = new Sample[bufferSize];
+			private float readerPosition = 0;
+			private int writerPosition = 0;
+			private int direction = 1;
+			private bool writerOffline = false;
+
+			public void Reset()
+			{
+				readerPosition = 0;
+				writerPosition = 0;
+				writerOffline = false;
+			}
+
+			public bool ShouldReset(int crossfadeInterval)
+			{
+				return writerPosition >= bufferSize - 1 - crossfadeInterval;
+			}
+
+			public void Write(Sample sample)
+			{
+				if(!writerOffline)
+					Samples[writerPosition] = sample;
+
+				if (writerPosition >= bufferSize - 1)
+				{
+					writerOffline = true;
+				}
+			}
+
+			public void MoveWriter()
+			{
+				if (writerPosition < bufferSize - 1)
+					writerPosition++;
+			}
+
+			public void MoveReader(float pitch)
+			{
+				readerPosition += direction * pitch;
+
+				if (readerPosition < 0)
+				{
+					readerPosition = -readerPosition;
+					direction = -direction;
+				}
+
+				if (readerPosition > writerPosition)
+				{
+					readerPosition = writerPosition - (readerPosition - writerPosition);
+					direction = -direction;
+				}
+
+				if (readerPosition < 0)
+				{
+					readerPosition = 0;
+					direction = 1;
+				}
+			}
+
+			public Sample Read()
+			{
+				var previousPosition = Math.Floor(readerPosition);
+				var nextPosition = Math.Ceiling(readerPosition);
+
+				var delta = readerPosition - previousPosition;
+
+				return
+					Samples[(int)previousPosition] * (1 - (float)delta)
+					 + Samples[(int)nextPosition] * (float)delta;
+			}
 		}
 	}
 }
