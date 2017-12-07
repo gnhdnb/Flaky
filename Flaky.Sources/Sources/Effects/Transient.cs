@@ -22,6 +22,7 @@ namespace Flaky
 			private double lastAmp = 0;
 			private bool triggered = false;
 			private const int crossfadeInterval = 441;
+			private long ticksFromLatestReset = 0;
 
 			private Buffer primary = new Buffer();
 			private Buffer secondary = new Buffer();
@@ -43,6 +44,7 @@ namespace Flaky
 				secondary = temp;
 				primary.Reset();
 				currentCrossfade = 0;
+				ticksFromLatestReset = 0;
 			}
 
 			public void WriteSample(Sample sample, float sensitivity, float trigger)
@@ -72,8 +74,11 @@ namespace Flaky
 				}
 
 				if (ampBuffer[ampPosition] >= 0
-					&& lastAmp > ampBuffer[ampPosition] * (2 - sensitivity))
+					&& lastAmp > ampBuffer[ampPosition] * (2 - sensitivity)
+					&& ticksFromLatestReset > crossfadeInterval)
+				{
 					reset = true;
+				}
 
 				ampBuffer[ampPosition] = lastAmp;
 
@@ -84,6 +89,7 @@ namespace Flaky
 
 				primary.Write(sample);
 				secondary.Write(sample);
+				ticksFromLatestReset++;
 			}
 
 			public Sample ReadSample(float pitch)
@@ -110,11 +116,19 @@ namespace Flaky
 
 		internal Transient(Source pitch, string id) : this(pitch, 0.7, id) { }
 
+		internal Transient(NoteSource pitch, string id) : this(pitch * (1 / Note.BaselineFrequency), 0.7, id) { }
+
 		internal Transient(Source pitch, Source sensitivity, string id) : base(id)
 		{
 			this.pitch = pitch;
 			this.sensitivity = sensitivity;
 		}
+
+		internal Transient(NoteSource pitch, Source sensitivity, string id)
+			: this(pitch * (1 / Note.BaselineFrequency), sensitivity, id) { }
+
+		internal Transient(NoteSource pitch, Source sensitivity, Source trigger, string id) 
+			: this(pitch * (1 / Note.BaselineFrequency), sensitivity, trigger, id) { }
 
 		internal Transient(Source pitch, Source sensitivity, Source trigger, string id) : base(id)
 		{

@@ -10,7 +10,7 @@ namespace Flaky
 	{
 		private readonly int number;
 		private readonly static double ratio = Math.Pow(2, 1d / 12d);
-		private const float a4 = 440;
+		public const float BaselineFrequency = 440;
 		private readonly float frequency;
 		private readonly float pitch;
 
@@ -18,7 +18,7 @@ namespace Flaky
 		{
 			this.number = number;
 			pitch = (float)Math.Pow(ratio, number);
-			frequency = (float)(a4 * Math.Pow(ratio, number));
+			frequency = (float)(BaselineFrequency * Math.Pow(ratio, number));
 		}
 
 		internal float ToFrequency()

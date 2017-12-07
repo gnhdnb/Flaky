@@ -25,9 +25,15 @@ namespace Flaky
 			{ return Pipe(new Fourier(effect, id)); }
 		protected PipingSourceWrapper Trans(Source pitch, string id)
 			{ return Pipe(new Transient(pitch, id)); }
+		protected PipingSourceWrapper Trans(NoteSource pitch, string id)
+			{ return Pipe(new Transient(pitch, id)); }
+		protected PipingSourceWrapper Trans(NoteSource pitch, Source sensitivity, string id)
+		{ return Pipe(new Transient(pitch, sensitivity, id)); }
+
+		protected PipingSourceWrapper Trans(NoteSource pitch, Source sensitivity, Source trigger, string id)
+			{ return Pipe(new Transient(pitch, sensitivity, trigger, id)); }
 		protected PipingSourceWrapper Trans(Source pitch, Source sensitivity, string id)
 			{ return Pipe(new Transient(pitch, sensitivity, id)); }
-
 		protected PipingSourceWrapper Trans(Source pitch, Source sensitivity, Source trigger, string id)
 			{ return Pipe(new Transient(pitch, sensitivity, trigger, id)); }
 
