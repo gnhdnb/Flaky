@@ -13,13 +13,18 @@ namespace Flaky
 
 		internal PSeq(string sequence, int size, string id)
 		{
-			sequencers = sequence
+			sequencers = CreateSequencers(sequence, size, id);
+
+			currentNotes = sequence.Select(s => new PlayingNote()).ToArray();
+		}
+
+		protected virtual Seq[] CreateSequencers(string sequence, int size, string id)
+		{
+			return sequence
 				.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
 				.Where(s => !string.IsNullOrWhiteSpace(s))
 				.Select((s, i) => new Seq(s, size, $"{id}-{i}"))
 				.ToArray();
-
-			currentNotes = sequence.Select(s => new PlayingNote()).ToArray();
 		}
 
 		protected override NoteSource[] Sources => sequencers;

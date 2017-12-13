@@ -28,7 +28,7 @@ namespace Flaky
 		protected PipingSourceWrapper Trans(NoteSource pitch, string id)
 			{ return Pipe(new Transient(pitch, id)); }
 		protected PipingSourceWrapper Trans(NoteSource pitch, Source sensitivity, string id)
-		{ return Pipe(new Transient(pitch, sensitivity, id)); }
+			{ return Pipe(new Transient(pitch, sensitivity, id)); }
 
 		protected PipingSourceWrapper Trans(NoteSource pitch, Source sensitivity, Source trigger, string id)
 			{ return Pipe(new Transient(pitch, sensitivity, trigger, id)); }
@@ -80,6 +80,8 @@ namespace Flaky
 
 		protected PSeq PSeq(string sequence, int size, string id)
 			{ return new PSeq(sequence, size, id); }
+		protected Groover Groover(string sequence, string id)
+			{ return new Groover(sequence, id); }
 		protected SequenceWrapper Seq(string sequence)
 			{ return new SequenceWrapper(sequence); }
 		protected Seq Seq(IEnumerable<int> notes, Source length)
