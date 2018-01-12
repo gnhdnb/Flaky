@@ -16,6 +16,11 @@ namespace Flaky
 		public RSeq(IEnumerable<int> notes, Source length, string id) : base(notes, length, id) { }
 		public RSeq(IEnumerable<int> notes, int size, string id) : base(notes, size, id) { }
 
+		public RSeq(string sequence, Source length, bool skipSilentNotes, string id) : base(sequence, length, id)
+		{
+			SkipSilentNotes = skipSilentNotes;
+		}
+
 		protected override int GetNextNoteIndex(IContext context, State state)
 		{
 			int newIndex;
@@ -38,6 +43,8 @@ namespace Flaky
 		private Source length;
 		private int size;
 		protected State state;
+
+		protected bool SkipSilentNotes { get; set; } = true;
 
 		protected class State
 		{
@@ -83,6 +90,13 @@ namespace Flaky
 			this.length = length;
 		}
 
+		public Seq(string sequence, Source length, bool skipSilentNotes, string id) : base(id)
+		{
+			this.notes = ParseSequence(sequence);
+			this.length = length;
+			SkipSilentNotes = skipSilentNotes;
+		}
+
 		public Seq(string sequence, int size, string id) : base(id)
 		{
 			this.notes = ParseSequence(sequence);
@@ -91,6 +105,11 @@ namespace Flaky
 			this.size = size;
 			if (size <= 0)
 				size = 1;
+		}
+
+		public Seq(string sequence, int size, bool skipSilentNotes, string id) : this(sequence, size, id)
+		{
+			SkipSilentNotes = skipSilentNotes;
 		}
 
 		public override PlayingNote GetNote(IContext context)
@@ -110,7 +129,7 @@ namespace Flaky
 			{
 				var nextNote = NextNote(context, state);
 
-				if(!nextNote.IsSilent)
+				if(!nextNote.IsSilent || !SkipSilentNotes)
 				{
 					state.currentNote = nextNote;
 					state.latestLength = GetLength(context);
@@ -135,7 +154,7 @@ namespace Flaky
 			}
 			else
 			{
-				return context.Sample % ((16 * 60 * context.SampleRate) / (context.BPM * size)) == 0;
+				return (context.Sample % ((16 * 60 * context.SampleRate) / (context.BPM * size))) == 0;
 			}
 		}
 
