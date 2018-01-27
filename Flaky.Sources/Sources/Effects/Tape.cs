@@ -15,36 +15,37 @@ namespace Flaky
 
 		private class State
 		{
-			const int queueSize = 15;
+			const int preeffectBufferSize = 15;
 			private double velocity = 0;
 			private double velocity2 = 0;
 			private double current = 0;
-			private double oscillator = 0;
-			private double[] queue = new double[queueSize];
-			private int queueCounter = 0;
-			private double latestSample = 0;
-			private double queueAverage = 0;
+			private double[] preeffectBuffer = new double[preeffectBufferSize];
+			private int preeffectBufferCounter = 0;
+			private double preeffectAverage = 0;
 			private double hpIntegrator = 0;
 			private double lpIntegrator = 0;
 
-			internal float[] buffer = new float[44100];
-			internal int position;
+			internal Sample[] detonationBuffer = new Sample[44100];
+			internal int detonationBufferPosition;
 			internal long sample;
 
-			public float NextSample(float sample, float noise, float lfo)
+			public Sample NextSample(Sample stereo, float noise, float lfo)
 			{
-				var tunedSample = OD(sample * 8 + noise * 0.001f) * 0.25f * 0.07f;
+				var sum = stereo.Left + stereo.Right;
+				var difference = stereo.Left - stereo.Right;
 
-				var currentSample = queue[queueCounter];
+				var tunedSample = Drive(sum * 8 + noise * 0.001f) * 0.25f * 0.07f;
 
-				queueAverage += tunedSample / queueSize;
-				queueAverage -= currentSample / queueSize;
-				queue[queueCounter] = tunedSample;
-				queueCounter++;
-				if (queueCounter >= queueSize)
-					queueCounter = 0;
+				var currentSample = preeffectBuffer[preeffectBufferCounter];
 
-				var acc = (queueAverage - currentSample);
+				preeffectAverage += tunedSample / preeffectBufferSize;
+				preeffectAverage -= currentSample / preeffectBufferSize;
+				preeffectBuffer[preeffectBufferCounter] = tunedSample;
+				preeffectBufferCounter++;
+				if (preeffectBufferCounter >= preeffectBufferSize)
+					preeffectBufferCounter = 0;
+
+				var acc = (preeffectAverage - currentSample);
 
 				velocity += acc * acc * acc * 30;
 				velocity = velocity * 0.9f;
@@ -54,51 +55,55 @@ namespace Flaky
 
 				current += velocity + velocity2;
 
-				current = OD(current * 20) / 20;
-
-				latestSample = currentSample;
+				current = Drive(current * 20) / 20;
 
 				hpIntegrator += (current - hpIntegrator) / (400 * (1 - Math.Abs(hpIntegrator * 20)));
 
 				lpIntegrator += (current - hpIntegrator - lpIntegrator) /
 					(1.5f + Math.Abs(lpIntegrator * 30) * Math.Abs(lpIntegrator * 30));
 
-				return Detonation((float)lpIntegrator * 20, lfo);
+				var result = new Sample
+				{
+					Right = (float)lpIntegrator * 10 - difference / 2,
+					Left = (float)lpIntegrator * 10 + difference / 2
+				};
+
+				return Detonation(result, lfo);
 			}
 
-			private float Detonation(float sample, float lfo)
+			private Sample Detonation(Sample sample, float lfo)
 			{
-				position ++;
+				detonationBufferPosition ++;
 
-				while (position >= buffer.Length)
-					position -= buffer.Length;
+				while (detonationBufferPosition >= detonationBuffer.Length)
+					detonationBufferPosition -= detonationBuffer.Length;
 
-				buffer[position] = sample;
+				detonationBuffer[detonationBufferPosition] = sample;
 
-				var finetune = (lfo - 1) * 10 - 1;
+				var offset = (lfo - 1) * 10 - 1;
 
-				var roughPoint = (int)Math.Floor(finetune);
-				var fineOffset = (float)(finetune - Math.Floor(finetune));
+				var roughOffset = (int)Math.Floor(offset);
+				var fineOffset = (float)(offset - Math.Floor(offset));
 
-				var readPosition = position + roughPoint;
+				var readPosition = detonationBufferPosition + roughOffset;
 
 				return
-					buffer[CorrectPosition(readPosition)] * (1 - fineOffset)
-					+ buffer[CorrectPosition(readPosition + 1)] * fineOffset;
+					detonationBuffer[CorrectPosition(readPosition)] * (1 - fineOffset)
+					+ detonationBuffer[CorrectPosition(readPosition + 1)] * fineOffset;
 			}
 
 			private long CorrectPosition(long position)
 			{
 				if (position < 0)
-					position += buffer.Length;
+					position += detonationBuffer.Length;
 
-				if (position >= buffer.Length)
-					position -= buffer.Length;
+				if (position >= detonationBuffer.Length)
+					position -= detonationBuffer.Length;
 
 				return position;
 			}
 
-			private double OD(double value)
+			private double Drive(double value)
 			{
 				return Math.Sign(value) * (1 - (float)Math.Pow(Math.E, -Math.Abs(value)));
 			}
@@ -125,12 +130,11 @@ namespace Flaky
 			var inputSample = source.Play(context);
 			var noiseSample = noise.Play(context);
 			var lfoSample = lfo.Play(context);
-			var result = state.NextSample(
-				inputSample.Value, 
+
+			return state.NextSample(
+				inputSample, 
 				noiseSample.Value,
 				lfoSample.Value);
-
-			return new Sample { Left = result, Right = result };
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)
