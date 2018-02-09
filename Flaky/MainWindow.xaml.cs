@@ -38,7 +38,15 @@ namespace WPF
 
 			Host = new Host(1, Path.Combine(GetLocation(), "flaky.wav"));
 			var code = Load();
-			textBlock.Text = string.Join("\n", Host.Recompile(0, code));
+
+			try
+			{
+				textBlock.Text = string.Join("\n", Host.Recompile(0, code));
+			} catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+
 			Host.Play();
 			textEditor.Text = code;
 

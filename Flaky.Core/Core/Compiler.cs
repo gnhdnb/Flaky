@@ -71,6 +71,7 @@ namespace Flaky
 				else
 				{
 					ms.Seek(0, SeekOrigin.Begin);
+
 					Assembly assembly = Assembly.Load(ms.ToArray());
 
 					Type type = assembly.GetType("Flaky.Player");

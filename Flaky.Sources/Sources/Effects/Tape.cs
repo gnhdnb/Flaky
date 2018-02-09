@@ -9,7 +9,8 @@ namespace Flaky
 	public class Tape : Source, IPipingSource
 	{
 		private Source source;
-		private Noise noise = new Noise();
+		private Source hpNoiseSum;
+		private Source hpNoiseDiff;
 		private Osc lfo;
 		private State state;
 
@@ -29,12 +30,12 @@ namespace Flaky
 			internal int detonationBufferPosition;
 			internal long sample;
 
-			public Sample NextSample(Sample stereo, float noise, float lfo)
+			public Sample NextSample(Sample stereo, float sumNoise, float diffNoise, float lfo)
 			{
 				var sum = stereo.Left + stereo.Right;
-				var difference = stereo.Left - stereo.Right;
+				var difference = stereo.Left - stereo.Right + diffNoise * 0.0002f;
 
-				var tunedSample = Drive(sum * 8 + noise * 0.001f) * 0.25f * 0.07f;
+				var tunedSample = Drive(sum * 8 + sumNoise * 0.0002f) * 0.25f * 0.07f;
 
 				var currentSample = preeffectBuffer[preeffectBufferCounter];
 
@@ -112,28 +113,40 @@ namespace Flaky
 		internal Tape(string id) : base(id)
 		{
 			lfo = new Osc(5, 1, $"{id}_lfo");
+			hpNoiseSum = CreateNoiseChain($"{id}_hpNoiseSum");
+			hpNoiseDiff = CreateNoiseChain($"{id}_hpNoiseDiff");
+		}
+
+		private Source CreateNoiseChain(string id)
+		{
+			Source result = new OnePoleHPFilter(new Noise(), 1f, $"{id}_hpNoise1");
+			result = new OnePoleHPFilter(result, 1f, $"{id}_hpNoise2");
+
+			return result;
 		}
 
 		public override void Dispose()
 		{
-			Dispose(noise, source,lfo);
+			Dispose(hpNoiseSum, hpNoiseDiff, source,lfo);
 		}
 
 		public override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			Initialize(context, noise, source, lfo);
+			Initialize(context, hpNoiseSum, hpNoiseDiff, source, lfo);
 		}
 
 		protected override Sample NextSample(IContext context)
 		{
 			var inputSample = source.Play(context);
-			var noiseSample = noise.Play(context);
+			var sumNoiseSample = hpNoiseSum.Play(context);
+			var diffNoiseSample = hpNoiseDiff.Play(context);
 			var lfoSample = lfo.Play(context);
 
 			return state.NextSample(
-				inputSample, 
-				noiseSample.Value,
+				inputSample,
+				sumNoiseSample.Value,
+				diffNoiseSample.Value,
 				lfoSample.Value);
 		}
 
