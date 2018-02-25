@@ -112,6 +112,7 @@
     <Compile Include="Sources\Player.cs" />
     <Compile Include="Sources\Sequence.cs" />
     <Compile Include="Sources\Source.cs" />
+    <Compile Include="Sources\Utility\Analog.cs" />
     <Compile Include="Sources\Utility\Recorder.cs" />
     <Compile Include="Sources\Waveform\SampleAndHold.cs" />
     <Compile Include="Sources\Waveform\DoublePendulum.cs" />
