@@ -15,9 +15,9 @@ namespace Flaky
 		private readonly Thread worker;
 		private readonly Queue<float[]> buffers = new Queue<float[]>();
 		private readonly Semaphore buffersCounter = new Semaphore(0, 3);
-		private readonly Semaphore reverseBuffersCounter = new Semaphore(0, 3);
 		private bool disposed = false;
 		private int codeVersion = 0;
+		private readonly float[] nullBuffer = new float[13230];
 
 		internal Channel(int sampleRate, Configuration configuration)
 		{
@@ -53,10 +53,11 @@ namespace Flaky
 
 		internal float[] ReadNextBatch()
 		{
-			reverseBuffersCounter.WaitOne();
-
 			lock (buffers)
 			{
+				if (buffers.Count == 0)
+					return nullBuffer;
+
 				var result = buffers.Dequeue();
 				buffersCounter.Release();
 				return result;
@@ -91,7 +92,6 @@ namespace Flaky
 				lock (buffers)
 				{
 					buffers.Enqueue(buffer);
-					reverseBuffersCounter.Release();
 				}
 			}
 		}

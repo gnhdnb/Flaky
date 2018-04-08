@@ -61,7 +61,13 @@ namespace WPF
 				{
 					textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
 					textEditor.TextArea.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFC8C8C8"));
+					textEditor.TextArea.FontFamily = new FontFamily("Consolas");
+					textEditor.WordWrap = true;
+					textEditor.TextArea.FontSize = 14;
 					textEditor.ShowLineNumbers = true;
+
+					textBlock.FontFamily = new FontFamily("Consolas");
+					textBlock.FontSize = 14;
 				}
 			}
 		}

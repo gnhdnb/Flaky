@@ -15,12 +15,12 @@
 			FontFamily="Consolas"
 			FontSize="14pt"
 			HorizontalAlignment="STRETCH" 
-			Margin="10,10,10,143" 
+			Margin="3,3,3,134" 
 			VerticalAlignment="STRETCH" 
 			Height="AUTO" 
 			Width="AUTO"
 			Background="#FF1E1E1E"
 		/>
-		<TextBlock x:Name="textBlock" HorizontalAlignment="STRETCH" VerticalAlignment="Bottom" Margin="10,0,10,10" TextWrapping="Wrap" Text="" Background="#FF1E1E1E" Foreground="#FFA60000" Height="128" Width="AUTO"/>
+		<TextBlock x:Name="textBlock" VerticalAlignment="Bottom" Margin="3,0,3,3" TextWrapping="Wrap" Text="" Background="#FF1E1E1E" Foreground="#FFA60000" Height="128"/>
 	</Grid>
 </Window>

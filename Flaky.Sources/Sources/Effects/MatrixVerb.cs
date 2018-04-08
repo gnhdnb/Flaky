@@ -9,7 +9,7 @@ namespace Flaky
 	public class MatrixVerb : Source, IPipingSource
 	{
 		private const int sizex = 122;
-		private const int sizey = 10;
+		private const int sizey = 4;
 		private float[,] value = new float[sizex, sizey];
 		private float[,] velocity = new float[sizex, sizey];
 		private Source source;
@@ -42,7 +42,7 @@ namespace Flaky
 
 			var sample = source.Play(context);
 			value[1, 1] = sample.Left;
-			value[1, 8] = sample.Right;
+			value[1, 2] = sample.Right;
 
 			for (int x = 1; x < sizex - 1; x++)
 			for (int y = 1; y < sizey - 1; y++)
@@ -65,7 +65,7 @@ namespace Flaky
 			return new Sample
 			{
 				Left = value[2, 1],
-				Right = value[2, 8]
+				Right = value[2, 2]
 			};
 		}
 

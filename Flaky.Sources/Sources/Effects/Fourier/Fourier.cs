@@ -19,6 +19,7 @@ namespace Flaky
 		private class State : IDisposable
 		{
 			public const int framesCount = 8192;
+			private bool reverse = false;
 			private int effect;
 			public Thread worker;
 			public BlockingCollection<Sample[]> inputQueue = new BlockingCollection<Sample[]>();
@@ -47,8 +48,14 @@ namespace Flaky
 
 			public void Initialize(float effect)
 			{
+				if (effect < -1)
+					effect = -1;
+
 				if (effect < 0)
-					effect = 0;
+				{
+					this.reverse = true;
+					effect = -effect;
+				}
 
 				if (effect > 1)
 					effect = 1;
@@ -72,10 +79,10 @@ namespace Flaky
 
 						for (int i = 0; i < framesCount; i++)
 						{
-							if (Power(leftOutputBuffer[i]) > leftThreshold)
+							if (Power(leftOutputBuffer[i]) >= leftThreshold)
 								leftOutputBuffer[i] = 0;
 
-							if (Power(rightOutputBuffer[i]) > rightThreshold)
+							if (Power(rightOutputBuffer[i]) >= rightThreshold)
 								rightOutputBuffer[i] = 0;
 						}
 
@@ -90,7 +97,7 @@ namespace Flaky
 
 			private float ThresholdPower(float[] buffer)
 			{
-				var orderedPower = buffer
+				float[] orderedPower = buffer
 					.Select(v => Power(v))
 					.OrderBy(v => v)
 					.ToArray();
@@ -110,7 +117,7 @@ namespace Flaky
 
 			private float Power(float value)
 			{
-				return Math.Abs(value);
+				return reverse ? -Math.Abs(value) : Math.Abs(value);
 			}
 
 			private void ImportSamples(Sample[] input, float[] leftBuffer, float[] rightBuffer)
