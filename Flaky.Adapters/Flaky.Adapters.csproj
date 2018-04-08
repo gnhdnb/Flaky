@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apc40\Apc40MixerAdapter.cs" />
+    <Compile Include="NAudio\MultipleWaveReader.cs" />
     <Compile Include="NAudio\WaveAdapter.cs" />
     <Compile Include="NAudio\WaveWriter.cs" />
     <Compile Include="NAudio\WaveReader.cs" />

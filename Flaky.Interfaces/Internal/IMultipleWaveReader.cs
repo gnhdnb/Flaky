@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IWaveReaderFactory
+	interface IMultipleWaveReader
 	{
-		IWaveReader Create(string fileName);
-
-		IMultipleWaveReader Create(string folder, string pack);
+		Sample? Read(int wave, long index);
+		long Length(int wave);
+		int Waves { get; }
 	}
 }

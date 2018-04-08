@@ -13,9 +13,8 @@ namespace Flaky
 	{
 		private readonly Sample[] sample;
 
-		public WaveReader(string fileName)
+		public WaveReader(string fullPath)
 		{
-			var fullPath = Path.Combine(GetLocation(), $@"samples\{fileName}.wav");
 			var reader = new WaveFileReader(fullPath);
 
 			List<Sample> sample = new List<Sample>();
@@ -56,11 +55,6 @@ namespace Flaky
 			{
 				return sample.LongLength;
 			}
-		}
-
-		private static string GetLocation()
-		{
-			return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 		}
 	}
 }

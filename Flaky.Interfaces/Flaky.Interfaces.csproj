@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internal\IBufferedSource.cs" />
+    <Compile Include="Internal\IMultipleWaveReader.cs" />
     <Compile Include="Internal\IWaveWriterFactory.cs" />
     <Compile Include="Internal\IWaveWriter.cs" />
     <Compile Include="Public\IChannelVolume.cs" />

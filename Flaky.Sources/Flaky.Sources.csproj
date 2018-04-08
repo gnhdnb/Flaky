@@ -125,6 +125,7 @@
     <Compile Include="Sources\Waveform\Noise.cs" />
     <Compile Include="Sources\Waveform\Sampler.cs" />
     <Compile Include="Sources\Waveform\ThreeBodiesOscillator.cs" />
+    <Compile Include="Sources\Waveform\WaveTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">

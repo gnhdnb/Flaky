@@ -63,6 +63,8 @@ namespace Flaky
 			{ return Pipe(new MatrixVerb(viscosity)); }
 		protected PipingSourceWrapper Overdrive(Source overdrive, string id)
 			{ return Pipe(new Overdrive(overdrive, id)); }
+		protected PipingSourceWrapper OD(Source overdrive, string id)
+			{ return Pipe(new Overdrive(overdrive, id)); }
 		protected PipingSourceWrapper Tape(string id)
 			{ return Pipe(new Tape(id)); }
 		protected PipingSourceWrapper Pan(Source position)
@@ -142,6 +144,9 @@ namespace Flaky
 			{ return Pipe(new Osc(amplitude)); }
 		protected PipingSourceWrapper Osc(Source amplitude, string id)
 			{ return Pipe(new Osc(amplitude, id)); }
+
+		protected PipingSourceWrapper WT(string pack, Source selector, string id)
+			{ return Pipe(new WaveTable(pack, selector, id)); }
 
 		protected PipingSourceWrapper Saw()
 			{ return Pipe(new Saw()); }
