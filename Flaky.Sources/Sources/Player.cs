@@ -67,6 +67,8 @@ namespace Flaky
 			{ return Pipe(new Overdrive(overdrive, id)); }
 		protected PipingSourceWrapper Tape(string id)
 			{ return Pipe(new Tape(id)); }
+		protected PipingSourceWrapper Tape(float noiseLevel, string id)
+			{ return Pipe(new Tape(noiseLevel, id)); }
 		protected PipingSourceWrapper Pan(Source position)
 			{ return Pipe(new Pan(position)); }
 		protected PipingSourceWrapper Pan(Source position, Source width)

@@ -15,6 +15,7 @@ namespace Flaky
 		private DetonationState state;
 		private Analog analog;
 		private Hold hold;
+		private readonly float noiseLevel;
 
 		private class DetonationState
 		{
@@ -65,8 +66,18 @@ namespace Flaky
 			}
 		}
 
-		internal Tape(string id) : base(id)
+		internal Tape(string id) : this(1.0f, id) { }
+
+		internal Tape(float noiseLevel, string id) : base(id)
 		{
+			if (noiseLevel < 0)
+				noiseLevel = 0;
+
+			if (noiseLevel > 1)
+				noiseLevel = 1;
+
+			this.noiseLevel = noiseLevel;
+
 			lfo = new Osc(5, 1, $"{id}_lfo");
 			hpNoiseSum = CreateNoiseChain($"{id}_hpNoiseSum");
 			hpNoiseDiff = CreateNoiseChain($"{id}_hpNoiseDiff");
@@ -100,8 +111,8 @@ namespace Flaky
 			var diffNoiseSample = hpNoiseDiff.Play(context);
 			var lfoSample = lfo.Play(context);
 
-			var sum = inputSample.Left + inputSample.Right + sumNoiseSample.Value * 0.00004f;
-			var difference = inputSample.Left - inputSample.Right + diffNoiseSample.Value * 0.00001f;
+			var sum = inputSample.Left + inputSample.Right + sumNoiseSample.Value * 0.00004f * noiseLevel;
+			var difference = inputSample.Left - inputSample.Right + diffNoiseSample.Value * 0.00001f * noiseLevel;
 
 			hold.Sample = new Sample
 			{
