@@ -104,6 +104,7 @@
     <Compile Include="Sources\Notes\Groover.cs" />
     <Compile Include="Sources\Notes\PSeq.cs" />
     <Compile Include="Sources\Notes\SequenceDelay.cs" />
+    <Compile Include="Sources\Notes\SequenceTranspose.cs" />
     <Compile Include="Sources\PipingSourceWrapper.cs" />
     <Compile Include="Sources\Notes\Seq.cs" />
     <Compile Include="Sources\Notes\Note.cs" />

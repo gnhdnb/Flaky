@@ -34,6 +34,8 @@ namespace Flaky
 			return context.Sample - startSample;
 		}
 
+		public long StartSample { get { return startSample; } }
+
 		public Note Note
 		{
 			get { return note; }

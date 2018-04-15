@@ -109,16 +109,30 @@ namespace Flaky
 		protected Seq Seq(string sequence, int size, string id)
 			{ return new Seq(sequence, size, id); }
 		protected Seq Seq(string sequence, int size, bool skipSilentNotes, string id)
-		{ return new Seq(sequence, size, skipSilentNotes, id); }
+			{ return new Seq(sequence, size, skipSilentNotes, id); }
+		protected Seq S(string sequence, Source length, string id)
+			{ return new Seq(sequence, length, id); }
+		protected Seq S(string sequence, Source length, bool skipSilentNotes, string id)
+			{ return new Seq(sequence, length, skipSilentNotes, id); }
+		protected Seq S(string sequence, int size, string id)
+			{ return new Seq(sequence, size, id); }
+		protected Seq S(string sequence, int size, bool skipSilentNotes, string id)
+			{ return new Seq(sequence, size, skipSilentNotes, id); }
 
 		protected RSeq RSeq(string sequence, Source length, string id)
 			{ return new RSeq(sequence, length, id); }
-
 		protected RSeq RSeq(string sequence, Source length, bool skipSilentNotes, string id)
-		{ return new RSeq(sequence, length, skipSilentNotes, id); }
-
+			{ return new RSeq(sequence, length, skipSilentNotes, id); }
 		protected RSeq RSeq(string sequence, int size, string id)
 			{ return new RSeq(sequence, size, id); }
+
+		protected RSeq RS(string sequence, Source length, string id)
+			{ return new RSeq(sequence, length, id); }
+		protected RSeq RS(string sequence, Source length, bool skipSilentNotes, string id)
+			{ return new RSeq(sequence, length, skipSilentNotes, id); }
+		protected RSeq RS(string sequence, int size, string id)
+			{ return new RSeq(sequence, size, id); }
+
 		protected RSeq RSeq(IEnumerable<int> notes, Source length, string id)
 			{ return new RSeq(notes, length, id); }
 		protected RSeq RSeq(IEnumerable<int> notes, int size, string id)
@@ -126,6 +140,15 @@ namespace Flaky
 
 		protected PipingSourceWrapper<NoteSource, NoteSource> DSeq(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }
+
+		protected PipingSourceWrapper<NoteSource, NoteSource> SD(int delay, string id)
+			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }
+
+		protected PipingSourceWrapper<NoteSource, NoteSource> ST(int delta)
+			{ return Pipe<NoteSource, NoteSource>(new SequenceTranspose(delta)); }
+
+		protected PipingSourceWrapper<NoteSource, NoteSource> ST(NoteSource delta)
+			{ return Pipe<NoteSource, NoteSource>(new SequenceTranspose(delta)); }
 
 		protected PipingSourceWrapper<NoteSource, Source> DR(params string[] samples)
 			{ return Pipe<NoteSource, Source>(new DR(samples)); }
