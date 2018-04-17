@@ -8,7 +8,7 @@ namespace Flaky
 {
 	public class PSeq : PolyphonicNoteSource
 	{
-		private readonly Seq[] sequencers;
+		private readonly Sequence[] sequencers;
 		private PlayingNote[] currentNotes;
 
 		internal PSeq(string sequence, int size, string id)
@@ -18,12 +18,12 @@ namespace Flaky
 			currentNotes = sequence.Select(s => new PlayingNote()).ToArray();
 		}
 
-		protected virtual Seq[] CreateSequencers(string sequence, int size, string id)
+		protected virtual Sequence[] CreateSequencers(string sequence, int size, string id)
 		{
 			return sequence
 				.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
 				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Select((s, i) => new Seq(s, size, $"{id}-{i}"))
+				.Select((s, i) => new Sequence(s, size, $"{id}-{i}"))
 				.ToArray();
 		}
 

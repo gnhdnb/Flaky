@@ -102,11 +102,16 @@
     <Compile Include="Sources\Envelopes\AD.cs" />
     <Compile Include="Sources\Envelopes\Fade.cs" />
     <Compile Include="Sources\Notes\Groover.cs" />
+    <Compile Include="Sources\Notes\RandomSeqence.cs" />
+    <Compile Include="Sources\Notes\RandomWalkSequence.cs" />
+    <Compile Include="Sources\Notes\Random\IRandomSource.cs" />
     <Compile Include="Sources\Notes\PSeq.cs" />
     <Compile Include="Sources\Notes\SequenceDelay.cs" />
     <Compile Include="Sources\Notes\SequenceTranspose.cs" />
+    <Compile Include="Sources\Notes\Random\XorShiftRandom.cs" />
+    <Compile Include="Sources\Notes\Random\ZigguratGaussianDistribution.cs" />
     <Compile Include="Sources\PipingSourceWrapper.cs" />
-    <Compile Include="Sources\Notes\Seq.cs" />
+    <Compile Include="Sources\Notes\Sequence.cs" />
     <Compile Include="Sources\Notes\Note.cs" />
     <Compile Include="Sources\Notes\NoteSource.cs" />
     <Compile Include="Sources\Notes\PlayingNote.cs" />

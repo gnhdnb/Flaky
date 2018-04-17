@@ -90,53 +90,60 @@ namespace Flaky
 			{ return new Groover(sequence, id); }
 		protected SequenceWrapper Seq(string sequence)
 			{ return new SequenceWrapper(sequence); }
-		protected Seq Seq(IEnumerable<int> notes, Source length)
-			{ return new Seq(notes, length); }
-		protected Seq Seq(IEnumerable<int> notes, Source length, string id)
-			{ return new Seq(notes, length, id); }
-		protected Seq Seq(IEnumerable<int> notes, int size, string id)
-			{ return new Seq(notes, size, id); }
-		protected Seq Seq(IEnumerable<Note> notes, Source length)
-			{ return new Seq(notes, length); }
-		protected Seq Seq(IEnumerable<Note> notes, Source length, string id)
-			{ return new Seq(notes, length, id); }
-		protected Seq Seq(IEnumerable<Note> notes, int size, string id)
-			{ return new Seq(notes, size, id); }
-		protected Seq Seq(string sequence, Source length, string id)
-			{ return new Seq(sequence, length, id); }
-		protected Seq Seq(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new Seq(sequence, length, skipSilentNotes, id); }
-		protected Seq Seq(string sequence, int size, string id)
-			{ return new Seq(sequence, size, id); }
-		protected Seq Seq(string sequence, int size, bool skipSilentNotes, string id)
-			{ return new Seq(sequence, size, skipSilentNotes, id); }
-		protected Seq S(string sequence, Source length, string id)
-			{ return new Seq(sequence, length, id); }
-		protected Seq S(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new Seq(sequence, length, skipSilentNotes, id); }
-		protected Seq S(string sequence, int size, string id)
-			{ return new Seq(sequence, size, id); }
-		protected Seq S(string sequence, int size, bool skipSilentNotes, string id)
-			{ return new Seq(sequence, size, skipSilentNotes, id); }
+		protected Sequence Seq(IEnumerable<int> notes, Source length)
+			{ return new Sequence(notes, length); }
+		protected Sequence Seq(IEnumerable<int> notes, Source length, string id)
+			{ return new Sequence(notes, length, id); }
+		protected Sequence Seq(IEnumerable<int> notes, int size, string id)
+			{ return new Sequence(notes, size, id); }
+		protected Sequence Seq(IEnumerable<Note> notes, Source length)
+			{ return new Sequence(notes, length); }
+		protected Sequence Seq(IEnumerable<Note> notes, Source length, string id)
+			{ return new Sequence(notes, length, id); }
+		protected Sequence Seq(IEnumerable<Note> notes, int size, string id)
+			{ return new Sequence(notes, size, id); }
+		protected Sequence Seq(string sequence, Source length, string id)
+			{ return new Sequence(sequence, length, id); }
+		protected Sequence Seq(string sequence, Source length, bool skipSilentNotes, string id)
+			{ return new Sequence(sequence, length, skipSilentNotes, id); }
+		protected Sequence Seq(string sequence, int size, string id)
+			{ return new Sequence(sequence, size, id); }
+		protected Sequence Seq(string sequence, int size, bool skipSilentNotes, string id)
+			{ return new Sequence(sequence, size, skipSilentNotes, id); }
+		protected Sequence S(string sequence, Source length, string id)
+			{ return new Sequence(sequence, length, id); }
+		protected Sequence S(string sequence, Source length, bool skipSilentNotes, string id)
+			{ return new Sequence(sequence, length, skipSilentNotes, id); }
+		protected Sequence S(string sequence, int size, string id)
+			{ return new Sequence(sequence, size, id); }
+		protected Sequence S(string sequence, int size, bool skipSilentNotes, string id)
+			{ return new Sequence(sequence, size, skipSilentNotes, id); }
 
-		protected RSeq RSeq(string sequence, Source length, string id)
-			{ return new RSeq(sequence, length, id); }
-		protected RSeq RSeq(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new RSeq(sequence, length, skipSilentNotes, id); }
-		protected RSeq RSeq(string sequence, int size, string id)
-			{ return new RSeq(sequence, size, id); }
+		protected RandomSeqence RSeq(string sequence, Source length, string id)
+			{ return new RandomSeqence(sequence, length, id); }
+		protected RandomSeqence RSeq(string sequence, Source length, bool skipSilentNotes, string id)
+			{ return new RandomSeqence(sequence, length, skipSilentNotes, id); }
+		protected RandomSeqence RSeq(string sequence, int size, string id)
+			{ return new RandomSeqence(sequence, size, id); }
 
-		protected RSeq RS(string sequence, Source length, string id)
-			{ return new RSeq(sequence, length, id); }
-		protected RSeq RS(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new RSeq(sequence, length, skipSilentNotes, id); }
-		protected RSeq RS(string sequence, int size, string id)
-			{ return new RSeq(sequence, size, id); }
+		protected RandomSeqence RS(string sequence, Source length, string id)
+			{ return new RandomSeqence(sequence, length, id); }
+		protected RandomSeqence RS(string sequence, Source length, bool skipSilentNotes, string id)
+			{ return new RandomSeqence(sequence, length, skipSilentNotes, id); }
+		protected RandomSeqence RS(string sequence, int size, string id)
+			{ return new RandomSeqence(sequence, size, id); }
 
-		protected RSeq RSeq(IEnumerable<int> notes, Source length, string id)
-			{ return new RSeq(notes, length, id); }
-		protected RSeq RSeq(IEnumerable<int> notes, int size, string id)
-			{ return new RSeq(notes, size, id); }
+		protected RandomWalkSequence RW(string sequence, Source deviation, Source length, string id)
+			{ return new RandomWalkSequence(sequence, deviation, length, id); }
+		protected RandomWalkSequence RW(string sequence, Source deviation, int size, string id)
+			{ return new RandomWalkSequence(sequence, deviation, size, id); }
+		protected RandomWalkSequence RW(string sequence, Source deviation, Source length, bool skipSilentNotes, string id)
+			{ return new RandomWalkSequence(sequence, deviation, length, skipSilentNotes, id); }
+
+		protected RandomSeqence RSeq(IEnumerable<int> notes, Source length, string id)
+			{ return new RandomSeqence(notes, length, id); }
+		protected RandomSeqence RSeq(IEnumerable<int> notes, int size, string id)
+			{ return new RandomSeqence(notes, size, id); }
 
 		protected PipingSourceWrapper<NoteSource, NoteSource> DSeq(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }

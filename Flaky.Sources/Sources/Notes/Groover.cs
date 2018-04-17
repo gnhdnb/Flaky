@@ -13,7 +13,7 @@ namespace Flaky
 		{
 		}
 
-		protected override Seq[] CreateSequencers(string sequence, int size, string id)
+		protected override Sequence[] CreateSequencers(string sequence, int size, string id)
 		{
 			return sequence
 				.Select(s => s.ToString())
@@ -22,7 +22,7 @@ namespace Flaky
 				.ToArray();
 		}
 
-		private class MonoGroover : Seq
+		private class MonoGroover : Sequence
 		{
 			private Random random;
 

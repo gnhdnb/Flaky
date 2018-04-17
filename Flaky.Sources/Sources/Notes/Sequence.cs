@@ -7,37 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class RSeq : Seq
-	{
-		private readonly static Random random = new Random();
-
-		public RSeq(string sequence, Source length, string id) : base(sequence, length, id) { }
-		public RSeq(string sequence, int size, string id) : base(sequence, size, id) { }
-		public RSeq(IEnumerable<int> notes, Source length, string id) : base(notes, length, id) { }
-		public RSeq(IEnumerable<int> notes, int size, string id) : base(notes, size, id) { }
-
-		public RSeq(string sequence, Source length, bool skipSilentNotes, string id) : base(sequence, length, id)
-		{
-			SkipSilentNotes = skipSilentNotes;
-		}
-
-		protected override int GetNextNoteIndex(IContext context, State state)
-		{
-			int newIndex;
-
-			if (notes.Length <= 1)
-				return 0;
-
-			do
-			{
-				newIndex = random.Next(0, notes.Length - 1);
-			} while (newIndex == state.index);
-
-			return newIndex;
-		}
-	}
-
-	public class Seq : NoteSource
+	public class Sequence : NoteSource
 	{
 		protected Note[] notes;
 		private Source length;
@@ -56,25 +26,25 @@ namespace Flaky
 			public long currentSample;
 		}
 
-		public Seq(IEnumerable<int> notes, Source length) : this(notes.Select(n => (Note)n), length) { }
+		public Sequence(IEnumerable<int> notes, Source length) : this(notes.Select(n => (Note)n), length) { }
 
-		public Seq(IEnumerable<int> notes, Source length, string id) : this(notes.Select(n => (Note)n), length, id) { }
+		public Sequence(IEnumerable<int> notes, Source length, string id) : this(notes.Select(n => (Note)n), length, id) { }
 
-		public Seq(IEnumerable<int> notes, int size, string id) : this(notes.Select(n => (Note)n), size, id) { }
+		public Sequence(IEnumerable<int> notes, int size, string id) : this(notes.Select(n => (Note)n), size, id) { }
 
-		public Seq(IEnumerable<Note> notes, Source length)
+		public Sequence(IEnumerable<Note> notes, Source length)
 		{
 			this.notes = notes.ToArray();
 			this.length = length;
 		}
 
-		public Seq(IEnumerable<Note> notes, Source length, string id) : base(id)
+		public Sequence(IEnumerable<Note> notes, Source length, string id) : base(id)
 		{
 			this.notes = notes.ToArray();
 			this.length = length;
 		}
 
-		public Seq(IEnumerable<Note> notes, int size, string id) : base(id)
+		public Sequence(IEnumerable<Note> notes, int size, string id) : base(id)
 		{
 			this.notes = notes.ToArray();
 			length = null;
@@ -84,20 +54,20 @@ namespace Flaky
 				size = 1;
 		}
 
-		public Seq(string sequence, Source length, string id) : base(id)
+		public Sequence(string sequence, Source length, string id) : base(id)
 		{
 			this.notes = ParseSequence(sequence);
 			this.length = length;
 		}
 
-		public Seq(string sequence, Source length, bool skipSilentNotes, string id) : base(id)
+		public Sequence(string sequence, Source length, bool skipSilentNotes, string id) : base(id)
 		{
 			this.notes = ParseSequence(sequence);
 			this.length = length;
 			SkipSilentNotes = skipSilentNotes;
 		}
 
-		public Seq(string sequence, int size, string id) : base(id)
+		public Sequence(string sequence, int size, string id) : base(id)
 		{
 			this.notes = ParseSequence(sequence);
 			length = null;
@@ -107,13 +77,17 @@ namespace Flaky
 				size = 1;
 		}
 
-		public Seq(string sequence, int size, bool skipSilentNotes, string id) : this(sequence, size, id)
+		public Sequence(string sequence, int size, bool skipSilentNotes, string id) : this(sequence, size, id)
 		{
 			SkipSilentNotes = skipSilentNotes;
 		}
 
 		public override PlayingNote GetNote(IContext context)
 		{
+			var lengthValue = GetLength(context);
+
+			Update(context);
+
 			if (state.currentSample == context.Sample)
 				return state.currentNote;
 
@@ -132,10 +106,10 @@ namespace Flaky
 				if(!nextNote.IsSilent || !SkipSilentNotes)
 				{
 					state.currentNote = nextNote;
-					state.latestLength = GetLength(context);
+					state.latestLength = lengthValue;
 				} else
 				{
-					state.latestLength += GetLength(context);
+					state.latestLength += lengthValue;
 				}
 				
 				return state.currentNote;
@@ -185,6 +159,11 @@ namespace Flaky
 			return state.index + 1;
 		}
 
+		protected virtual void Update(IContext context)
+		{
+
+		}
+
 		public override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
@@ -193,10 +172,10 @@ namespace Flaky
 				Initialize(context, length);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(length);
-        }
+		public override void Dispose()
+		{
+			Dispose(length);
+		}
 
         private static Note[] ParseSequence(string sequence)
 		{
