@@ -13,12 +13,17 @@ namespace Flaky
 		{
 		}
 
+		internal Groover(string sequence, int size, string id)
+			: base(sequence, size, id)
+		{
+		}
+
 		protected override Sequence[] CreateSequencers(string sequence, int size, string id)
 		{
 			return sequence
 				.Select(s => s.ToString())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Select((s, i) => new MonoGroover(s, $"{id}-{i}"))
+				.Select((s, i) => new MonoGroover(s, size, $"{id}-{i}"))
 				.ToArray();
 		}
 
@@ -26,7 +31,7 @@ namespace Flaky
 		{
 			private Random random;
 
-			public MonoGroover(string note, string id) : base(note + "--", 64, id)
+			public MonoGroover(string note, int size, string id) : base(note + "--", size, id)
 			{
 				random = new Random(id.GetHashCode());
 			}

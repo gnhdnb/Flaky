@@ -88,6 +88,8 @@ namespace Flaky
 			{ return new PSeq(sequence, size, id); }
 		protected Groover Groover(string sequence, string id)
 			{ return new Groover(sequence, id); }
+		protected Groover Groover(string sequence, int size, string id)
+			{ return new Groover(sequence, size, id); }
 		protected SequenceWrapper Seq(string sequence)
 			{ return new SequenceWrapper(sequence); }
 		protected Sequence Seq(IEnumerable<int> notes, Source length)
