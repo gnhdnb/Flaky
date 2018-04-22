@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Note
+	public class Note : IEquatable<Note>
 	{
 		private readonly int number;
 		private readonly static double ratio = Math.Pow(2, 1d / 12d);
@@ -29,6 +29,14 @@ namespace Flaky
 		internal float ToPitch()
 		{
 			return pitch;
+		}
+
+		public bool Equals(Note other)
+		{
+			if (other == null)
+				return false;
+
+			return this.number == other.number;
 		}
 
 		internal int Number

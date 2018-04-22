@@ -106,6 +106,7 @@
     <Compile Include="Sources\Notes\RandomWalkSequence.cs" />
     <Compile Include="Sources\Notes\Random\IRandomSource.cs" />
     <Compile Include="Sources\Notes\PSeq.cs" />
+    <Compile Include="Sources\Notes\SequenceAggregator.cs" />
     <Compile Include="Sources\Notes\SequenceDelay.cs" />
     <Compile Include="Sources\Notes\SequenceTranspose.cs" />
     <Compile Include="Sources\Notes\Random\XorShiftRandom.cs" />

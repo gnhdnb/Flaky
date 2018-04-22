@@ -159,6 +159,9 @@ namespace Flaky
 		protected PipingSourceWrapper<NoteSource, NoteSource> ST(NoteSource delta)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceTranspose(delta)); }
 
+		protected PipingSourceWrapper<NoteSource, PolyphonicNoteSource> SA(int voices, string id)
+			{ return Pipe<NoteSource, PolyphonicNoteSource>(new SequenceAggregator(voices, id)); }
+
 		protected PipingSourceWrapper<NoteSource, Source> DR(params string[] samples)
 			{ return Pipe<NoteSource, Source>(new DR(samples)); }
 		protected PipingSourceWrapper<NoteSource, Source> Sampler(string sample, string id)

@@ -52,6 +52,10 @@ namespace Flaky
 
 	public abstract class PolyphonicNoteSource : NoteSource
 	{
+		public PolyphonicNoteSource() : base() { }
+
+		public PolyphonicNoteSource(string id) : base(id) { }
+
 		public abstract PlayingNote[] GetNotes(IContext context);
 
 		protected abstract NoteSource[] Sources { get; }
