@@ -23,7 +23,7 @@ namespace Flaky
 			this.filterChain = CreateFilterChain(input, filterChainCutoffInput, id);
 			this.feedbackInput = new Hold($"{id}_FeedbackInputHold");
 			this.feedbackChain = new OnePoleLPFilter(feedbackInput, 0.18f, $"{id}_OnePoleFeedback");
-			this.feedbackChain = new Analog(feedbackChain, $"{id}_FeedbackAnalog");
+			this.feedbackChain = new Analog(feedbackChain, $"{id}_FeedbackAnalog") * 10;
 		}
 
 		protected abstract Source CreateFilterChain(Source input, Source cutoff, string id);
@@ -56,7 +56,7 @@ namespace Flaky
 
 			feedbackInput.Sample = output * -GetResonance(resonanceValue, cutoffValue);
 
-			return output;
+			return output * 4;
 		}
 
 		private float GetResonance(float resonanceInput, float cutoff)
@@ -64,7 +64,8 @@ namespace Flaky
 			if (resonanceInput > 1)
 				resonanceInput = 1;
 
-			return 0.9f * resonanceInput * (1 - cutoff * cutoff + 0.1f);
+			//return 0.9f * resonanceInput * (1 - cutoff * cutoff + 0.1f);
+			return 0.9f * resonanceInput;
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)

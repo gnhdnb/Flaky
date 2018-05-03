@@ -1,15 +1,19 @@
-﻿namespace Flaky
+﻿using System;
+
+namespace Flaky
 {
 	public abstract class OnePoleFilter : Source, IPipingSource
 	{
 		private Source source;
 		private Source cutoff;
 		private State state;
+		private const int oversampling = 4;
 
 		private class State
 		{
 			public Sample integratorState;
 			public Sample lp;
+			public Sample latestInputSample;
 		}
 
 		internal OnePoleFilter(Source source, Source cutoff, string id) : base(id)
@@ -45,9 +49,25 @@
 			if (cutoffValue > 1)
 				cutoffValue = 1;
 
-			var hp = sample - state.lp;
-			state.lp = Integrate(hp * cutoffValue);
+			Sample hp = 0;
+
+			for(int i = 1; i <= oversampling; i++)
+			{
+				var inputSample = 
+					(sample * i + state.latestInputSample * (oversampling - i))
+					* (1 / (float)oversampling);
+
+				hp = Iterate(inputSample, cutoffValue / 2);
+			}
+
 			return GetResult(state.lp, hp);
+		}
+
+		private Sample Iterate(Sample inputSample, float cutoffValue)
+		{
+			var hp = inputSample - state.lp;
+			state.lp = Integrate(hp * cutoffValue);
+			return hp;
 		}
 
 		private Sample Integrate(Sample sample)
