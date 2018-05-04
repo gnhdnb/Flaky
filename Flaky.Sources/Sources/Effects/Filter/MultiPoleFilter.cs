@@ -64,8 +64,7 @@ namespace Flaky
 			if (resonanceInput > 1)
 				resonanceInput = 1;
 
-			//return 0.9f * resonanceInput * (1 - cutoff * cutoff + 0.1f);
-			return 0.9f * resonanceInput;
+			return 0.9f * resonanceInput * (1 - cutoff * cutoff * 0.9f);
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)

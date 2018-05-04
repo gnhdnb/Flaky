@@ -9,6 +9,7 @@ namespace Flaky
 	public class SampleAndHold : Source, IPipingSource
 	{
 		private readonly Source trigger;
+		private readonly NoteSource noteTrigger;
 		private Source source;
 		private State state;
 
@@ -18,22 +19,45 @@ namespace Flaky
 			public bool triggered = false;
 		}
 
+		internal SampleAndHold(NoteSource trigger, string id) : base(id)
+		{
+			noteTrigger = trigger;
+		}
+
 		internal SampleAndHold(Source trigger, string id) : base(id)
 		{
 			this.trigger = trigger;
 		}
 
+		private bool Triggered(IContext context)
+		{
+			if (trigger != null)
+			{
+				var triggerSample = trigger.Play(context);
+
+				return triggerSample.Value >= 0.5;
+			}
+			else
+			{
+				var triggerNote = noteTrigger.GetNote(context);
+
+				return triggerNote.CurrentSample(context) == 0;
+			}
+		}
+
 		protected override Sample NextSample(IContext context)
 		{
 			var sample = source.Play(context);
-			var triggerSample = trigger.Play(context);
 
-			if(triggerSample.Value < 0.5)
+			var triggered = Triggered(context);
+			
+
+			if(!triggered)
 			{
 				state.triggered = false;
 			}
 
-			if(triggerSample.Value >= 0.5 && !state.triggered)
+			if(triggered && !state.triggered)
 			{
 				state.currentSample = sample;
 				state.triggered = true;
@@ -44,13 +68,13 @@ namespace Flaky
 
 		public override void Dispose()
 		{
-			Dispose(trigger, source);
+			Dispose(trigger, noteTrigger, source);
 		}
 
 		public override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			Initialize(context, trigger, source);
+			Initialize(context, trigger, noteTrigger, source);
 		}
 
 		public void SetMainSource(Source mainSource)

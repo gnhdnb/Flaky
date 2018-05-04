@@ -26,7 +26,7 @@ namespace Flaky
 
 				this.pack = pack;
 
-				waveReader = readerFactory.Create("waveforms", "AKWF");
+				waveReader = readerFactory.Create("waveforms", pack);
 			}
 
 			public Sample Read(float pitch, float selector)
