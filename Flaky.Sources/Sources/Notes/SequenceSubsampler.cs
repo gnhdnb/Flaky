@@ -22,7 +22,9 @@ namespace Flaky
 		private class State
 		{
 			public long latestNoteStartSample = -1;
+			public long latestPlayingNoteStartSample = -1;
 			public bool shouldPlay = false;
+			public Note latestPlayingNote;
 		}
 
 		public override void Dispose()
@@ -43,9 +45,18 @@ namespace Flaky
 			}
 
 			if (state.shouldPlay)
+			{
+				state.latestPlayingNote = note.Note;
+				state.latestPlayingNoteStartSample = note.StartSample;
 				return note;
+			}
 			else
-				return new PlayingNote(null, state.latestNoteStartSample);
+			{
+				if(state.latestPlayingNoteStartSample > 0)
+					return new PlayingNote(state.latestPlayingNote, state.latestPlayingNoteStartSample);
+				else
+					return new PlayingNote(0, state.latestNoteStartSample);
+			}
 		}
 
 		public override void Initialize(IContext context)

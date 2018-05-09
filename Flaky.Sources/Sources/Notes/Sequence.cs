@@ -24,6 +24,7 @@ namespace Flaky
 			public float latestLength;
 			public int codeVersion;
 			public long currentSample;
+			public long startSample;
 		}
 
 		public Sequence(IEnumerable<int> notes, Source length) : this(notes.Select(n => (Note)n), length) { }
@@ -94,7 +95,10 @@ namespace Flaky
 			state.currentSample = context.Sample;
 
 			if (!state.playing && context.Beat % 4 == 0 && context.MetronomeTick)
+			{
 				state.playing = true;
+				state.startSample = context.Sample;
+			}
 
 			if (!state.playing)
 				return state.currentNote;
@@ -128,7 +132,7 @@ namespace Flaky
 			}
 			else
 			{
-				return (context.Sample % ((16 * 60 * context.SampleRate) / (context.BPM * size))) == 0;
+				return ((context.Sample - state.startSample) % ((16 * 60 * context.SampleRate) / (context.BPM * size))) == 0;
 			}
 		}
 
