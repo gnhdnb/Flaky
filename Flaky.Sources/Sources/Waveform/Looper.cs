@@ -36,7 +36,7 @@ namespace Flaky
 			return result ?? 0;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			var factory = Get<IWaveReaderFactory>(context);

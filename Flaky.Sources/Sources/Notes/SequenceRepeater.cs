@@ -66,7 +66,7 @@ namespace Flaky
 				: sourcePlayingNote;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			this.state = GetOrCreate<State>(context);
 			Initialize(context, mainSource);

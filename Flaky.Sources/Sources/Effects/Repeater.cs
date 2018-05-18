@@ -94,7 +94,7 @@ namespace Flaky
 			return readPosition;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			state.Initialize(context);

@@ -10,6 +10,8 @@ namespace Flaky
 	{
 		private readonly ContextController controller;
 		private readonly int codeVersion;
+		private SourceTreeNode sourceTreeRoot;
+		private HashSet<ISource> initializedSources;
 
 		public long Sample { get; }
 
@@ -20,18 +22,41 @@ namespace Flaky
 
 		public int SampleRate { get; private set; }
 
-		public TState GetOrCreateState<TState>(string id) where TState : class, new()
+		TState IFlakyContext.GetOrCreateState<TState>(string id)
 		{
 			return controller.GetOrCreateState<TState>(id, codeVersion);
 		}
 
-		public TFactory Get<TFactory>() where TFactory : class
+		TFactory IFlakyContext.Get<TFactory>()
 		{
 			return controller.Get<TFactory>();
 		}
 
+		void IFlakyContext.RegisterConnection(ISource from, ISource to)
+		{
+			var existingSourceNode = sourceTreeRoot.FindNodeFor(from);
+			var destinationNode = sourceTreeRoot.FindNodeFor(to);
+
+			// actual calculation occurs only on first usage of the operator
+			// so we are not interested in subsequent ones
+			if (existingSourceNode == null)
+				destinationNode.AddConnection(from);
+		}
+
+		void IFlakyContext.RegisterInitialization(ISource source)
+		{
+			initializedSources.Add(source);
+		}
+
+		bool IFlakyContext.AlreadyInitialized(ISource source)
+		{
+			return initializedSources.Contains(source);
+		}
+
 		internal Context(ContextController controller)
 		{
+			sourceTreeRoot = null;
+			initializedSources = null;
 			Sample = controller.Sample;
 			Beat = controller.Beat;
 			BPM = controller.BPM;
@@ -41,9 +66,14 @@ namespace Flaky
 			this.controller = controller;
 		}
 
-		internal Context(ContextController controller, int codeVersion) : this(controller)
+		internal Context(ContextController controller, int codeVersion, ISource root) : this(controller)
 		{
+			sourceTreeRoot = new SourceTreeNode(root);
+			initializedSources = new HashSet<ISource>();
+
 			this.codeVersion = codeVersion;
 		}
+
+		internal SourceTreeNode SourceTreeRoot { get { return sourceTreeRoot; } }
 	}
 }

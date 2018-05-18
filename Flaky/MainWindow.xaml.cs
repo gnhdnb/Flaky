@@ -1,6 +1,12 @@
 ﻿using Flaky;
+using GraphX.Controls;
+using GraphX.PCL.Common.Enums;
+using GraphX.PCL.Common.Models;
+using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
+using GraphX.PCL.Logic.Models;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using QuickGraph;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,18 +45,90 @@ namespace WPF
 			Host = new Host(1, Path.Combine(GetLocation(), "flaky.wav"));
 			var code = Load();
 
-			try
-			{
-				textBlock.Text = string.Join("\n", Host.Recompile(0, code));
-			} catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
+			Recompile(code);
 
 			Host.Play();
 			textEditor.Text = code;
 
 			this.Closing += MainWindow_Closing;
+		}
+
+		private bool Recompile(string code)
+		{
+			try
+			{
+				var (errors, sourceRoot) = Host.Recompile(0, code);
+
+				var totalWeight = sourceRoot.GetOrder();
+
+				textBlock.Text = string.Join("\n", errors);
+
+				var graph = new BidirectionalGraph<SourceVertex, SourceTreeEdge>();
+
+				var vertexLookup = new Dictionary<SourceTreeNode, SourceVertex>();
+
+				sourceRoot.Enumerate(
+					(r, c) =>
+					{
+						if (!vertexLookup.ContainsKey(r))
+							vertexLookup[r] = new SourceVertex(r);
+
+						if (!vertexLookup.ContainsKey(c))
+							vertexLookup[c] = new SourceVertex(c);
+
+						graph.AddVerticesAndEdge(
+							new SourceTreeEdge(vertexLookup[c], vertexLookup[r]));
+					}
+				);
+
+				var logicCore = new GXLogicCore
+					<SourceVertex, SourceTreeEdge, BidirectionalGraph<SourceVertex, SourceTreeEdge>>()
+					{ Graph = graph };
+
+				logicCore.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
+				logicCore.DefaultLayoutAlgorithmParams = logicCore.AlgorithmFactory
+					.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
+				((LinLogLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).AttractionExponent = 2;
+				((LinLogLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).GravitationMultiplier = 0.8;
+				logicCore.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
+				logicCore.DefaultOverlapRemovalAlgorithmParams.HorizontalGap = 50;
+				logicCore.DefaultOverlapRemovalAlgorithmParams.VerticalGap = 50;
+				logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
+				logicCore.AsyncAlgorithmCompute = false;
+				Area.LogicCore = logicCore;
+//				var edgeColor = (SolidColorBrush)(new BrushConverter().ConvertFrom("#4E8B60"));
+				var nodeBackground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#000000"));
+				Area.GenerateGraph(true, true);
+				Area
+					.EdgesList
+					.ToList()
+					.ForEach(e =>
+					{
+						var node = e.Key.Source.Node;
+
+						e.Value.Foreground =
+							 new SolidColorBrush(Color.FromArgb(
+									 (byte)((255 * node.GetOrder()) / totalWeight),
+									 node.Subtree != 1 ? (byte)255 : (byte)0,
+									 node.Subtree != 2 ? (byte)255 : (byte)0,
+									 node.Subtree != 3 ? (byte)255 : (byte)0
+								 ));
+					});
+				Area
+					.VertexList
+					.ToList()
+					.ForEach(e => e.Value.Background = nodeBackground);
+
+				zoomctrl.ZoomToFill();
+
+				return !errors.Any();
+			}
+			catch (Exception ex)
+			{
+				textBlock.Text = ex.Message;
+
+				return false;
+			}
 		}
 
 		private void LoadTheme()
@@ -92,8 +170,8 @@ namespace WPF
 		{
 			MainWindow control = (MainWindow)sender;
 
-			control.textBlock.Text = string.Join("\n", control.Host.Recompile(0, control.textEditor.Text));
-			Save(control.textEditor.Text);
+			if(control.Recompile(control.textEditor.Text))
+				Save(control.textEditor.Text);
 
 			control.textEditor.IsModified = false;
 		}

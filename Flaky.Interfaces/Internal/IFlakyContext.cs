@@ -11,5 +11,11 @@ namespace Flaky
 		TState GetOrCreateState<TState>(string id) where TState : class, new();
 
 		TFactory Get<TFactory>() where TFactory : class;
+
+		void RegisterConnection(ISource from, ISource to);
+
+		void RegisterInitialization(ISource source);
+
+		bool AlreadyInitialized(ISource source);
 	}
 }

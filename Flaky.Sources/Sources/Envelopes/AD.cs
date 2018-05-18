@@ -62,7 +62,7 @@ namespace Flaky
 			return new Sample { Value = 0 };
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, source, attack, decay);
 		}

@@ -20,7 +20,7 @@ namespace Flaky
 			return new Sample { Value = value };
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			// do nothing
 		}

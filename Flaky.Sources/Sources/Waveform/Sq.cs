@@ -86,10 +86,10 @@ namespace Flaky
 			};
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			Initialize(context, Frequency, Amplitude, PWM);
+			Initialize(context, Amplitude, Frequency, PWM);
 		}
 
 		public override void Dispose()

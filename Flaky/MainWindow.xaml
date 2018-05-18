@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="http://schemas.panthernet.ru/graphx/"
+        xmlns:flaky="clr-namespace:Flaky"
         xmlns:local="clr-namespace:WPF"
         xmlns:syntaxeditor="http://schemas.actiprosoftware.com/winfx/xaml/syntaxeditor" x:Class="WPF.MainWindow"
         mc:Ignorable="d"
@@ -15,12 +17,20 @@
 			FontFamily="Consolas"
 			FontSize="14pt"
 			HorizontalAlignment="STRETCH" 
-			Margin="3,3,3,134" 
+			Margin="3,3,340.333,134.333" 
 			VerticalAlignment="STRETCH" 
 			Height="AUTO" 
 			Width="AUTO"
 			Background="#FF1E1E1E"
 		/>
 		<TextBlock x:Name="textBlock" VerticalAlignment="Bottom" Margin="3,0,3,3" TextWrapping="Wrap" Text="" Background="#FF1E1E1E" Foreground="#FFA60000" Height="128"/>
+		<controls:ZoomControl x:Name="zoomctrl"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Stretch"
+							Margin="358,3,3,136.333"
+							Background="#FF1E1E1E"
+							Foreground="#FF4E8B60">
+			<flaky:SourceTreeArea x:Name="Area"/>
+		</controls:ZoomControl>
 	</Grid>
 </Window>

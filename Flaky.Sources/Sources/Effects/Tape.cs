@@ -95,13 +95,13 @@ namespace Flaky
 
 		public override void Dispose()
 		{
-			Dispose(hpNoiseSum, hpNoiseDiff, source, lfo, hold, analog);
+			Dispose(hpNoiseSum, hpNoiseDiff, source, lfo, analog);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<DetonationState>(context);
-			Initialize(context, hpNoiseSum, hpNoiseDiff, source, lfo, analog, hold);
+			Initialize(context, source, hpNoiseSum, hpNoiseDiff, lfo, analog);
 		}
 
 		protected override Sample NextSample(IContext context)

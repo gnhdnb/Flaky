@@ -58,7 +58,7 @@ namespace Flaky
 			Dispose(sources);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			Initialize(context, sources);

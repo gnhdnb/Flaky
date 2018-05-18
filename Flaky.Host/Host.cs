@@ -45,15 +45,15 @@ namespace Flaky
 			}
 		}
 
-		public string[] Recompile(int channel, string code)
+		public (string[], SourceTreeNode) Recompile(int channel, string code)
 		{
 			var result = Compiler.Compile(code);
 
 			if (!result.Success)
-				return result.Messages;
+				return (result.Messages, null);
 
-			Mixer.ChangePlayer(channel, result.Player);
-			return new string[0];
+			var root = Mixer.ChangePlayer(channel, result.Player);
+			return (new string[0], root);
 		}
 
 		public void Play()

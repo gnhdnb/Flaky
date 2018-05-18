@@ -44,7 +44,7 @@ namespace Flaky
 			return currentNotes;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, sequencers);
 		}

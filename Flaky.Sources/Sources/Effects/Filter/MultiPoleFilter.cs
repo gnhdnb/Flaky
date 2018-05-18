@@ -28,9 +28,9 @@ namespace Flaky
 
 		protected abstract Source CreateFilterChain(Source input, Source cutoff, string id);
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
-			Initialize(context, cutoff, source, filterChain, feedbackChain, resonance);
+			Initialize(context, cutoff, source, feedbackChain, filterChain, resonance);
 		}
 
 		public override void Dispose()
