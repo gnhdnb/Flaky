@@ -37,10 +37,10 @@ namespace Flaky
 			var existingSourceNode = sourceTreeRoot.FindNodeFor(from);
 			var destinationNode = sourceTreeRoot.FindNodeFor(to);
 
-			// actual calculation occurs only on first usage of the operator
-			// so we are not interested in subsequent ones
 			if (existingSourceNode == null)
 				destinationNode.AddConnection(from);
+			else
+				destinationNode.AddConnection(existingSourceNode);
 		}
 
 		void IFlakyContext.RegisterInitialization(ISource source)

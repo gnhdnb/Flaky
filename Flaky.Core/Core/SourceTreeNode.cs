@@ -22,6 +22,11 @@ namespace Flaky
 			children.Add(new SourceTreeNode(source));
 		}
 
+		internal void AddConnection(SourceTreeNode node)
+		{
+			children.Add(node);
+		}
+
 		internal SourceTreeNode FindNodeFor(ISource source)
 		{
 			if (root == source)
@@ -35,9 +40,11 @@ namespace Flaky
 
 		internal void SetSubtree(int subtree)
 		{
-			this.subtree = subtree;
-
-			children.ForEach(c => c.SetSubtree(subtree));
+			if (subtree == 0 || this.subtree == 0)
+			{
+				this.subtree = subtree;
+				children.ForEach(c => c.SetSubtree(subtree));
+			}
 		}
 
 		public int Subtree { get { return subtree; } }
@@ -55,11 +62,21 @@ namespace Flaky
 			return GetWeight(new HashSet<SourceTreeNode>());
 		}
 
-		internal int GetWeight(HashSet<SourceTreeNode> excludingNodes)
+		private int GetWeight(HashSet<SourceTreeNode> excludingNodes)
 		{
+			return GetWeight(excludingNodes, new HashSet<SourceTreeNode>());
+		}
+
+		private int GetWeight(
+			HashSet<SourceTreeNode> excludingNodes,
+			HashSet<SourceTreeNode> visitedNodes)
+		{
+			visitedNodes.Add(this);
+
 			return 1 + children
 				.Where(c => !excludingNodes.Contains(c))
-				.Sum(c => c.GetWeight(excludingNodes));
+				.Where(c => !visitedNodes.Contains(c))
+				.Sum(c => c.GetWeight(excludingNodes, visitedNodes));
 		}
 
 		internal List<SourceTreeNode> Split(int subtreesCount)
@@ -112,14 +129,15 @@ namespace Flaky
 			int optimalWeight, 
 			HashSet<SourceTreeNode> excludingNodes)
 		{
-			if (optimalWeight > GetWeight(excludingNodes) && !ContainsAnyOf(excludingNodes))
+			//if (optimalWeight > GetWeight(excludingNodes) && !ContainsAnyOf(excludingNodes))
+			if (optimalWeight > GetWeight(excludingNodes))
 				return this;
 
 			return children
 				.Where(c => !excludingNodes.Contains(c))
 				.Select(c => c.GetOptimalSubtree(optimalWeight, excludingNodes))
 				.Where(s => s != null)
-				.Where(s => !s.ContainsAnyOf(excludingNodes))
+				//.Where(s => !s.ContainsAnyOf(excludingNodes))
 				.OrderByDescending(c => c.GetWeight(excludingNodes))
 				.FirstOrDefault();
 		}

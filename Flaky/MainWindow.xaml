@@ -8,8 +8,18 @@
         xmlns:local="clr-namespace:WPF"
         xmlns:syntaxeditor="http://schemas.actiprosoftware.com/winfx/xaml/syntaxeditor" x:Class="WPF.MainWindow"
         mc:Ignorable="d"
-        Title="F L A K Y" Height="700" Width="700" WindowState="Maximized" Background="DimGray" WindowStyle="None">
+        Title="F L A K Y" Height="700" Width="700" WindowState="Maximized" Background="#FF2E2E2E" WindowStyle="None">
 	<Grid>
+		<controls:ZoomControl x:Name="zoomctrl"
+							HorizontalAlignment="STRETCH" 
+							Margin="3,3,3,134.333" 
+							VerticalAlignment="STRETCH" 
+							Background="#FF1E1E1E"
+							Foreground="#FF4E8B60"
+							IsManipulationEnabled="False"
+							IsAnimationEnabled="False">
+			<flaky:SourceTreeArea x:Name="Area"/>
+		</controls:ZoomControl>
 		<avalonEdit:TextEditor
 			xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
 			Name="textEditor"
@@ -17,20 +27,12 @@
 			FontFamily="Consolas"
 			FontSize="14pt"
 			HorizontalAlignment="STRETCH" 
-			Margin="3,3,340.333,134.333" 
+			Margin="3,3,3,134.333" 
 			VerticalAlignment="STRETCH" 
 			Height="AUTO" 
 			Width="AUTO"
-			Background="#FF1E1E1E"
+			Background="#001E1E1E"
 		/>
 		<TextBlock x:Name="textBlock" VerticalAlignment="Bottom" Margin="3,0,3,3" TextWrapping="Wrap" Text="" Background="#FF1E1E1E" Foreground="#FFA60000" Height="128"/>
-		<controls:ZoomControl x:Name="zoomctrl"
-							HorizontalAlignment="Left"
-							VerticalAlignment="Stretch"
-							Margin="358,3,3,136.333"
-							Background="#FF1E1E1E"
-							Foreground="#FF4E8B60">
-			<flaky:SourceTreeArea x:Name="Area"/>
-		</controls:ZoomControl>
 	</Grid>
 </Window>
