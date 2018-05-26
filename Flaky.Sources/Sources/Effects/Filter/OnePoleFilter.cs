@@ -60,6 +60,8 @@ namespace Flaky
 				hp = Iterate(inputSample, cutoffValue / 2);
 			}
 
+			state.latestInputSample = sample;
+
 			return GetResult(state.lp, hp);
 		}
 
