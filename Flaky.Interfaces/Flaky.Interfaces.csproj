@@ -83,6 +83,7 @@
     <Compile Include="Internal\IWaveWriter.cs" />
     <Compile Include="Public\IChannelVolume.cs" />
     <Compile Include="Internal\IFlakyContext.cs" />
+    <Compile Include="Public\IExternalProcessor.cs" />
     <Compile Include="Public\IMixerController.cs" />
     <Compile Include="Internal\IWaveReader.cs" />
     <Compile Include="Internal\IWaveReaderFactory.cs" />

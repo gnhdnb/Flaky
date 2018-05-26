@@ -13,6 +13,7 @@ namespace Flaky
 
 		private Sample latestSample;
 		private long latestSampleIndex = -1;
+		private IExternalProcessor exteralProcessor;
 
 		protected Source() { }
 
@@ -21,7 +22,7 @@ namespace Flaky
 			this.id = id;
 		}
 
-		public Sample Play(IContext context)
+		internal Sample PlayInCurrentThread(IContext context)
 		{
 			if (context.Sample == latestSampleIndex)
 				return latestSample;
@@ -32,6 +33,14 @@ namespace Flaky
 			latestSampleIndex = context.Sample;
 
 			return result;
+		}
+
+		public Sample Play(IContext context)
+		{
+			if (exteralProcessor != null)
+				return exteralProcessor.Play(context);
+
+			return PlayInCurrentThread(context);
 		}
 
 		protected abstract Sample NextSample(IContext context);

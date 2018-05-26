@@ -48,7 +48,6 @@ namespace Flaky
 			codeVersion++;
 			var context = new Context(controller, codeVersion, source);
 			source.Init(context);
-
 			context.SourceTreeRoot.Split(4);
 
 			sourceToDispose = this.source;
