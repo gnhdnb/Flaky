@@ -20,6 +20,7 @@ namespace Flaky
 			this.states = other.states;
 			this.versions = other.versions;
 			this.sample = other.sample;
+			this.SampleRate = other.SampleRate;
 			this.MetronomeTick = other.MetronomeTick;
 			this.Beat = other.Beat;
 			this.BPM = other.BPM;

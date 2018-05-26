@@ -18,6 +18,7 @@ namespace Flaky
 		private bool disposed = false;
 		private int codeVersion = 0;
 		private readonly float[] nullBuffer = new float[13230];
+		private readonly List<SeparateThreadProcessor> threadProcessors = new List<SeparateThreadProcessor>();
 
 		internal Channel(int sampleRate, Configuration configuration)
 		{
@@ -48,7 +49,17 @@ namespace Flaky
 			codeVersion++;
 			var context = new Context(controller, codeVersion, source);
 			source.Init(context);
-			context.SourceTreeRoot.Split(4);
+
+			threadProcessors.ForEach(p => p.Stop());
+			threadProcessors.Clear();
+
+			foreach (var separateThreadNode in context.SourceTreeRoot.Split(8))
+			{
+				var root = (IFlakySource)separateThreadNode.Root;
+				var threadProcessor = new SeparateThreadProcessor(root, controller);
+				threadProcessors.Add(threadProcessor);
+				root.SetExternalProcessor(threadProcessor);
+			}
 
 			sourceToDispose = this.source;
 			this.source = source;

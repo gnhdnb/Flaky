@@ -98,6 +98,19 @@ namespace WPF
 				Area.LogicCore = logicCore;
 //				var edgeColor = (SolidColorBrush)(new BrushConverter().ConvertFrom("#4E8B60"));
 				var nodeBackground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#000000"));
+
+				var pallette = new[] {
+					"#4ABDAC",
+					"#FC4A1A",
+					"#DFDCE3",
+					"#FFCE00",
+					"#0375B4",
+					"#66B9BF",
+					"#A239CA",
+					"#C09F80"}
+				.Select(c => (SolidColorBrush)(new BrushConverter().ConvertFrom(c)))
+				.ToArray();
+
 				Area.GenerateGraph(true, true);
 				Area
 					.EdgesList
@@ -108,10 +121,10 @@ namespace WPF
 
 						e.Value.Foreground =
 							 new SolidColorBrush(Color.FromArgb(
-									 (byte)((255 * node.GetOrder()) / totalWeight),
-									 node.Subtree != 1 ? (byte)255 : (byte)0,
-									 node.Subtree != 2 ? (byte)255 : (byte)0,
-									 node.Subtree != 3 ? (byte)255 : (byte)0
+									 (byte)(Math.Max(2 * (255 * node.GetOrder()) / totalWeight, 255)),
+									 pallette[node.Subtree].Color.R,
+									 pallette[node.Subtree].Color.G,
+									 pallette[node.Subtree].Color.B
 								 ));
 					});
 				Area

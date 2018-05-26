@@ -47,6 +47,8 @@ namespace Flaky
 			}
 		}
 
+		internal ISource Root { get { return root; } }
+
 		public int Subtree { get { return subtree; } }
 
 		public int GetOrder()

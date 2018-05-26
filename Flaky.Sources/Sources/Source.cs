@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public abstract class Source : ISource
+	public abstract class Source : IFlakySource
 	{
 		private readonly string id;
 		private IStateContainer stateContainer;
@@ -22,10 +22,15 @@ namespace Flaky
 			this.id = id;
 		}
 
+		Sample IFlakySource.PlayInCurrentThread(IContext context)
+		{
+			return PlayInCurrentThread(context);
+		}
+
 		internal Sample PlayInCurrentThread(IContext context)
 		{
-			if (context.Sample == latestSampleIndex)
-				return latestSample;
+			if (context.Sample <= latestSampleIndex)
+				return 0;// latestSample;
 
 			var result = NextSample(context);
 
@@ -106,6 +111,11 @@ namespace Flaky
 				return $"{GetType().Name}({id})";
 			else
 				return $"{GetType().Name}";
+		}
+
+		void IFlakySource.SetExternalProcessor(IExternalProcessor processor)
+		{
+			this.exteralProcessor = processor;
 		}
 
 		public static implicit operator Source(float d)

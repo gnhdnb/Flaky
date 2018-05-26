@@ -23,7 +23,7 @@ namespace Flaky
 			this.filterChain = CreateFilterChain(input, filterChainCutoffInput, id);
 			this.feedbackInput = new Hold($"{id}_FeedbackInputHold");
 			this.feedbackChain = new OnePoleLPFilter(feedbackInput, 0.18f, $"{id}_OnePoleFeedback");
-			this.feedbackChain = new Analog(feedbackChain, $"{id}_FeedbackAnalog") * 10;
+			this.feedbackChain = new Analog(feedbackChain, $"{id}_FeedbackAnalog") * 5;
 		}
 
 		protected abstract Source CreateFilterChain(Source input, Source cutoff, string id);
