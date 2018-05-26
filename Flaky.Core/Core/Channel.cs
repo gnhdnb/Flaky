@@ -53,12 +53,27 @@ namespace Flaky
 			threadProcessors.ForEach(p => p.Stop());
 			threadProcessors.Clear();
 
-			foreach (var separateThreadNode in context.SourceTreeRoot.Split(8))
+			var roots = context.SourceTreeRoot.Split(8, s => !(s is IFlakyNoteSource));
+
+			foreach (var root in roots)
 			{
-				var root = (IFlakySource)separateThreadNode.Root;
-				var threadProcessor = new SeparateThreadProcessor(root, controller);
+				var separateThreadSource = (IFlakySource)root.Source;
+				var threadProcessor = new SeparateThreadProcessor(separateThreadSource, controller);
 				threadProcessors.Add(threadProcessor);
-				root.SetExternalProcessor(threadProcessor);
+				separateThreadSource.SetExternalProcessor(threadProcessor);
+			}
+
+			var junctions = context.SourceTreeRoot.GetJunctions().Except(roots);
+
+			foreach (var junction in junctions)
+			{
+				var junctionSource = junction.Source as IFlakySource;
+				var junctionNoteSource = junction.Source as IFlakyNoteSource;
+
+				if (junctionNoteSource != null)
+					junctionNoteSource.SetExternalProcessor(new BufferedNoteProcessor(junctionNoteSource));
+				else
+					junctionSource.SetExternalProcessor(new BufferedProcessor(junctionSource));
 			}
 
 			sourceToDispose = this.source;
@@ -117,6 +132,8 @@ namespace Flaky
 			if (disposed)
 				return;
 			disposed = true;
+
+			threadProcessors?.ForEach(p => p.Stop());
 
 			worker.Join();
 

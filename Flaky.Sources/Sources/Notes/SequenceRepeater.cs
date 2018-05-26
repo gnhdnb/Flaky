@@ -32,7 +32,7 @@ namespace Flaky
 			Dispose(mainSource);
 		}
 
-		public override PlayingNote GetNote(IContext context)
+		protected override PlayingNote NextNote(IContext context)
 		{
 			var sourcePlayingNote = mainSource.GetNote(context);
 

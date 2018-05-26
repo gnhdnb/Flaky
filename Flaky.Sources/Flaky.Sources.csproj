@@ -121,9 +121,7 @@
     <Compile Include="Sources\Notes\Random\ZigguratGaussianDistribution.cs" />
     <Compile Include="Sources\PipingSourceWrapper.cs" />
     <Compile Include="Sources\Notes\Sequence.cs" />
-    <Compile Include="Sources\Notes\Note.cs" />
     <Compile Include="Sources\Notes\NoteSource.cs" />
-    <Compile Include="Sources\Notes\PlayingNote.cs" />
     <Compile Include="Sources\Player.cs" />
     <Compile Include="Sources\Sequence.cs" />
     <Compile Include="Sources\Source.cs" />

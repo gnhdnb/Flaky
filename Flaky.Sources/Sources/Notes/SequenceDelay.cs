@@ -42,7 +42,7 @@ namespace Flaky
 			Dispose(source);
 		}
 
-		public override PlayingNote GetNote(IContext context)
+		protected override PlayingNote NextNote(IContext context)
 		{
 			var originalNote = source.GetNote(context);
 

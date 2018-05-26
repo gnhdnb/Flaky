@@ -169,6 +169,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Core\BufferedNoteProcessor.cs" />
+    <Compile Include="Core\BufferedProcessor.cs" />
     <Compile Include="Core\Channel.cs" />
     <Compile Include="Core\Compiler.cs" />
     <Compile Include="Core\Context.cs" />

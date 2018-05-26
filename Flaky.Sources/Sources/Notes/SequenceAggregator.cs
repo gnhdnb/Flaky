@@ -97,7 +97,7 @@ namespace Flaky
 				this.voiceNumber = voiceNumber;
 			}
 
-			public override PlayingNote GetNote(IContext context)
+			protected override PlayingNote NextNote(IContext context)
 			{
 				return aggregator.GetNote(context, voiceNumber);
 			}

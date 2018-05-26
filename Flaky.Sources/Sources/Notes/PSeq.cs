@@ -60,7 +60,7 @@ namespace Flaky
 
 		protected abstract NoteSource[] Sources { get; }
 
-		public sealed override PlayingNote GetNote(IContext context)
+		protected sealed override PlayingNote NextNote(IContext context)
 		{
 			return GetNotes(context)[0];
 		}

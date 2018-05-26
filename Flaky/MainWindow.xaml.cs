@@ -96,7 +96,6 @@ namespace WPF
 				logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
 				logicCore.AsyncAlgorithmCompute = false;
 				Area.LogicCore = logicCore;
-//				var edgeColor = (SolidColorBrush)(new BrushConverter().ConvertFrom("#4E8B60"));
 				var nodeBackground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#000000"));
 
 				var pallette = new[] {
@@ -121,7 +120,7 @@ namespace WPF
 
 						e.Value.Foreground =
 							 new SolidColorBrush(Color.FromArgb(
-									 (byte)(Math.Max(2 * (255 * node.GetOrder()) / totalWeight, 255)),
+									 (byte)(55 + (200 * node.GetOrder()) / totalWeight),
 									 pallette[node.Subtree].Color.R,
 									 pallette[node.Subtree].Color.G,
 									 pallette[node.Subtree].Color.B
@@ -130,7 +129,11 @@ namespace WPF
 				Area
 					.VertexList
 					.ToList()
-					.ForEach(e => e.Value.Background = nodeBackground);
+					.ForEach(e => 
+					{
+						e.Value.Background = nodeBackground;
+						e.Value.FontSize = 24;
+					});
 
 				zoomctrl.ZoomToFill();
 

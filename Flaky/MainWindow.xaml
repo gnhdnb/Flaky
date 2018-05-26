@@ -10,11 +10,15 @@
         mc:Ignorable="d"
         Title="F L A K Y" Height="700" Width="700" WindowState="Maximized" Background="#FF2E2E2E" WindowStyle="None">
 	<Grid>
+		<Rectangle Fill="#FF1E1E1E" 
+			HorizontalAlignment="Stretch" 
+			VerticalAlignment="STRETCH"
+			Margin="3,3,3,134.333"/>
 		<controls:ZoomControl x:Name="zoomctrl"
 							HorizontalAlignment="STRETCH" 
-							Margin="3,3,3,134.333" 
-							VerticalAlignment="STRETCH" 
-							Background="#FF1E1E1E"
+							Margin="500,3,3,134.333" 
+							VerticalAlignment="STRETCH"
+							Background="#001E1E1E"
 							Foreground="#FF4E8B60"
 							IsManipulationEnabled="False"
 							IsAnimationEnabled="False">
@@ -34,5 +38,6 @@
 			Background="#001E1E1E"
 		/>
 		<TextBlock x:Name="textBlock" VerticalAlignment="Bottom" Margin="3,0,3,3" TextWrapping="Wrap" Text="" Background="#FF1E1E1E" Foreground="#FFA60000" Height="128"/>
+		
 	</Grid>
 </Window>

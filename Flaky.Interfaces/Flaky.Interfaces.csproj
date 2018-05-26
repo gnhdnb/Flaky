@@ -78,20 +78,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internal\IBufferedSource.cs" />
+    <Compile Include="Internal\IExternalNoteSourceProcessor.cs" />
+    <Compile Include="Internal\IFlakyNoteSource.cs" />
     <Compile Include="Internal\IFlakySource.cs" />
     <Compile Include="Internal\IMultipleWaveReader.cs" />
     <Compile Include="Internal\IWaveWriterFactory.cs" />
     <Compile Include="Internal\IWaveWriter.cs" />
     <Compile Include="Public\IChannelVolume.cs" />
     <Compile Include="Internal\IFlakyContext.cs" />
-    <Compile Include="Public\IExternalProcessor.cs" />
+    <Compile Include="Internal\IExternalSourceProcessor.cs" />
     <Compile Include="Public\IMixerController.cs" />
     <Compile Include="Internal\IWaveReader.cs" />
     <Compile Include="Internal\IWaveReaderFactory.cs" />
     <Compile Include="Public\IContext.cs" />
     <Compile Include="Public\IPlayer.cs" />
+    <Compile Include="Public\INoteSource.cs" />
     <Compile Include="Public\ISource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Public\Note.cs" />
+    <Compile Include="Public\PlayingNote.cs" />
     <Compile Include="Public\Sample.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

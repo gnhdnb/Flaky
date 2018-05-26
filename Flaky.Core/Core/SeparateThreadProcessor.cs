@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class SeparateThreadProcessor : IExternalProcessor
+	internal class SeparateThreadProcessor : IExternalSourceProcessor
 	{
 		private IFlakySource source;
 		private ContextController controller;
 		private ContextController externalController;
-		private const int readBuffersCount = 3;
-		private const int bufferSize = 6615;
+		internal const int readBuffersCount = 3;
+		internal const int bufferSize = 6615;
 
 		private long topReadingSample = 0;
 		private bool isStopping = false;

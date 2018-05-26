@@ -13,7 +13,7 @@ namespace Flaky
 
 		private Sample latestSample;
 		private long latestSampleIndex = -1;
-		private IExternalProcessor exteralProcessor;
+		private IExternalSourceProcessor exteralProcessor;
 
 		protected Source() { }
 
@@ -29,8 +29,8 @@ namespace Flaky
 
 		internal Sample PlayInCurrentThread(IContext context)
 		{
-			if (context.Sample <= latestSampleIndex)
-				return 0;// latestSample;
+			if (context.Sample == latestSampleIndex)
+				return latestSample;
 
 			var result = NextSample(context);
 
@@ -113,7 +113,7 @@ namespace Flaky
 				return $"{GetType().Name}";
 		}
 
-		void IFlakySource.SetExternalProcessor(IExternalProcessor processor)
+		void IFlakySource.SetExternalProcessor(IExternalSourceProcessor processor)
 		{
 			this.exteralProcessor = processor;
 		}

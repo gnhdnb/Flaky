@@ -17,6 +17,62 @@ namespace Flaky
 			this.root = root;
 		}
 
+		public int Subtree { get { return subtree; } }
+
+		public int GetOrder()
+		{
+			if (children.Any())
+				return children.Max(c => c.GetOrder()) + 1;
+			else
+				return 1;
+		}
+
+		public void Enumerate(Action<SourceTreeNode, SourceTreeNode> action)
+		{
+			foreach (var child in children)
+			{
+				action(this, child);
+				child.Enumerate(action);
+			}
+		}
+
+		internal List<SourceTreeNode> GetJunctions()
+		{
+			return children
+				.Where(c => c.Subtree != Subtree)
+				.Concat(children.SelectMany(c => c.GetJunctions()))
+				.ToList();
+		}
+
+		internal List<SourceTreeNode> Split(int subtreesCount, Func<ISource, bool> filter)
+		{
+			var balancedSubtreeWeight = GetWeight() / subtreesCount + 1;
+
+			var excludingNodes = new HashSet<SourceTreeNode>();
+			var result = new List<SourceTreeNode>();
+
+			SetSubtree(0);
+
+			for (int i = 1; i < subtreesCount; i++)
+			{
+				var subtree = GetOptimalSubtree(balancedSubtreeWeight, excludingNodes, filter);
+
+				if (subtree != null)
+					subtree.SetSubtree(i);
+
+				if (subtree == null)
+					return Split(i, filter);
+
+				excludingNodes.Add(subtree);
+				result.Add(subtree);
+
+				balancedSubtreeWeight =
+					(GetWeight() - excludingNodes.Sum(n => n.GetWeight())) / (subtreesCount - i) + 1;
+			}
+
+			return result;
+		}
+
 		internal void AddConnection(ISource source)
 		{
 			children.Add(new SourceTreeNode(source));
@@ -38,7 +94,9 @@ namespace Flaky
 				.SingleOrDefault(n => n != null);
 		}
 
-		internal void SetSubtree(int subtree)
+		internal ISource Source { get { return root; } }
+
+		private void SetSubtree(int subtree)
 		{
 			if (subtree == 0 || this.subtree == 0)
 			{
@@ -47,19 +105,7 @@ namespace Flaky
 			}
 		}
 
-		internal ISource Root { get { return root; } }
-
-		public int Subtree { get { return subtree; } }
-
-		public int GetOrder()
-		{
-			if (children.Any())
-				return children.Max(c => c.GetOrder()) + 1;
-			else
-				return 1;
-		}
-
-		internal int GetWeight()
+		private int GetWeight()
 		{
 			return GetWeight(new HashSet<SourceTreeNode>());
 		}
@@ -81,35 +127,6 @@ namespace Flaky
 				.Sum(c => c.GetWeight(excludingNodes, visitedNodes));
 		}
 
-		internal List<SourceTreeNode> Split(int subtreesCount)
-		{
-			var balancedSubtreeWeight = GetWeight() / subtreesCount + 1;
-
-			var excludingNodes = new HashSet<SourceTreeNode>();
-			var result = new List<SourceTreeNode>();
-
-			SetSubtree(0);
-
-			for(int i = 1; i < subtreesCount; i++)
-			{
-				var subtree = GetOptimalSubtree(balancedSubtreeWeight, excludingNodes);
-
-				if (subtree != null)
-					subtree.SetSubtree(i);
-
-				if (subtree == null)
-					return Split(i);
-
-				excludingNodes.Add(subtree);
-				result.Add(subtree);
-
-				balancedSubtreeWeight =
-					(GetWeight() - excludingNodes.Sum(n => n.GetWeight())) / (subtreesCount - i) + 1;
-			}
-
-			return result;
-		}
-
 		private bool ContainsAnyOf(HashSet<SourceTreeNode> excludingNodes)
 		{
 			if (excludingNodes.Contains(this))
@@ -118,28 +135,19 @@ namespace Flaky
 			return children.Any(c => c.ContainsAnyOf(excludingNodes));
 		}
 
-		public void Enumerate(Action<SourceTreeNode, SourceTreeNode> action)
-		{
-			foreach(var child in children)
-			{
-				action(this, child);
-				child.Enumerate(action);
-			}
-		}
-
 		private SourceTreeNode GetOptimalSubtree(
 			int optimalWeight, 
-			HashSet<SourceTreeNode> excludingNodes)
+			HashSet<SourceTreeNode> excludingNodes,
+			Func<ISource, bool> filter)
 		{
-			//if (optimalWeight > GetWeight(excludingNodes) && !ContainsAnyOf(excludingNodes))
 			if (optimalWeight > GetWeight(excludingNodes))
 				return this;
 
 			return children
 				.Where(c => !excludingNodes.Contains(c))
-				.Select(c => c.GetOptimalSubtree(optimalWeight, excludingNodes))
+				.Select(c => c.GetOptimalSubtree(optimalWeight, excludingNodes, filter))
 				.Where(s => s != null)
-				//.Where(s => !s.ContainsAnyOf(excludingNodes))
+				.Where(s => filter(s.root))
 				.OrderByDescending(c => c.GetWeight(excludingNodes))
 				.FirstOrDefault();
 		}

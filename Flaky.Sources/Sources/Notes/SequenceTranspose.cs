@@ -28,7 +28,7 @@ namespace Flaky
 			Dispose(mainSource, deltaSource);
 		}
 
-		public override PlayingNote GetNote(IContext context)
+		protected override PlayingNote NextNote(IContext context)
 		{
 			var mainNote = mainSource.GetNote(context);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public interface IExternalProcessor
+	internal interface IExternalSourceProcessor
 	{
 		Sample Play(IContext context);
 	}

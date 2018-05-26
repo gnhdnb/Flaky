@@ -8,7 +8,7 @@ namespace Flaky
 {
 	interface IFlakySource : ISource
 	{
-		void SetExternalProcessor(IExternalProcessor processor);
+		void SetExternalProcessor(IExternalSourceProcessor processor);
 		Sample PlayInCurrentThread(IContext context);
 	}
 }
