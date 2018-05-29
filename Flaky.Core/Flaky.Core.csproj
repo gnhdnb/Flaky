@@ -176,6 +176,8 @@
     <Compile Include="Core\Context.cs" />
     <Compile Include="Core\ContextController.cs" />
     <Compile Include="Core\Mixer.cs" />
+    <Compile Include="Core\OneSampleBufferedNoteProcessor.cs" />
+    <Compile Include="Core\OneSampleBufferedProcessor.cs" />
     <Compile Include="Core\SeparateThreadProcessor.cs" />
     <Compile Include="Core\SourceTreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

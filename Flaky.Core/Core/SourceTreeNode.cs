@@ -44,6 +44,21 @@ namespace Flaky
 				.ToList();
 		}
 
+		internal List<SourceTreeNode> GetMultipleOutputNodes()
+		{
+			return GetMultipleOutputNodes(new HashSet<SourceTreeNode>()).ToList();
+		}
+
+		private IEnumerable<SourceTreeNode> GetMultipleOutputNodes(HashSet<SourceTreeNode> visitedNodes)
+		{
+			if (visitedNodes.Contains(this))
+				return Enumerable.Repeat(this, 1);
+
+			visitedNodes.Add(this);
+
+			return children.SelectMany(c => c.GetMultipleOutputNodes(visitedNodes));
+		}
+
 		internal List<SourceTreeNode> Split(int subtreesCount, Func<ISource, bool> filter)
 		{
 			var balancedSubtreeWeight = GetWeight() / subtreesCount + 1;

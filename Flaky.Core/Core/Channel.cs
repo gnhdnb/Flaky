@@ -53,7 +53,7 @@ namespace Flaky
 			threadProcessors.ForEach(p => p.Stop());
 			threadProcessors.Clear();
 
-			var roots = context.SourceTreeRoot.Split(8, s => !(s is IFlakyNoteSource));
+			var roots = context.SourceTreeRoot.Split(1, s => !(s is IFlakyNoteSource));
 
 			foreach (var root in roots)
 			{
@@ -74,6 +74,23 @@ namespace Flaky
 					junctionNoteSource.SetExternalProcessor(new BufferedNoteProcessor(junctionNoteSource));
 				else
 					junctionSource.SetExternalProcessor(new BufferedProcessor(junctionSource));
+			}
+
+			var multipleOutputNodes = context
+				.SourceTreeRoot
+				.GetMultipleOutputNodes()
+				.Except(roots)
+				.Except(junctions);
+
+			foreach (var node in multipleOutputNodes)
+			{
+				var moSource = node.Source as IFlakySource;
+				var moNoteSource = node.Source as IFlakyNoteSource;
+
+				if (moNoteSource != null)
+					moNoteSource.SetExternalProcessor(new OneSampleBufferedNoteProcessor(moNoteSource));
+				else
+					moSource.SetExternalProcessor(new OneSampleBufferedProcessor(moSource));
 			}
 
 			sourceToDispose = this.source;
