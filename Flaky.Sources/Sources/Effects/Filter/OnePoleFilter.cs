@@ -49,35 +49,44 @@ namespace Flaky
 			if (cutoffValue > 1)
 				cutoffValue = 1;
 
-			Sample hp = 0;
+			float hpLeft = 0;
+			float hpRight = 0;
 
-			for(int i = 1; i <= oversampling; i++)
+			const float oversamplingD = 1 / (float)oversampling;
+			float integratorStateLeft = state.integratorState.Left;
+			float integratorStateRight = state.integratorState.Right;
+			float lpLeft = state.integratorState.Left;
+			float lpRight = state.integratorState.Right;
+			float sampleLeft = sample.Left;
+			float sampleRight = sample.Right;
+			float latestInputSampleLeft = state.latestInputSample.Left;
+			float latestInputSampleRight = state.latestInputSample.Right;
+
+			for (int i = 1; i <= oversampling; i++)
 			{
-				var inputSample = 
-					(sample * i + state.latestInputSample * (oversampling - i))
-					* (1 / (float)oversampling);
+				var inputSampleLeft = (sampleLeft * i + latestInputSampleLeft * (oversampling - i)) * oversamplingD;
+				var inputSampleRight = (sampleRight * i + latestInputSampleRight * (oversampling - i)) * oversamplingD;
 
-				hp = Iterate(inputSample, cutoffValue / 2);
+				hpLeft = inputSampleLeft - lpLeft;
+				hpRight = inputSampleRight - lpRight;
+
+				var inputLeft = hpLeft * (cutoffValue * 0.25f);
+				var inputRight = hpRight * (cutoffValue * 0.25f);
+				var outputLeft = inputLeft + integratorStateLeft;
+				var outputRight = inputRight + integratorStateRight;
+
+				integratorStateLeft = inputLeft + outputLeft;
+				integratorStateRight = inputRight + outputRight;
+
+				lpLeft = outputLeft;
+				lpRight = outputRight;
 			}
 
 			state.latestInputSample = sample;
+			state.lp = new Sample { Left = lpLeft, Right = lpRight };
+			state.integratorState = new Sample { Left = integratorStateLeft, Right = integratorStateRight };
 
-			return GetResult(state.lp, hp);
-		}
-
-		private Sample Iterate(Sample inputSample, float cutoffValue)
-		{
-			var hp = inputSample - state.lp;
-			state.lp = Integrate(hp * cutoffValue);
-			return hp;
-		}
-
-		private Sample Integrate(Sample sample)
-		{
-			var input = sample / 2;
-			var output = input + state.integratorState;
-			state.integratorState = input + output;
-			return output;
+			return GetResult(state.lp, new Sample { Left = hpLeft, Right = hpRight });
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)
