@@ -42,7 +42,7 @@ namespace Flaky
 			}
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 

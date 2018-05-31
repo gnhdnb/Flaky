@@ -41,9 +41,9 @@ namespace Flaky
 			return Perform(soundValue, positionValue, widthValue);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
-			Initialize(context, sound, position, width);
+			Initialize(context, position, width, sound);
 		}
 
 		public override void Dispose()

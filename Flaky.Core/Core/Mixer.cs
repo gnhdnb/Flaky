@@ -58,9 +58,9 @@ namespace Flaky
 			return result;
 		}
 
-		public void ChangePlayer(int channel, IPlayer player)
+		public SourceTreeNode ChangePlayer(int channel, IPlayer player)
 		{
-			channels[channel].ChangePlayer(player);
+			return channels[channel].ChangePlayer(player);
 		}
 
 		public void SetVolume(int channel, float volume)

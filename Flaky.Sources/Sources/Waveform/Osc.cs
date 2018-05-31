@@ -71,10 +71,10 @@ namespace Flaky
 			return new Sample { Value = (float)(amplitude * Math.Sin(2 * Math.PI * state.phase)) };
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			Initialize(context, Frequency, Amplitude);
+			Initialize(context, Amplitude, Frequency);
 		}
 
 		public override void Dispose()

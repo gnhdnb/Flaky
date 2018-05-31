@@ -9,9 +9,24 @@ namespace Flaky
 	internal class ContextController : IDisposable
 	{
 		private readonly Configuration configuration;
+		private readonly bool isCloned = false;
 		private readonly Dictionary<StateKey, object> states = new Dictionary<StateKey, object>();
 		private readonly Dictionary<StateKey, int> versions = new Dictionary<StateKey, int>();
 		private long sample;
+
+		private ContextController(ContextController other)
+		{
+			this.configuration = other.configuration;
+			this.states = other.states;
+			this.versions = other.versions;
+			this.sample = other.sample;
+			this.SampleRate = other.SampleRate;
+			this.MetronomeTick = other.MetronomeTick;
+			this.Beat = other.Beat;
+			this.BPM = other.BPM;
+			this.CodeVersion = other.CodeVersion;
+			this.isCloned = true;
+		}
 
 		internal ContextController(int sampleRate, int bpm, Configuration configuration)
 		{
@@ -54,6 +69,11 @@ namespace Flaky
 
 			MetronomeTick = (sample * BPM) % (SampleRate * 60) == 0;
 			Beat = (int)((sample * BPM) / (SampleRate * 60));
+		}
+
+		internal ContextController Clone()
+		{
+			return new ContextController(this);
 		}
 
 		public void Dispose()

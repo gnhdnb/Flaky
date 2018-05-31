@@ -71,10 +71,10 @@ namespace Flaky
 			Dispose(trigger, noteTrigger, source);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			Initialize(context, trigger, noteTrigger, source);
+			Initialize(context, source, trigger, noteTrigger);
 		}
 
 		public void SetMainSource(Source mainSource)

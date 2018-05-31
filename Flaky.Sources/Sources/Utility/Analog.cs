@@ -81,7 +81,7 @@ namespace Flaky
 			this.input = input;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			Initialize(context, input);

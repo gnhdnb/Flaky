@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public interface ISource : IDisposable
+	internal interface IExternalSourceProcessor
 	{
 		Sample Play(IContext context);
-		void Init(IContext context);
 	}
 }

@@ -28,7 +28,7 @@ namespace Flaky
 			Dispose(mainSource, deltaSource);
 		}
 
-		public override PlayingNote GetNote(IContext context)
+		protected override PlayingNote NextNote(IContext context)
 		{
 			var mainNote = mainSource.GetNote(context);
 
@@ -49,7 +49,7 @@ namespace Flaky
 			return new PlayingNote(currentNote, mainNote.StartSample);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, mainSource, deltaSource);
 		}

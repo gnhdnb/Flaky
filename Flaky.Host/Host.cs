@@ -3,6 +3,7 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +21,8 @@ namespace Flaky
 		public Host(int channelsCount, string outputWaveFilePath = null, IMixerController mixerController = null)
 		{
 			var configuration = new Configuration();
+
+			GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 
 			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory());
 			configuration.Register<IWaveWriterFactory>(new WaveWriterFactory());
@@ -45,15 +48,15 @@ namespace Flaky
 			}
 		}
 
-		public string[] Recompile(int channel, string code)
+		public (string[], SourceTreeNode) Recompile(int channel, string code)
 		{
 			var result = Compiler.Compile(code);
 
 			if (!result.Success)
-				return result.Messages;
+				return (result.Messages, null);
 
-			Mixer.ChangePlayer(channel, result.Player);
-			return new string[0];
+			var root = Mixer.ChangePlayer(channel, result.Player);
+			return (new string[0], root);
 		}
 
 		public void Play()

@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public abstract class Source : ISource
+	public abstract class Source : IFlakySource
 	{
 		private readonly string id;
 		private IStateContainer stateContainer;
 
-		private Sample latestSample;
-		private long latestSampleIndex = -1;
+		private IExternalSourceProcessor exteralProcessor;
 
 		protected Source() { }
 
@@ -21,22 +20,27 @@ namespace Flaky
 			this.id = id;
 		}
 
+		Sample IFlakySource.PlayInCurrentThread(IContext context)
+		{
+			return NextSample(context);
+		}
+
 		public Sample Play(IContext context)
 		{
-			if (context.Sample == latestSampleIndex)
-				return latestSample;
+			if (exteralProcessor != null)
+				return exteralProcessor.Play(context);
 
-			var result = NextSample(context);
-
-			latestSample = result;
-			latestSampleIndex = context.Sample;
-
-			return result;
+			return NextSample(context);
 		}
 
 		protected abstract Sample NextSample(IContext context);
 
-		public abstract void Initialize(IContext context);
+		void ISource.Init(IContext context)
+		{
+			Initialize(context);
+		}
+
+		protected abstract void Initialize(IContext context);
 
 		protected TState GetOrCreate<TState>(IContext context) where TState : class, new()
 		{
@@ -58,10 +62,20 @@ namespace Flaky
 
 		protected void Initialize(IContext context, params Source[] sources)
 		{
+			var flakyContext = context as IFlakyContext;
+
 			foreach (var source in sources)
 			{
-				if(source != null)
+				if (source != null)
+				{
+					flakyContext.RegisterConnection(source, this);
+
+					if (flakyContext.AlreadyInitialized(source))
+						continue;
+
+					flakyContext.RegisterInitialization(source);
 					source.Initialize(context);
+				}
 			}
 		}
 
@@ -74,6 +88,19 @@ namespace Flaky
 				if(source != null)
 					source.Dispose();
 			}
+		}
+
+		public override string ToString()
+		{
+			if (id != null)
+				return $"{GetType().Name}({id})";
+			else
+				return $"{GetType().Name}";
+		}
+
+		void IFlakySource.SetExternalProcessor(IExternalSourceProcessor processor)
+		{
+			this.exteralProcessor = processor;
 		}
 
 		public static implicit operator Source(float d)

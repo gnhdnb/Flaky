@@ -18,6 +18,7 @@ namespace Flaky
 		private bool disposed = false;
 		private int codeVersion = 0;
 		private readonly float[] nullBuffer = new float[13230];
+		private readonly List<SeparateThreadProcessor> threadProcessors = new List<SeparateThreadProcessor>();
 
 		internal Channel(int sampleRate, Configuration configuration)
 		{
@@ -36,7 +37,7 @@ namespace Flaky
 			}
 		}
 
-		public void ChangePlayer(IPlayer player)
+		public SourceTreeNode ChangePlayer(IPlayer player)
 		{
 			if (sourceToDispose != null)
 			{
@@ -46,9 +47,56 @@ namespace Flaky
 
 			var source = player.CreateSource();
 			codeVersion++;
-			source.Initialize(new Context(controller, codeVersion));
+			var context = new Context(controller, codeVersion, source);
+			source.Init(context);
+
+			threadProcessors.ForEach(p => p.Stop());
+			threadProcessors.Clear();
+
+			var roots = context.SourceTreeRoot.Split(1, s => !(s is IFlakyNoteSource));
+
+			foreach (var root in roots)
+			{
+				var separateThreadSource = (IFlakySource)root.Source;
+				var threadProcessor = new SeparateThreadProcessor(separateThreadSource, controller);
+				threadProcessors.Add(threadProcessor);
+				separateThreadSource.SetExternalProcessor(threadProcessor);
+			}
+
+			var junctions = context.SourceTreeRoot.GetJunctions().Except(roots);
+
+			foreach (var junction in junctions)
+			{
+				var junctionSource = junction.Source as IFlakySource;
+				var junctionNoteSource = junction.Source as IFlakyNoteSource;
+
+				if (junctionNoteSource != null)
+					junctionNoteSource.SetExternalProcessor(new BufferedNoteProcessor(junctionNoteSource));
+				else
+					junctionSource.SetExternalProcessor(new BufferedProcessor(junctionSource));
+			}
+
+			var multipleOutputNodes = context
+				.SourceTreeRoot
+				.GetMultipleOutputNodes()
+				.Except(roots)
+				.Except(junctions);
+
+			foreach (var node in multipleOutputNodes)
+			{
+				var moSource = node.Source as IFlakySource;
+				var moNoteSource = node.Source as IFlakyNoteSource;
+
+				if (moNoteSource != null)
+					moNoteSource.SetExternalProcessor(new OneSampleBufferedNoteProcessor(moNoteSource));
+				else
+					moSource.SetExternalProcessor(new OneSampleBufferedProcessor(moSource));
+			}
+
 			sourceToDispose = this.source;
 			this.source = source;
+
+			return context.SourceTreeRoot;
 		}
 
 		internal float[] ReadNextBatch()
@@ -101,6 +149,8 @@ namespace Flaky
 			if (disposed)
 				return;
 			disposed = true;
+
+			threadProcessors?.ForEach(p => p.Stop());
 
 			worker.Join();
 

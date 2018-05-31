@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public interface ISource : IDisposable
+	public interface INoteSource : ISource
 	{
-		Sample Play(IContext context);
-		void Init(IContext context);
+		PlayingNote GetNote(IContext context);
 	}
 }

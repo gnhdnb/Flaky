@@ -32,7 +32,7 @@ namespace Flaky
 			Dispose(mainSource, probability);
 		}
 
-		public override PlayingNote GetNote(IContext context)
+		protected override PlayingNote NextNote(IContext context)
 		{
 			var note = mainSource.GetNote(context);
 			var probabilityValue = probability.Play(context).Value;
@@ -59,7 +59,7 @@ namespace Flaky
 			}
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			Initialize(context, mainSource, probability);
