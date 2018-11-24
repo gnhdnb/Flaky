@@ -25,11 +25,11 @@ namespace Flaky
 		internal override bool NextNoteRequired(IContext context)
 		{
 			double sequenceLength = (context.Sample - state.startSample);
-			double noteLength = (context.BPM * size) / (double)(16 * 60 * context.SampleRate);
+			double noteLength = (16 * 60 * context.SampleRate) / (double)(context.BPM * size);
 
-			var expectedNoteIndex = Math.Ceiling(sequenceLength / noteLength);
+			var expectedNoteIndex = Math.Floor(sequenceLength / noteLength);
 
-			return Math.Abs(expectedNoteIndex - sequenceLength / noteLength) < 1 / noteLength;
+			return Math.Abs(sequenceLength / noteLength - expectedNoteIndex) < 1;
 		}
 	}
 
