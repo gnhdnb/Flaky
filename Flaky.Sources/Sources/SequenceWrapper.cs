@@ -17,7 +17,13 @@ namespace Flaky
 
 		public static NoteSource operator %(SequenceWrapper sequenceWrapper, int size)
 		{
-			return new Sequence(sequenceWrapper.sequence, size, $"sequence{sequenceWrapper.sequence.Replace(" ", "")}size{size}");
+			var id = $"sequence{sequenceWrapper.sequence.Replace(" ", "")}size{size}";
+
+			return new FixLengthSequence(
+				new SequentialNoteCollection(sequenceWrapper.sequence, id), 
+				size, 
+				false,
+				id);
 		}
 	}
 }
