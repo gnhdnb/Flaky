@@ -27,9 +27,9 @@ namespace Flaky
 			double sequenceLength = (context.Sample - state.startSample);
 			double noteLength = (16 * 60 * context.SampleRate) / (double)(context.BPM * size);
 
-			var expectedNoteIndex = Math.Floor(sequenceLength / noteLength);
+			var expectedNextNoteIndex = Math.Ceiling(sequenceLength / noteLength) * noteLength;
 
-			return Math.Abs(sequenceLength / noteLength - expectedNoteIndex) < 1;
+			return expectedNextNoteIndex - sequenceLength <= 1;
 		}
 	}
 

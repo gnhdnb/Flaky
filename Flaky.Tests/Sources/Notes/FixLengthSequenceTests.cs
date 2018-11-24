@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Flaky.Tests
 {
@@ -20,7 +18,7 @@ namespace Flaky.Tests
 		}
 
 		[TestMethod]
-		public void FirstNote()
+		public void QuantizedSequenceStart()
 		{
 			var noteCollection = new StubNoteCollection();
 			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
@@ -28,76 +26,53 @@ namespace Flaky.Tests
 
 			sequence.Initialize(context);
 
-			context.MetronomeTick = true;
+			context.Beat = 3;
 
 			noteCollection.NextNote = new Note(5);
 
 			var playingNote = sequence.GetNote(context);
 
+			Assert.AreEqual(null, playingNote.Note);
+
+			context.Beat = 4;
+
+			playingNote = sequence.GetNote(context);
+
 			Assert.AreEqual(noteCollection.NextNote, playingNote.Note);
 		}
 
-	}
-
-	internal class StubContext : IFlakyContext
-	{
-		public long Sample { get; set; }
-
-		public int SampleRate => 44100;
-
-		public int Beat { get; set; }
-
-		public bool MetronomeTick { get; set; }
-
-		public int BPM { get; set; } = 120;
-
-		public TFactory Get<TFactory>() where TFactory : class
+		[TestMethod]
+		public void Sequencing()
 		{
-			throw new NotImplementedException();
-		}
+			var noteCollection = new StubNoteCollection();
+			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
+			var context = new StubContext();
 
-		public TState GetOrCreateState<TState>(string id) where TState : class, new()
-		{
-			var key = (typeof(TState), id);
+			sequence.Initialize(context);
 
-			if (!states.ContainsKey(key))
-				states[key] = new TState();
+			var notes = new[] {
+				new Note(5),
+				new Note(6),
+				new Note(7),
+				new Note(8)
+			};
 
-			return (TState)states[key];
-		}
+			context.Beat = 0;
+			noteCollection.NextNote = notes[0];
+			var playingNote = sequence.GetNote(context);
+			Assert.AreEqual(notes[0], playingNote.Note);
 
-		private readonly Dictionary<(Type, string), object> states
-			= new Dictionary<(Type, string), object>();
-	}
+			noteCollection.NextNote = notes[1];
 
-	internal class StubNoteCollection : INoteCollection
-	{
-		public bool Initialized { get; set; }
-		public Note NextNote { get; set; }
+			context.Beat = 1;
+			playingNote = sequence.GetNote(context);
+			Assert.AreNotEqual(notes[1], playingNote.Note);
+			Assert.AreEqual(0, playingNote.StartSample);
 
-		public void Dispose()
-		{
-			
-		}
-
-		public Note GetNextNote()
-		{
-			return NextNote;
-		}
-
-		public void Initialize(IFlakyContext context)
-		{
-			Initialized = true;
-		}
-
-		public void Reset()
-		{
-			
-		}
-
-		public void Update(IContext context)
-		{
-			
+			context.Beat = 4;
+			playingNote = sequence.GetNote(context);
+			Assert.AreEqual(notes[1], playingNote.Note);
+			Assert.AreEqual(context.Sample, playingNote.StartSample);
 		}
 	}
 }
