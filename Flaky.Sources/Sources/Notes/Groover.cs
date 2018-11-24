@@ -23,35 +23,35 @@ namespace Flaky
 			return sequence
 				.Select(s => s.ToString())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Select((s, i) => new MonoGroover(s, size, $"{id}-{i}"))
+				.Select((s, i) => new FixLengthSequence(new GrooverNoteCollection(s, $"{id}-{i}"), size, false, $"{id}-{i}"))
 				.ToArray();
 		}
 
-		private class MonoGroover : Sequence
+		private class GrooverNoteCollection : NoteCollection
 		{
-			private Random random;
+			private static Random random;
 
-			public MonoGroover(string note, int size, string id) : base(note + "--", size, id)
+			public GrooverNoteCollection(string note, string parentId) : base(note + "--", parentId)
 			{
-				random = new Random(id.GetHashCode());
+				random = new Random(parentId.GetHashCode());
 			}
 
-			protected override int GetNextNoteIndex(IContext context, State state)
+			protected override int GetNextNoteIndex(int currentNoteIndex)
 			{
-				if(state.index == 0 && random.NextDouble() > 0.9)
+				if (currentNoteIndex == 0 && random.NextDouble() > 0.9)
 				{
 					return 0;
 				}
 
-				if (state.index == 1 && random.NextDouble() > 0.7)
+				if (currentNoteIndex == 1 && random.NextDouble() > 0.7)
 				{
 					return 0;
 				}
 
-				if (state.index == 2)
+				if (currentNoteIndex == 2)
 					return 0;
 
-				return state.index + 1;
+				return currentNoteIndex + 1;
 			}
 		}
 	}

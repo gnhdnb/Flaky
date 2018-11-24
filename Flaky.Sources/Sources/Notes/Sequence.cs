@@ -22,7 +22,7 @@ namespace Flaky
 			// do nothing
 		}
 
-		protected override bool NextNoteRequired(IContext context)
+		internal override bool NextNoteRequired(IContext context)
 		{
 			double sequenceLength = (context.Sample - state.startSample);
 			double noteLength = (context.BPM * size) / (double)(16 * 60 * context.SampleRate);
@@ -50,7 +50,7 @@ namespace Flaky
 			this.length = length ?? throw new ArgumentNullException(nameof(length));
 		}
 
-		protected override bool NextNoteRequired(IContext context)
+		internal override bool NextNoteRequired(IContext context)
 		{
 			return state.currentSequencedNote.CurrentTime(context) > lengthState.lastSampledLength;
 		}
@@ -121,7 +121,7 @@ namespace Flaky
 
 		internal bool Playing { get { return state.playing; } }
 
-		protected abstract bool NextNoteRequired(IContext context);
+		internal abstract bool NextNoteRequired(IContext context);
 
 		protected abstract void MoveToNextNote(IContext context);
 
