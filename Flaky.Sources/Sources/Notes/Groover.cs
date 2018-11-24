@@ -29,7 +29,7 @@ namespace Flaky
 
 		private class GrooverNoteCollection : NoteCollection
 		{
-			private static Random random;
+			private Random random;
 
 			public GrooverNoteCollection(string note, string parentId) : base(note + "--", parentId)
 			{
