@@ -52,9 +52,7 @@ namespace Flaky.Tests
 
 			var notes = new[] {
 				new Note(5),
-				new Note(6),
-				new Note(7),
-				new Note(8)
+				new Note(6)
 			};
 
 			context.Beat = 0;

@@ -52,6 +52,8 @@
     <Compile Include="Sources\Notes\FixLengthSequenceTests.cs" />
     <Compile Include="Sources\Notes\StubContext.cs" />
     <Compile Include="Sources\Notes\StubNoteCollection.cs" />
+    <Compile Include="Sources\Notes\StubSource.cs" />
+    <Compile Include="Sources\Notes\VariableLengthSequenceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

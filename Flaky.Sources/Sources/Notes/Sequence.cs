@@ -17,11 +17,6 @@ namespace Flaky
 			this.size = size;
 		}
 
-		protected override void MoveToNextNote(IContext context)
-		{
-			// do nothing
-		}
-
 		internal override bool NextNoteRequired(IContext context)
 		{
 			double sequenceLength = (context.Sample - state.startSample);
@@ -35,7 +30,7 @@ namespace Flaky
 
 	public class VariableLengthSequence : Sequence
 	{
-		private Source length;
+		private ISource length;
 
 		private LengthState lengthState;
 
@@ -44,7 +39,7 @@ namespace Flaky
 			public float lastSampledLength;
 		}
 
-		internal VariableLengthSequence(INoteCollection noteSource, Source length, bool skipSilentNotes, string id)
+		internal VariableLengthSequence(INoteCollection noteSource, ISource length, bool skipSilentNotes, string id)
 			: base(noteSource, skipSilentNotes, id)
 		{
 			this.length = length ?? throw new ArgumentNullException(nameof(length));
@@ -52,16 +47,24 @@ namespace Flaky
 
 		internal override bool NextNoteRequired(IContext context)
 		{
-			return state.currentSequencedNote.CurrentTime(context) > lengthState.lastSampledLength;
+			if(state.currentSequencedNote.CurrentTime(context) >= lengthState.lastSampledLength)
+			{
+				lengthState.lastSampledLength = length.Play(context).Value;
+				return true;
+			}
+
+			return false;
 		}
 
-		protected override void MoveToNextNote(IContext context)
+		protected override void Update(IContext context)
 		{
-			lengthState.lastSampledLength = length.Play(context).Value;
+			length.Play(context);
 		}
 
 		public override void Initialize(IContext context)
 		{
+			base.Initialize(context);
+
 			lengthState = GetOrCreate<LengthState>(context);
 		}
 
@@ -96,6 +99,7 @@ namespace Flaky
 		public override PlayingNote GetNote(IContext context)
 		{
 			noteSource.Update(context);
+			Update(context);
 
 			if (!state.playing && context.Beat % 4 == 0 && context.MetronomeTick)
 			{
@@ -119,11 +123,11 @@ namespace Flaky
 			return state.currentPlayingNote;
 		}
 
+		protected virtual void Update(IContext context) { }
+
 		internal bool Playing { get { return state.playing; } }
 
 		internal abstract bool NextNoteRequired(IContext context);
-
-		protected abstract void MoveToNextNote(IContext context);
 
 		public override void Initialize(IContext context)
 		{
