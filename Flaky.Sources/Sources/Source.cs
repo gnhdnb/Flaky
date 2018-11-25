@@ -9,7 +9,6 @@ namespace Flaky
 	public abstract class Source : ISource
 	{
 		private readonly string id;
-		private IStateContainer stateContainer;
 
 		private Sample latestSample;
 		private long latestSampleIndex = -1;
@@ -40,15 +39,7 @@ namespace Flaky
 
 		protected TState GetOrCreate<TState>(IContext context) where TState : class, new()
 		{
-			if (stateContainer == null)
-			{
-				if (id == null)
-					stateContainer = new StateContainer<TState>(new TState());
-				else
-					stateContainer = new StateContainer<TState>(((IFlakyContext)context).GetOrCreateState<TState>(id));
-			}
-
-			return ((StateContainer<TState>)stateContainer).State;
+			return ((IFlakyContext)context).GetOrCreateState<TState>(id);
 		}
 
 		protected TFactory Get<TFactory>(IContext context) where TFactory : class
@@ -67,7 +58,7 @@ namespace Flaky
 
 		public abstract void Dispose();
 
-		protected void Dispose(params Source[] sources)
+		protected void Dispose(params ISource[] sources)
 		{
 			foreach (var source in sources)
 			{
@@ -104,17 +95,6 @@ namespace Flaky
 		public static Source operator *(Source a, Source b)
 		{
 			return new Multiply(a, b);
-		}
-
-		private interface IStateContainer { }
-		private class StateContainer<TState> : IStateContainer where TState : class, new()
-		{
-			internal TState State { get; }
-
-			internal StateContainer(TState state)
-			{
-				State = state;
-			}
 		}
 	}
 }

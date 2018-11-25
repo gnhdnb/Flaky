@@ -23,7 +23,7 @@ namespace Flaky
 			return sequence
 				.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
 				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Select((s, i) => new Sequence(s, size, $"{id}-{i}"))
+				.Select((s, i) => new FixLengthSequence(new SequentialNoteCollection(s, $"{id}-{i}"), size, false, $"{id}-{i}"))
 				.ToArray();
 		}
 

@@ -92,60 +92,28 @@ namespace Flaky
 			{ return new Groover(sequence, size, id); }
 		protected SequenceWrapper Seq(string sequence)
 			{ return new SequenceWrapper(sequence); }
-		protected Sequence Seq(IEnumerable<int> notes, Source length)
-			{ return new Sequence(notes, length); }
-		protected Sequence Seq(IEnumerable<int> notes, Source length, string id)
-			{ return new Sequence(notes, length, id); }
-		protected Sequence Seq(IEnumerable<int> notes, int size, string id)
-			{ return new Sequence(notes, size, id); }
-		protected Sequence Seq(IEnumerable<Note> notes, Source length)
-			{ return new Sequence(notes, length); }
-		protected Sequence Seq(IEnumerable<Note> notes, Source length, string id)
-			{ return new Sequence(notes, length, id); }
-		protected Sequence Seq(IEnumerable<Note> notes, int size, string id)
-			{ return new Sequence(notes, size, id); }
-		protected Sequence Seq(string sequence, Source length, string id)
-			{ return new Sequence(sequence, length, id); }
-		protected Sequence Seq(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new Sequence(sequence, length, skipSilentNotes, id); }
-		protected Sequence Seq(string sequence, int size, string id)
-			{ return new Sequence(sequence, size, id); }
-		protected Sequence Seq(string sequence, int size, bool skipSilentNotes, string id)
-			{ return new Sequence(sequence, size, skipSilentNotes, id); }
 		protected Sequence S(string sequence, Source length, string id)
-			{ return new Sequence(sequence, length, id); }
+			{ return new VariableLengthSequence(new SequentialNoteCollection(sequence, id), length, false, id); }
 		protected Sequence S(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new Sequence(sequence, length, skipSilentNotes, id); }
+			{ return new VariableLengthSequence(new SequentialNoteCollection(sequence, id), length, skipSilentNotes, id); }
 		protected Sequence S(string sequence, int size, string id)
-			{ return new Sequence(sequence, size, id); }
+			{ return new FixLengthSequence(new SequentialNoteCollection(sequence, id), size, false, id); }
 		protected Sequence S(string sequence, int size, bool skipSilentNotes, string id)
-			{ return new Sequence(sequence, size, skipSilentNotes, id); }
+			{ return new FixLengthSequence(new SequentialNoteCollection(sequence, id), size, skipSilentNotes, id); }
 
-		protected RandomSeqence RSeq(string sequence, Source length, string id)
-			{ return new RandomSeqence(sequence, length, id); }
-		protected RandomSeqence RSeq(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new RandomSeqence(sequence, length, skipSilentNotes, id); }
-		protected RandomSeqence RSeq(string sequence, int size, string id)
-			{ return new RandomSeqence(sequence, size, id); }
+		protected Sequence RS(string sequence, Source length, string id)
+			{ return new VariableLengthSequence(new RandomNoteCollection(sequence, id), length, false, id); }
+		protected Sequence RS(string sequence, Source length, bool skipSilentNotes, string id)
+			{ return new VariableLengthSequence(new RandomNoteCollection(sequence, id), length, skipSilentNotes, id); }
+		protected Sequence RS(string sequence, int size, string id)
+			{ return new FixLengthSequence(new RandomNoteCollection(sequence, id), size, false, id); }
 
-		protected RandomSeqence RS(string sequence, Source length, string id)
-			{ return new RandomSeqence(sequence, length, id); }
-		protected RandomSeqence RS(string sequence, Source length, bool skipSilentNotes, string id)
-			{ return new RandomSeqence(sequence, length, skipSilentNotes, id); }
-		protected RandomSeqence RS(string sequence, int size, string id)
-			{ return new RandomSeqence(sequence, size, id); }
-
-		protected RandomWalkSequence RW(string sequence, Source deviation, Source length, string id)
-			{ return new RandomWalkSequence(sequence, deviation, length, id); }
-		protected RandomWalkSequence RW(string sequence, Source deviation, int size, string id)
-			{ return new RandomWalkSequence(sequence, deviation, size, id); }
-		protected RandomWalkSequence RW(string sequence, Source deviation, Source length, bool skipSilentNotes, string id)
-			{ return new RandomWalkSequence(sequence, deviation, length, skipSilentNotes, id); }
-
-		protected RandomSeqence RSeq(IEnumerable<int> notes, Source length, string id)
-			{ return new RandomSeqence(notes, length, id); }
-		protected RandomSeqence RSeq(IEnumerable<int> notes, int size, string id)
-			{ return new RandomSeqence(notes, size, id); }
+		protected Sequence RW(string sequence, Source deviation, Source length, string id)
+			{ return new VariableLengthSequence(new RandomWalkNoteCollection(sequence, deviation, id), length, false, id); }
+		protected Sequence RW(string sequence, Source deviation, int size, string id)
+			{ return new FixLengthSequence(new RandomWalkNoteCollection(sequence, deviation, id), size, false, id); }
+		protected Sequence RW(string sequence, Source deviation, Source length, bool skipSilentNotes, string id)
+			{ return new VariableLengthSequence(new RandomWalkNoteCollection(sequence, deviation, id), length, skipSilentNotes, id); }
 
 		protected PipingSourceWrapper<NoteSource, NoteSource> DSeq(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }

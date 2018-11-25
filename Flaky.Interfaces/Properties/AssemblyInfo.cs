@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Flaky.Adapters")]
 [assembly: InternalsVisibleTo("Flaky.Core")]
 [assembly: InternalsVisibleTo("Flaky.Host")]
+[assembly: InternalsVisibleTo("Flaky.Tests")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
