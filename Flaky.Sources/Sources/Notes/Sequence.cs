@@ -24,7 +24,7 @@ namespace Flaky
 
 			var expectedNextNoteIndex = Math.Ceiling(sequenceLength / noteLength) * noteLength;
 
-			return expectedNextNoteIndex - sequenceLength <= 1;
+			return expectedNextNoteIndex - sequenceLength < 1;
 		}
 	}
 
@@ -88,6 +88,7 @@ namespace Flaky
 			public PlayingNote currentSequencedNote;
 			public long startSample;
 			public bool playing;
+			public long lastSample = -1;
 		}
 
 		internal Sequence(INoteCollection noteSource, bool skipSilentNotes, string id) : base(id)
@@ -109,6 +110,11 @@ namespace Flaky
 
 			if (!state.playing)
 				return state.currentPlayingNote;
+
+			if (context.Sample == state.lastSample)
+				return state.currentPlayingNote;
+
+			state.lastSample = context.Sample;
 
 			if (NextNoteRequired(context))
 			{

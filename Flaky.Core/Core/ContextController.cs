@@ -33,6 +33,9 @@ namespace Flaky
 
 		internal TState GetOrCreateState<TState>(string id, int codeVersion) where TState : class, new()
 		{
+			if (id == null)
+				return new TState();
+
 			var key = new StateKey(typeof(TState), id);
 
 			if (!states.ContainsKey(key) || versions[key] < codeVersion - 1)

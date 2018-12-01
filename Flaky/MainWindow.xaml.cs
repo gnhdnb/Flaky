@@ -36,7 +36,8 @@ namespace WPF
 
 			SetProcessPriority();
 
-			Host = new Host(1, Path.Combine(GetLocation(), "flaky.wav"));
+			//Host = new Host(1, Path.Combine(GetLocation(), "flaky.wav"));
+			Host = new Host(1);
 			var code = Load();
 
 			try
