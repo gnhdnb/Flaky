@@ -67,9 +67,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PerformanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Resources\StandardWorkload.flk" />
     <Compile Include="Sources\Notes\FixLengthSequenceTests.cs" />
     <Compile Include="Sources\Notes\SequentialNoteCollectionTests.cs" />
     <Compile Include="Sources\StubContext.cs" />

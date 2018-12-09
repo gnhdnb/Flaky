@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BenchmarkDotNet.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,36 +8,42 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flaky.Tests
+namespace Flaky.Benchmark
 {
-	[TestClass]
-	public class PerformanceTests
+	public class StandardWorkload
 	{
-		[TestMethod]
-		public void StandardWorkloadTest()
+		private ContextController contextController;
+		private ISource source;
+
+		[GlobalSetup]
+		public void Setup()
 		{
 			var compiler = new Compiler(typeof(Source).Assembly);
 			var result = compiler.Compile(LoadEmbededResource("StandardWorkload.flk"));
 
-			var source = result.Player.CreateSource();
+			source = result.Player.CreateSource();
 
-			var contextController = new ContextController(44100, 120, new Configuration());
+			contextController = new ContextController(44100, 120, new Configuration());
 
 			source.Initialize(new Context(contextController));
+		}
 
+		[Benchmark]
+		public void StandardWorkloadTest()
+		{
 
-			var timer = new Stopwatch();
-
-			timer.Start();
 			for (long i = 0; i < 44100; i++)
 			{
 				contextController.NextSample();
 
 				source.Play(new Context(contextController));
 			}
-			timer.Stop();
+		}
 
-			Assert.Inconclusive($"{timer.ElapsedMilliseconds} ms");
+		[GlobalCleanup]
+		public void Cleanup()
+		{
+			source.Dispose();
 		}
 
 		private static string LoadEmbededResource(string fileName)
