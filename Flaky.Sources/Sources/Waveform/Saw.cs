@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,18 +34,18 @@ namespace Flaky
 			internal float position;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			int sampleRate = context.SampleRate;
 
-			float amplitude = Amplitude.Play(context).Value;
-			float frequency = Frequency.Play(context).Value;
+			float amplitude = Amplitude.Play(context).X;
+			float frequency = Frequency.Play(context).X;
 
 			if (frequency < 0)
 				frequency = 0;
 
 			if (frequency == 0)
-				return 0;
+				return new Vector2(0, 0);
 
 			if(frequency > sampleRate / 2)
 				frequency = sampleRate / 2;
@@ -58,11 +59,7 @@ namespace Flaky
 
 			state.position -= 2 * amplitude * frequency / (float)sampleRate;
 
-			return new Sample
-			{
-				Left = state.position,
-				Right = state.position
-			};
+			return new Vector2(state.position, state.position);
 		}
 
 		public override void Initialize(IContext context)

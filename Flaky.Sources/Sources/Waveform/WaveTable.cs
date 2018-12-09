@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace Flaky
 				waveReader = readerFactory.Create("waveforms", pack);
 			}
 
-			public Sample Read(float pitch, float selector)
+			public Vector2 Read(float pitch, float selector)
 			{
 				if (pitch < 0)
 					pitch = -pitch;
@@ -64,7 +65,7 @@ namespace Flaky
 				return sample2 * crossfade + sample1 * (1 - crossfade);
 			}
 
-			private Sample Read(IMultipleWaveReader reader, int wave, double position)
+			private Vector2 Read(IMultipleWaveReader reader, int wave, double position)
 			{
 				position %= reader.Length(wave);
 
@@ -102,11 +103,11 @@ namespace Flaky
 			Initialize(context, pitch, selector);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			return state.Read(
-				pitch.Play(context).Value,
-				selector.Play(context).Value);
+				pitch.Play(context).X,
+				selector.Play(context).X);
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)

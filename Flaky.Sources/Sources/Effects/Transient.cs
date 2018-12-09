@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,7 +48,7 @@ namespace Flaky
 				ticksFromLatestReset = 0;
 			}
 
-			public void WriteSample(Sample sample, float sensitivity, float trigger)
+			public void WriteSample(Vector2 sample, float sensitivity, float trigger)
 			{
 				primary.MoveWriter();
 				secondary.MoveWriter();
@@ -55,7 +56,7 @@ namespace Flaky
 				if (sensitivity > 1)
 					sensitivity = 1;
 
-				var currentAmp = Math.Abs(sample.Value);
+				var currentAmp = Math.Abs(sample.X);
 
 				if (currentAmp > lastAmp)
 				{
@@ -92,7 +93,7 @@ namespace Flaky
 				ticksFromLatestReset++;
 			}
 
-			public Sample ReadSample(float pitch)
+			public Vector2 ReadSample(float pitch)
 			{
 				primary.MoveReader(pitch);
 				secondary.MoveReader(pitch);
@@ -148,7 +149,7 @@ namespace Flaky
 			Initialize(context, trigger, source, pitch);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var sensitivityValue = sensitivity.Play(context);
 			var sourceValue = source.Play(context);
@@ -157,11 +158,11 @@ namespace Flaky
 			float triggerValue = 0;
 
 			if (trigger != null)
-				triggerValue = trigger.Play(context).Value;
+				triggerValue = trigger.Play(context).X;
 
-			state.WriteSample(sourceValue, Math.Abs(sensitivityValue.Value), triggerValue);
+			state.WriteSample(sourceValue, Math.Abs(sensitivityValue.X), triggerValue);
 
-			return state.ReadSample(pitchValue.Value);
+			return state.ReadSample(pitchValue.X);
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)
@@ -172,7 +173,7 @@ namespace Flaky
 		private class Buffer
 		{
 			private const int bufferSize = 441000;
-			private Sample[] Samples = new Sample[bufferSize];
+			private Vector2[] Samples = new Vector2[bufferSize];
 			private float readerPosition = 0;
 			private int writerPosition = 0;
 			private int direction = 1;
@@ -190,7 +191,7 @@ namespace Flaky
 				return writerPosition >= bufferSize - 1 - crossfadeInterval;
 			}
 
-			public void Write(Sample sample)
+			public void Write(Vector2 sample)
 			{
 				if(!writerOffline)
 					Samples[writerPosition] = sample;
@@ -230,7 +231,7 @@ namespace Flaky
 				}
 			}
 
-			public Sample Read()
+			public Vector2 Read()
 			{
 				var previousPosition = Math.Floor(readerPosition);
 				var nextPosition = Math.Ceiling(readerPosition);

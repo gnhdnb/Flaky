@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,9 +18,10 @@ namespace Flaky
 			this.startSample = startSample;
 		}
 
-		public static implicit operator Sample(PlayingNote n)
+		public static implicit operator Vector2(PlayingNote n)
 		{
-			return new Sample { Value = n.note?.ToFrequency() ?? 0 };
+			var freq = n.note?.ToFrequency() ?? 0;
+			return new Vector2(freq, freq);
 		}
 
 		public bool IsSilent { get { return note == null; } }

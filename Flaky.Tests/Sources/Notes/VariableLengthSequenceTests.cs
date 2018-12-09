@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace Flaky.Tests
 				new Note(6)
 			};
 
-			lengthSource.NextSample = new Sample { Left = 1, Right = 1 };
+			lengthSource.NextSample = new Vector2 { X = 1, Y = 1 };
 
 			context.Beat = 0;
 			noteCollection.NextNote = notes[0];

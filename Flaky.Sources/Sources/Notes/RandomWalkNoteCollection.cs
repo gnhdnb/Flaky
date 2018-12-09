@@ -37,7 +37,7 @@ namespace Flaky
 		{
 			base.Update(context);
 
-			deviationValue = deviation.Play(context).Value;
+			deviationValue = deviation.Play(context).X;
 		}
 
 		public override void Initialize(IFlakyContext context)

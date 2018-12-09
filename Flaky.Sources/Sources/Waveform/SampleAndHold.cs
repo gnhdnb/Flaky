@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Flaky
 
 		private class State
 		{
-			public Sample currentSample;
+			public Vector2 currentSample;
 			public bool triggered = false;
 		}
 
@@ -35,7 +36,7 @@ namespace Flaky
 			{
 				var triggerSample = trigger.Play(context);
 
-				return triggerSample.Value >= 0.5;
+				return triggerSample.X >= 0.5;
 			}
 			else
 			{
@@ -45,7 +46,7 @@ namespace Flaky
 			}
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var sample = source.Play(context);
 

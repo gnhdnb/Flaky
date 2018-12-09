@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace Flaky
 			this.sample = sample;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var delta = 1;
 
@@ -33,7 +34,7 @@ namespace Flaky
 
 			var result = state.Reader.Read((long)state.LatestSamplerSample);
 
-			return result ?? 0;
+			return result ?? new Vector2(0, 0);
 		}
 
 		public override void Initialize(IContext context)

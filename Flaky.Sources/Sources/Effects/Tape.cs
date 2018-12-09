@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,16 +20,16 @@ namespace Flaky
 
 		private class DetonationState
 		{
-			internal Sample[] detonationBuffer = new Sample[44100];
+			internal Vector2[] detonationBuffer = new Vector2[44100];
 			internal int detonationBufferPosition;
 			internal long sample;
 
-			public Sample NextSample(Sample stereo, float lfo)
+			public Vector2 NextSample(Vector2 stereo, float lfo)
 			{
 				return Detonation(stereo, lfo);
 			}
 
-			private Sample Detonation(Sample sample, float lfo)
+			private Vector2 Detonation(Vector2 sample, float lfo)
 			{
 				detonationBufferPosition ++;
 
@@ -104,31 +105,31 @@ namespace Flaky
 			Initialize(context, hpNoiseSum, hpNoiseDiff, source, lfo, analog, hold);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var inputSample = source.Play(context);
 			var sumNoiseSample = hpNoiseSum.Play(context);
 			var diffNoiseSample = hpNoiseDiff.Play(context);
 			var lfoSample = lfo.Play(context);
 
-			var sum = inputSample.Left + inputSample.Right + sumNoiseSample.Value * 0.00004f * noiseLevel;
-			var difference = inputSample.Left - inputSample.Right + diffNoiseSample.Value * 0.00001f * noiseLevel;
+			var sum = inputSample.X + inputSample.Y + sumNoiseSample.X * 0.00004f * noiseLevel;
+			var difference = inputSample.X - inputSample.Y + diffNoiseSample.X * 0.00001f * noiseLevel;
 
-			hold.Sample = new Sample
+			hold.Sample = new Vector2
 			{
-				Left = sum,
-				Right = difference
+				X = sum,
+				Y = difference
 			};
 
 			var result = analog.Play(context);
 
 			return state.NextSample(
-				new Sample
+				new Vector2
 				{
-					Left = (result.Left + result.Right) / 2,
-					Right = (result.Left - result.Right) / 2,
+					X = (result.X + result.Y) / 2,
+					Y = (result.X - result.Y) / 2,
 				},
-				lfoSample.Value);
+				lfoSample.X);
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)

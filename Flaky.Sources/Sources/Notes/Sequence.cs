@@ -49,7 +49,7 @@ namespace Flaky
 		{
 			if(state.currentSequencedNote.CurrentTime(context) >= lengthState.lastSampledLength)
 			{
-				lengthState.lastSampledLength = length.Play(context).Value;
+				lengthState.lastSampledLength = length.Play(context).X;
 				return true;
 			}
 

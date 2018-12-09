@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,12 +11,12 @@ namespace Flaky
 	{
 		private class State
 		{
-			public Sample Sample { get; set; }
+			public Vector2 Sample { get; set; } = new Vector2(0, 0);
 		}
 
 		private State state;
 
-		public Sample Sample {
+		public Vector2 Sample {
 			get { return state.Sample; }
 			set { state.Sample = value; }
 		}
@@ -27,7 +28,7 @@ namespace Flaky
 			state = GetOrCreate<State>(context);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			return state.Sample;
 		}

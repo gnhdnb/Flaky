@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,16 +18,12 @@ namespace Flaky
 			this.b = b;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var aValue = a.Play(context);
 			var bValue = b.Play(context);
 
-			return new Sample
-			{
-				Left = aValue.Left + bValue.Left,
-				Right = aValue.Right + bValue.Right,
-			};
+			return aValue + bValue;
 		}
 
 		public override void Initialize(IContext context)

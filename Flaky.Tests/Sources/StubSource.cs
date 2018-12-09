@@ -1,11 +1,13 @@
-﻿namespace Flaky.Tests
+﻿using System.Numerics;
+
+namespace Flaky.Tests
 {
 	public class StubSource : ISource
 	{
 		public bool Initialized { get; set; }
 		public bool Disposed { get; set; }
 
-		public Sample NextSample { get; set; }
+		public Vector2 NextSample { get; set; }
 
 		public void Dispose()
 		{
@@ -17,7 +19,7 @@
 			Initialized = true;
 		}
 
-		public Sample Play(IContext context)
+		public Vector2 Play(IContext context)
 		{
 			return NextSample;
 		}

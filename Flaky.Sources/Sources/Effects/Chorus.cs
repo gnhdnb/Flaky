@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Flaky
 		{
 			internal int sampleRate;
 			internal int capacity;
-			internal Sample[] buffer;
+			internal Vector2[] buffer;
 			internal int position;
 			internal long sample;
 			internal LFO lfo1;
@@ -30,7 +31,7 @@ namespace Flaky
 
 				sampleRate = context.SampleRate;
 				capacity = sampleRate * 10;
-				buffer = new Sample[capacity];
+				buffer = new Vector2[capacity];
 
 				var random = new Random();
 
@@ -42,7 +43,7 @@ namespace Flaky
 
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var sound = source.Play(context);
 
@@ -72,7 +73,7 @@ namespace Flaky
 				+ Pan.Perform(echo4, 1f, 1) * 0.2f;
 		}
 
-		private Sample Read(IContext context, State state, long offset, int order, double finetune)
+		private Vector2 Read(IContext context, State state, long offset, int order, double finetune)
 		{
 			var roughPoint = (int)Math.Floor(finetune);
 			var fineOffset = (float)(finetune - Math.Floor(finetune));

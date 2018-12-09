@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,11 +14,11 @@ namespace Flaky
 			private Effect left = new Effect();
 			private Effect right = new Effect();
 
-			public Sample NextSample(Sample input)
+			public Vector2 NextSample(Vector2 input)
 			{
-				return new Sample {
-					Left = (float)left.NextSample(input.Left),
-					Right = (float)right.NextSample(input.Right),
+				return new Vector2 {
+					X = (float)left.NextSample(input.X),
+					Y = (float)right.NextSample(input.Y),
 				};
 			}
 
@@ -87,7 +88,7 @@ namespace Flaky
 			Initialize(context, input);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			return state.NextSample(input.Play(context));
 		}

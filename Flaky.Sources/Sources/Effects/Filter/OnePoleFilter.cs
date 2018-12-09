@@ -12,9 +12,9 @@ namespace Flaky
 
 		private class State
 		{
-			public Sample integratorState;
-			public Sample lp;
-			public Sample latestInputSample;
+			public Vector2 integratorState;
+			public Vector2 lp;
+			public Vector2 latestInputSample;
 		}
 
 		internal OnePoleFilter(Source source, Source cutoff, string id) : base(id)
@@ -39,10 +39,10 @@ namespace Flaky
 			Dispose(source, cutoff);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var sample = source.Play(context);
-			var cutoffValue = cutoff.Play(context).Value;
+			var cutoffValue = cutoff.Play(context).X;
 
 			if (cutoffValue < 0)
 				cutoffValue = 0;
@@ -51,10 +51,10 @@ namespace Flaky
 				cutoffValue = 1;
 
 			var hp = new Vector2(0, 0);
-			var integrator = new Vector2(state.integratorState.Left, state.integratorState.Right);
-			var lp = new Vector2(state.integratorState.Left, state.integratorState.Right);
-			var s = new Vector2(sample.Left, sample.Right);
-			var latestInput = new Vector2(state.latestInputSample.Left, state.latestInputSample.Right);
+			var integrator = state.integratorState;
+			var lp = state.integratorState;
+			var s = sample;
+			var latestInput = state.latestInputSample;
 
 			const float oversamplingD = 1 / (float)oversampling;
 
@@ -71,10 +71,10 @@ namespace Flaky
 			}
 
 			state.latestInputSample = sample;
-			state.lp = new Sample { Left = lp.X, Right = lp.Y };
-			state.integratorState = new Sample { Left = integrator.X, Right = integrator.Y };
+			state.lp = lp;
+			state.integratorState = integrator;
 
-			return GetResult(state.lp, new Sample { Left = hp.X, Right = hp.Y });
+			return GetResult(state.lp, hp);
 		}
 
 		void IPipingSource<Source>.SetMainSource(Source mainSource)
@@ -82,6 +82,6 @@ namespace Flaky
 			this.source = mainSource;
 		}
 
-		protected abstract Sample GetResult(Sample lp, Sample hp);
+		protected abstract Vector2 GetResult(Vector2 lp, Vector2 hp);
 	}
 }

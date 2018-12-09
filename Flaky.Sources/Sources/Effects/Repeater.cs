@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace Flaky
 		{
 			internal int sampleRate;
 			internal int capacity;
-			internal Sample[] buffer;
+			internal Vector2[] buffer;
 			internal int position;
 			internal long sample;
 
@@ -30,7 +31,7 @@ namespace Flaky
 
 				sampleRate = context.SampleRate;
 				capacity = sampleRate * 10;
-				buffer = new Sample[capacity];
+				buffer = new Vector2[capacity];
 			}
 		}
 
@@ -54,7 +55,7 @@ namespace Flaky
 
 		public Rep( NoteSource feed, string id) : this(feed, 1, 1, 0.5f, id) { }
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var sound = source.Play(context);
 			var note = feed.GetNote(context);

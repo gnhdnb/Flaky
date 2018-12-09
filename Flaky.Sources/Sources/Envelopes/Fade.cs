@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,7 +59,7 @@ namespace Flaky
 
         public override void Dispose() { }
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			if (time == 0)
 				state.CurrentValue = FinalValue;
@@ -78,7 +79,7 @@ namespace Flaky
 					state.CurrentValue = FinalValue;
 			}
 
-			return state.CurrentValue;
+			return new Vector2(state.CurrentValue, state.CurrentValue);
 		}
 
 		protected abstract float InitialValue { get; }

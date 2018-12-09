@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,25 +18,25 @@ namespace Flaky
 			this.samples = samples;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var note = noteSource.GetNote(context);
 			var sample = note.CurrentSample(context);
 
 			if (note.IsSilent)
-				return new Sample();
+				return new Vector2();
 
 			var index = note.Note.Number;
 
 			if (index < 0)
-				return new Sample();
+				return new Vector2();
 
 			if (index >= readers.Length)
-				return new Sample();
+				return new Vector2();
 
 			var result = readers[index].Read(sample);
 
-			return result ?? 0;
+			return result ?? new Vector2(0, 0);
 		}
 
 		public override void Initialize(IContext context)
