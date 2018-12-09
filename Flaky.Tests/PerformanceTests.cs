@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,11 +17,7 @@ namespace Flaky.Tests
 		public void StandardWorkloadTest()
 		{
 			var compiler = new Compiler(typeof(Source).Assembly);
-			var result = compiler.Compile(
-			@"
-				return 35 % Osc(1);
-			"
-			);
+			var result = compiler.Compile(LoadEmbededResource("StandardWorkload.flk"));
 
 			var source = result.Player.CreateSource();
 
@@ -40,6 +38,20 @@ namespace Flaky.Tests
 			timer.Stop();
 
 			Assert.Inconclusive($"{timer.ElapsedMilliseconds} ms");
+		}
+
+		private static string LoadEmbededResource(string fileName)
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+
+			var resources = assembly.GetManifestResourceNames();
+			var resourceName = resources.Single(r => r.EndsWith(fileName));
+
+			using (var stream = assembly.GetManifestResourceStream(resourceName))
+			using (var reader = new StreamReader(stream))
+			{
+				return reader.ReadToEnd();
+			}
 		}
 	}
 }
