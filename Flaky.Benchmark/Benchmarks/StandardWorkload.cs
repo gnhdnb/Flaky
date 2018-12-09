@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flaky.Benchmark
 {
+	[MemoryDiagnoser]
 	public class StandardWorkload
 	{
 		private ContextController contextController;
