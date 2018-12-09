@@ -1,0 +1,81 @@
+﻿Source result = 0;
+
+var a = S("029", 16, "rw2");
+var r = S("13a", 64, "rw1") % ST(-24) % ST(a);
+
+Source arp = r
+% Sq(1, 0.7 + (0.1 % Osc(0.001)), "wt1")
+% LP(AD(r, 0.001, 0.2) * 0.04f, 0.2f, "wlp")
+% Chr("c1")
+% Pan(7 % Osc(1), 1)
+* 0.05;
+
+Source dr = 0;
+
+dr = Groover("012", "grv1") 
+	% ((g, n) => g % Osc(1)) * 0.04f
+	% Pan(7 % Osc(1), 1)
+	% HP1(0.1, "snarehp");
+
+dr = 0.5f * dr + dr % Chr("ch1");
+
+result += arp % Pan(0, 0.6);
+result += dr;
+
+var chord = PSeq(@"
+0079 0079 9979 9979
+3322 3322 3322 3322
+5--- 5--- 5--- 5---
+", 1, "ps1")
+% ((g, n) => g % Sq(1, 0.4 + (0.02 % Osc(0.001 * n)), $"wtp_{n}") % Pan((n - 0.5) * 0.6, 1))
+% Pan(0, 0);
+
+Source stbass = 0;
+var stbsq = S("-3ddd5ddd-", 4, "stsq3");
+stbass += 0.2 * Oscillo(stbsq, "stos3") * AD(stbsq, 0.7f, 2f);
+stbass = DelayStack(stbass, "strd");
+stbass += 0.005 * Oscillo2(stbsq, "stos4") * AD(stbsq, 0.7f, 2f);
+stbass = stbass* 5 % Tape("stt2") * 2f;
+
+result += chord * 0.02;
+
+var dr2 = RS("012--", 64, "dr2s")
+% Osc(0.1);
+
+result += dr2* 0.4;
+result = 0;
+result += stbass;
+
+return result * 0.07f % Tape(1, "t1") * 20 % Pan(0, 0.6);
+
+Source DelayStack(Source input, string id)
+{
+	input = input % Pan(7 % Osc(1), 1);
+	input = input % Delay(0.17, $"{id}-d1") * 1.5f;
+	input = input % Delay(0.167, $"{id}-d2") * 1.5f;
+	input = input % Delay(0.147, $"{id}-d3") * 1.5f;
+	input = input % Delay(0.137, $"{id}-d4") * 1.5f;
+	return input % Chr($"{id}-c") * 2;
+}
+
+Source Oscillo(NoteSource sq, string id)
+{
+	Source mod = (sq * 2.02f) % Osc(100, $"{id}-o1");
+	mod += (sq * 4.04f) % Osc(10, $"{id}-o2");
+	mod += (sq * 6.04f) % Osc(5, $"{id}-o3");
+
+	var res = sq % Saw(0.3, $"{id}-o4") + mod * 0.001f + (sq * 4) % Osc(0.04, $"{id}-o5");
+
+	return res % LP(0.1 * AD(sq, 0.1f, 0.4f), 0.1, $"{id}-filter") * 0.4f * AD(sq, 0.1f, 0.4f);
+}
+
+Source Oscillo2(Source sq, string id)
+{
+	Source res = 0;
+
+	res += (sq * 0.25) % Saw(1, $"{id}-s1");
+	res += (sq * 0.251) % Saw(1, $"{id}-s2");
+	res += (sq * 0.249) % Saw(1, $"{id}-s3");
+
+	return res % Overdrive(1f, $"{id}-od") % BP(0.1f, 0.1f, $"{id}-bp");
+}
