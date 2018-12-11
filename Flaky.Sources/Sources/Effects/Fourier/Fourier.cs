@@ -175,10 +175,10 @@ namespace Flaky
 
 			Sample outputSample = 0;
 
-			for(int step = 0; step < oversampling; step++)
+			for(int step = 1; step <= oversampling; step++)
 			{
 				var interpolated = 
-					(inputSample * step + state.latestSample * (oversampling - step - 1))
+					(inputSample * step + state.latestSample * (oversampling - step))
 					* d;
 
 				outputSample += Step(interpolated);
