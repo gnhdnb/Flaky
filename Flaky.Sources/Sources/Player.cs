@@ -77,6 +77,9 @@ namespace Flaky
 			{ return Pipe(new Pan(position, width)); }
 		protected PipingSourceWrapper Rep(NoteSource feed, string id)
 			{ return Pipe(new Rep(feed, id)); }
+		protected PipingSourceWrapper Rep(
+				NoteSource feed, float multiplier, float dry, float wet, string id)
+			{ return Pipe(new Rep(feed, multiplier, dry, wet, id)); }
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }
 		protected AD AD(NoteSource source, Source attack, Source decay)
