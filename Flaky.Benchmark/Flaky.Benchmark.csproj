@@ -216,7 +216,7 @@
       <Name>Flaky.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\Flaky.Sources\Flaky.Sources.csproj">
-      <Project>{0fa2ceca-75a3-4ca2-af2d-25ca9dc3906b}</Project>
+      <Project>{ca1adf22-6c85-421d-94e0-714cb3164a2f}</Project>
       <Name>Flaky.Sources</Name>
     </ProjectReference>
   </ItemGroup>

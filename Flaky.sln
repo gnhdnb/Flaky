@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Sources", "Flaky.Sources\Flaky.Sources.csproj", "{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Host", "Flaky.Host\Flaky.Host.csproj", "{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Adapters", "Flaky.Adapters\Flaky.Adapters.csproj", "{807D2E09-3C18-4DED-B582-ACE81FF3C54D}"
@@ -19,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flaky.Interfaces", "Flaky.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Core", "Flaky.Core\Flaky.Core.csproj", "{A17ED290-1530-45F7-AAF7-8364E1A5E0A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Sources", "Flaky.Sources\Flaky.Sources.csproj", "{CA1ADF22-6C85-421D-94E0-714CB3164A2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,14 +27,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Debug|x64.ActiveCfg = Debug|x64
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Debug|x64.Build.0 = Debug|x64
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Release|x64.ActiveCfg = Release|x64
-		{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}.Release|x64.Build.0 = Release|x64
 		{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}.Debug|x64.ActiveCfg = Debug|x64
@@ -91,6 +83,14 @@ Global
 		{A17ED290-1530-45F7-AAF7-8364E1A5E0A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A17ED290-1530-45F7-AAF7-8364E1A5E0A1}.Release|x64.ActiveCfg = Release|Any CPU
 		{A17ED290-1530-45F7-AAF7-8364E1A5E0A1}.Release|x64.Build.0 = Release|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA1ADF22-6C85-421D-94E0-714CB3164A2F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}</ProjectGuid>
+    <ProjectGuid>{0FA2CECA-75A3-4CA2-AF2D-25CA9DC3906B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Flaky.Host</RootNamespace>
-    <AssemblyName>Flaky.Host</AssemblyName>
+    <RootNamespace>Flaky.Sources</RootNamespace>
+    <AssemblyName>Flaky.Sources</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -47,6 +47,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -67,13 +68,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
@@ -81,7 +79,9 @@
       <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Numerics" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -90,30 +90,77 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Host.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sources\Basic\Constant.cs" />
+    <Compile Include="Sources\Basic\Difference.cs" />
+    <Compile Include="Sources\Basic\Hold.cs" />
+    <Compile Include="Sources\Basic\Multiply.cs" />
+    <Compile Include="Sources\Basic\Sum.cs" />
+    <Compile Include="Sources\Effects\Chorus.cs" />
+    <Compile Include="Sources\Effects\Delay.cs" />
+    <Compile Include="Sources\Effects\Filter\BPFilter.cs" />
+    <Compile Include="Sources\Effects\Filter\HPFilter.cs" />
+    <Compile Include="Sources\Effects\Filter\MultiPoleFilter.cs" />
+    <Compile Include="Sources\Effects\Filter\OnePoleFilter.cs" />
+    <Compile Include="Sources\Effects\Filter\OnePoleHPFilter.cs" />
+    <Compile Include="Sources\Effects\Filter\OnePoleLPFilter.cs" />
+    <Compile Include="Sources\Effects\Fourier\Fourier.cs" />
+    <Compile Include="Sources\Effects\Fourier\MDCT.cs" />
+    <Compile Include="Sources\Effects\Fourier\OffsetArray.cs" />
+    <Compile Include="Sources\Effects\Fourier\WindowFunction.cs" />
+    <Compile Include="Sources\Effects\Filter\LPFilter.cs" />
+    <Compile Include="Sources\Effects\MatrixVerb.cs" />
+    <Compile Include="Sources\Effects\Overdrive.cs" />
+    <Compile Include="Sources\Effects\Pan.cs" />
+    <Compile Include="Sources\Effects\Repeater.cs" />
+    <Compile Include="Sources\Effects\Tape.cs" />
+    <Compile Include="Sources\Effects\Transient.cs" />
+    <Compile Include="Sources\Envelopes\AD.cs" />
+    <Compile Include="Sources\Envelopes\Fade.cs" />
+    <Compile Include="Sources\Notes\Groover.cs" />
+    <Compile Include="Sources\Notes\INoteCollection.cs" />
+    <Compile Include="Sources\Notes\RandomNoteCollection.cs" />
+    <Compile Include="Sources\Notes\RandomWalkNoteCollection.cs" />
+    <Compile Include="Sources\Notes\Random\IRandomSource.cs" />
+    <Compile Include="Sources\Notes\PSeq.cs" />
+    <Compile Include="Sources\Notes\SequenceAggregator.cs" />
+    <Compile Include="Sources\Notes\SequenceDelay.cs" />
+    <Compile Include="Sources\Notes\SequenceRepeater.cs" />
+    <Compile Include="Sources\Notes\SequenceSubsampler.cs" />
+    <Compile Include="Sources\Notes\SequenceTranspose.cs" />
+    <Compile Include="Sources\Notes\Random\XorShiftRandom.cs" />
+    <Compile Include="Sources\Notes\Random\ZigguratGaussianDistribution.cs" />
+    <Compile Include="Sources\PipingSourceWrapper.cs" />
+    <Compile Include="Sources\Notes\Sequence.cs" />
+    <Compile Include="Sources\Notes\Note.cs" />
+    <Compile Include="Sources\Notes\NoteSource.cs" />
+    <Compile Include="Sources\Notes\PlayingNote.cs" />
+    <Compile Include="Sources\Player.cs" />
+    <Compile Include="Sources\SequenceWrapper.cs" />
+    <Compile Include="Sources\Source.cs" />
+    <Compile Include="Sources\Utility\Analog.cs" />
+    <Compile Include="Sources\Utility\Recorder.cs" />
+    <Compile Include="Sources\Waveform\SampleAndHold.cs" />
+    <Compile Include="Sources\Waveform\DoublePendulum.cs" />
+    <Compile Include="Sources\Waveform\DrumRack.cs" />
+    <Compile Include="Sources\Waveform\Metronome.cs" />
+    <Compile Include="Sources\Waveform\Looper.cs" />
+    <Compile Include="Sources\Waveform\Sq.cs" />
+    <Compile Include="Sources\Waveform\Saw.cs" />
+    <Compile Include="Sources\Waveform\Osc.cs" />
+    <Compile Include="Sources\Waveform\Noise.cs" />
+    <Compile Include="Sources\Waveform\Sampler.cs" />
+    <Compile Include="Sources\Waveform\ThreeBodiesOscillator.cs" />
+    <Compile Include="Sources\Waveform\WaveTable.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Flaky.Adapters\Flaky.Adapters.csproj">
-      <Project>{807d2e09-3c18-4ded-b582-ace81ff3c54d}</Project>
-      <Name>Flaky.Adapters</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Flaky.Core\Flaky.Core.csproj">
-      <Project>{a17ed290-1530-45f7-aaf7-8364e1a5e0a1}</Project>
-      <Name>Flaky.Core</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
       <Project>{48679cbb-d62f-40c8-b6ec-4e6528266166}</Project>
       <Name>Flaky.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Flaky.Sources\Flaky.Sources.csproj">
-      <Project>{ca1adf22-6c85-421d-94e0-714cb3164a2f}</Project>
-      <Name>Flaky.Sources</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

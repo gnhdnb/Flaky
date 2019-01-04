@@ -172,10 +172,6 @@
       <Project>{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}</Project>
       <Name>Flaky.Host</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Flaky.Sources\Flaky.Sources.csproj">
-      <Project>{0fa2ceca-75a3-4ca2-af2d-25ca9dc3906b}</Project>
-      <Name>Flaky.Sources</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
