@@ -39,6 +39,7 @@ namespace Flaky
 			public Mdct leftBackward = new Mdct(framesCount, false);
 			public Mdct rightBackward = new Mdct(framesCount, false);
 			public CancellationTokenSource disposing = new CancellationTokenSource();
+			public Sample latestSample;
 
 			public State()
 			{
@@ -146,10 +147,20 @@ namespace Flaky
 			}
 		}
 
-		internal Fourier(float effect, string id) : base(id)
+		private readonly int oversampling = 1;
+
+		internal Fourier(float effect, int oversampling, string id) : base(id)
 		{
-			if (effect < 0)
-				effect = 0;
+			if (oversampling < 1)
+				oversampling = 1;
+
+			if (oversampling > 8)
+				oversampling = 8;
+
+			this.oversampling = oversampling;
+
+			if (effect < -1)
+				effect = -1;
 
 			if (effect > 1)
 				effect = 1;
@@ -159,16 +170,37 @@ namespace Flaky
 
 		protected override Vector2 NextSample(IContext context)
 		{
-			var chunkSize = State.framesCount / 2;
+			var d = 1 / (float)oversampling;
 
 			var inputSample = input.Play(context);
+
+			Sample outputSample = 0;
+
+			for(int step = 1; step <= oversampling; step++)
+			{
+				var interpolated = 
+					(inputSample * step + state.latestSample * (oversampling - step))
+					* d;
+
+				outputSample += Step(interpolated);
+			}
+
+			state.latestSample = inputSample;
+
+			return outputSample * d;
+		}
+
+		private Sample Step(Sample inputSample)
+		{ 
+			const int chunkSize = State.framesCount / 2;
+
 			state.inputBuffer[chunkSize + state.currentFrame] = inputSample;
 			state.secondInputBuffer[state.currentFrame] = inputSample;
 			var outputSample = state.outputBuffer[state.currentFrame] + state.latestOutputBuffer[state.currentFrame + chunkSize];
 
 			state.currentFrame++;
 
-			if(state.currentFrame >= chunkSize)
+			if (state.currentFrame >= chunkSize)
 			{
 				var bufferToEnqueue = state.inputBuffer;
 				state.inputBuffer = state.secondInputBuffer;

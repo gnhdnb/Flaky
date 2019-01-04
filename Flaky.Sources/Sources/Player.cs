@@ -22,7 +22,9 @@ namespace Flaky
 			{ return new DoublePendulum(); }
 
 		protected PipingSourceWrapper Fourier(float effect, string id)
-			{ return Pipe(new Fourier(effect, id)); }
+			{ return Pipe(new Fourier(effect, 1, id)); }
+		protected PipingSourceWrapper Fourier(float effect, int oversampling, string id)
+			{ return Pipe(new Fourier(effect, oversampling, id)); }
 		protected PipingSourceWrapper Trans(Source pitch, string id)
 			{ return Pipe(new Transient(pitch, id)); }
 		protected PipingSourceWrapper Trans(NoteSource pitch, string id)
@@ -75,6 +77,9 @@ namespace Flaky
 			{ return Pipe(new Pan(position, width)); }
 		protected PipingSourceWrapper Rep(NoteSource feed, string id)
 			{ return Pipe(new Rep(feed, id)); }
+		protected PipingSourceWrapper Rep(
+				NoteSource feed, float multiplier, float dry, float wet, string id)
+			{ return Pipe(new Rep(feed, multiplier, dry, wet, id)); }
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }
 		protected AD AD(NoteSource source, Source attack, Source decay)
@@ -117,6 +122,11 @@ namespace Flaky
 
 		protected PipingSourceWrapper<NoteSource, NoteSource> DSeq(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }
+
+		protected PipingSourceWrapper<NoteSource, NoteSource> OS(string sequence, int size, string id)
+			{ return Pipe<NoteSource, NoteSource>(
+				new FixLengthSequence(new OneShotSequentialNoteCollection(sequence, id), size, false, id));
+			}
 
 		protected PipingSourceWrapper<NoteSource, NoteSource> SD(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }

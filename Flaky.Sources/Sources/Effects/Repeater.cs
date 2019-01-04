@@ -53,7 +53,7 @@ namespace Flaky
 			this.dry = dry;
 		}
 
-		public Rep( NoteSource feed, string id) : this(feed, 1, 1, 0.5f, id) { }
+		public Rep(NoteSource feed, string id) : this(feed, 1, 1, 0.5f, id) { }
 
 		protected override Vector2 NextSample(IContext context)
 		{
