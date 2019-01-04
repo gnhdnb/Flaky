@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public interface IMixerController
+	public interface IWaveReader
 	{
-		EventHandler<IChannelVolume> OnMixerChange { get; set; }
+		Vector2? Read(long index);
+		long Length { get; }
 	}
 }

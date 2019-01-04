@@ -19,19 +19,22 @@ namespace Flaky
 		private const OptimizationLevel optimizationLevel = OptimizationLevel.Release;
 #endif
 
-		private readonly MetadataReference[] references;
+		private readonly IEnumerable<MetadataReference> references;
 
 		private readonly ClassTemplate classTemplate;
 
 		public Compiler(Assembly sourcesAssembly)
 		{
-			references = new MetadataReference[]
+			var assemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+
+			references = new List<MetadataReference>()
 			{
 				MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-				MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
-				MetadataReference.CreateFromFile(typeof(IPlayer).Assembly.Location),
 				MetadataReference.CreateFromFile(sourcesAssembly.Location)
-			};
+			}
+			.Concat(assemblies
+				.Select(a => Assembly.ReflectionOnlyLoad(a.FullName).Location)
+				.Select(l => MetadataReference.CreateFromFile(l)));
 
 			classTemplate = ClassTemplate.FromEmbededResource("Player.tmp");
 		}

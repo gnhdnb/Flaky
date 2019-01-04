@@ -153,6 +153,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -167,17 +168,9 @@
       <Project>{807d2e09-3c18-4ded-b582-ace81ff3c54d}</Project>
       <Name>Flaky.Adapters</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Flaky.Core\Flaky.Core.csproj">
-      <Project>{16d91bac-575e-4075-9697-9f49414c4171}</Project>
-      <Name>Flaky.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Flaky.Host\Flaky.Host.csproj">
       <Project>{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}</Project>
       <Name>Flaky.Host</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
-      <Project>{4cea5444-f875-4561-82a3-77d467f37ae8}</Project>
-      <Name>Flaky.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\Flaky.Sources\Flaky.Sources.csproj">
       <Project>{0fa2ceca-75a3-4ca2-af2d-25ca9dc3906b}</Project>

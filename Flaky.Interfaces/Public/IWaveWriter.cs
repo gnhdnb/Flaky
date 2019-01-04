@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	interface IWaveWriter : IDisposable
+	public interface IWaveWriter : IDisposable
 	{
 		void Write(Vector2 sample);
 	}
