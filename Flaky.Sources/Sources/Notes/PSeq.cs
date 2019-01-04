@@ -62,7 +62,12 @@ namespace Flaky
 
 		public sealed override PlayingNote GetNote(IContext context)
 		{
-			return GetNotes(context)[0];
+			var notes = GetNotes(context);
+
+			if (notes.Length == 0)
+				return new PlayingNote(null, 0);
+
+			return notes[0];
 		}
 
 		public static Source operator %(PolyphonicNoteSource a, Func<NoteSource, int, Source> b)

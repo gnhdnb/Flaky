@@ -11,8 +11,13 @@ namespace Flaky
 	{
 		public int size;
 
-		internal FixLengthSequence(INoteCollection noteSource, int size, bool skipSilentNotes, string id)
-			: base(noteSource, skipSilentNotes, id)
+		internal FixLengthSequence(
+			INoteCollection noteSource, 
+			int size, 
+			bool skipSilentNotes, 
+			string id,
+			NoteSource resetSource = null)
+			: base(noteSource, skipSilentNotes, id, resetSource)
 		{
 			this.size = size;
 		}
@@ -39,8 +44,13 @@ namespace Flaky
 			public float lastSampledLength;
 		}
 
-		internal VariableLengthSequence(INoteCollection noteSource, ISource length, bool skipSilentNotes, string id)
-			: base(noteSource, skipSilentNotes, id)
+		internal VariableLengthSequence(
+			INoteCollection noteSource, 
+			ISource length, 
+			bool skipSilentNotes, 
+			string id,
+			NoteSource resetSource = null)
+			: base(noteSource, skipSilentNotes, id, resetSource)
 		{
 			this.length = length ?? throw new ArgumentNullException(nameof(length));
 		}
@@ -65,6 +75,8 @@ namespace Flaky
 		{
 			base.Initialize(context);
 
+			Initialize(context, length);
+
 			lengthState = GetOrCreate<LengthState>(context);
 		}
 
@@ -76,9 +88,10 @@ namespace Flaky
 		}
 	}
 
-	public abstract class Sequence : NoteSource
+	public abstract class Sequence : NoteSource, IPipingSource<NoteSource>
 	{
-		private INoteCollection noteSource;
+		private INoteCollection noteCollection;
+		private NoteSource resetSource;
 		private bool skipSilentNotes;
 		protected State state;
 
@@ -86,35 +99,61 @@ namespace Flaky
 		{
 			public PlayingNote currentPlayingNote;
 			public PlayingNote currentSequencedNote;
-			public long startSample;
+			public long startSample = -1;
 			public bool playing;
 			public long lastSample = -1;
 		}
 
-		internal Sequence(INoteCollection noteSource, bool skipSilentNotes, string id) : base(id)
+		public void SetMainSource(NoteSource mainSource)
 		{
-			this.noteSource = noteSource ?? throw new ArgumentNullException(nameof(noteSource));
+			resetSource = mainSource;
+		}
+
+		internal Sequence(
+			INoteCollection noteCollection, 
+			bool skipSilentNotes, 
+			string id,
+			NoteSource resetSource = null) : base(id)
+		{
+			this.noteCollection = noteCollection ?? throw new ArgumentNullException(nameof(noteCollection));
+			this.resetSource = resetSource;
 			this.skipSilentNotes = skipSilentNotes;
 		}
 
 		public override PlayingNote GetNote(IContext context)
 		{
-			noteSource.Update(context);
-			Update(context);
-
-			if (!state.playing && context.Beat % 4 == 0 && context.MetronomeTick)
-			{
-				state.playing = true;
-				state.startSample = context.Sample;
-			}
-
-			if (!state.playing)
-				return state.currentPlayingNote;
-
 			if (context.Sample == state.lastSample)
 				return state.currentPlayingNote;
 
 			state.lastSample = context.Sample;
+
+			noteCollection.Update(context);
+			Update(context);
+
+			if(resetSource != null)
+			{
+				var resetNote = resetSource.GetNote(context);
+
+				if (resetNote.IsSilent)
+					return state.currentPlayingNote;
+
+				if (resetNote.StartSample > state.startSample)
+				{
+					state.startSample = resetNote.StartSample;
+					state.playing = true;
+					noteCollection.Reset();
+				}
+			} else
+			{
+				if (!state.playing && context.Beat % 4 == 0 && context.MetronomeTick)
+				{
+					state.playing = true;
+					state.startSample = context.Sample;
+				}
+
+				if (!state.playing)
+					return state.currentPlayingNote;
+			}
 
 			if (NextNoteRequired(context))
 			{
@@ -137,19 +176,23 @@ namespace Flaky
 
 		public override void Initialize(IContext context)
 		{
+			Initialize(context, resetSource);
+
 			state = GetOrCreate<State>(context);
 
-			noteSource.Initialize((IFlakyContext)context);
+			noteCollection.Initialize((IFlakyContext)context);
 		}
 
 		public override void Dispose()
 		{
-			noteSource.Dispose();
+			Dispose(resetSource);
+
+			noteCollection.Dispose();
 		}
 
 		private PlayingNote NextNote(IContext context)
 		{
-			return new PlayingNote(noteSource.GetNextNote(), context.Sample);
+			return new PlayingNote(noteCollection.GetNextNote(), context.Sample);
 		}
 	}
 }

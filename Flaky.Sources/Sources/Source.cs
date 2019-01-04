@@ -47,11 +47,11 @@ namespace Flaky
 			return ((IFlakyContext)context).Get<TFactory>();
 		}
 
-		protected void Initialize(IContext context, params Source[] sources)
+		protected void Initialize(IContext context, params ISource[] sources)
 		{
 			foreach (var source in sources)
 			{
-				if(source != null)
+				if (source != null)
 					source.Initialize(context);
 			}
 		}

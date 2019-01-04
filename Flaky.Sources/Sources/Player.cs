@@ -123,6 +123,11 @@ namespace Flaky
 		protected PipingSourceWrapper<NoteSource, NoteSource> DSeq(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }
 
+		protected PipingSourceWrapper<NoteSource, NoteSource> OS(string sequence, int size, string id)
+			{ return Pipe<NoteSource, NoteSource>(
+				new FixLengthSequence(new OneShotSequentialNoteCollection(sequence, id), size, false, id));
+			}
+
 		protected PipingSourceWrapper<NoteSource, NoteSource> SD(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }
 

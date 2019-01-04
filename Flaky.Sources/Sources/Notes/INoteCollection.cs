@@ -31,6 +31,25 @@ namespace Flaky
 		}
 	}
 
+	internal class OneShotSequentialNoteCollection : NoteCollection
+	{
+		public OneShotSequentialNoteCollection(string sequence, string parentId)
+			: base(sequence, parentId) { }
+
+		protected override int GetNextNoteIndex(int currentNoteIndex)
+		{
+			if (currentNoteIndex < -1)
+				return currentNoteIndex;
+
+			var nextNote = currentNoteIndex + 1;
+
+			if (nextNote >= sequence.Length)
+				nextNote = -2;
+
+			return nextNote;
+		}
+	}
+
 	internal abstract class NoteCollection : INoteCollection
 	{
 		protected Note[] sequence;
@@ -52,6 +71,9 @@ namespace Flaky
 		{
 			state.currentNoteIndex = GetNextNoteIndex(state.currentNoteIndex);
 
+			if (state.currentNoteIndex < 0)
+				return null;
+
 			return sequence[state.currentNoteIndex];
 		}
 
@@ -69,7 +91,7 @@ namespace Flaky
 
 		public void Reset()
 		{
-			state.currentNoteIndex = 0;
+			state.currentNoteIndex = -1;
 		}
 
 		public virtual void Update(IContext context)
