@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Flaky
 			return waves[wave].Length;
 		}
 
-		public Sample? Read(int wave, long index)
+		public Vector2? Read(int wave, long index)
 		{
 			return waves[wave].Read(index);
 		}

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,10 +30,10 @@ namespace Flaky
 			writer.Dispose();
 		}
 
-		public void Write(Sample sample)
+		public void Write(Vector2 sample)
 		{
-			writer.WriteSample(sample.Left);
-			writer.WriteSample(sample.Right);
+			writer.WriteSample(sample.X);
+			writer.WriteSample(sample.Y);
 		}
 	}
 }

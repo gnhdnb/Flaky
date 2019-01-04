@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace Flaky
 		{
 			internal int sampleRate;
 			internal int capacity;
-			internal Sample[] buffer;
+			internal Vector2[] buffer;
 			internal int position;
 			internal long sample;
 
@@ -30,7 +31,7 @@ namespace Flaky
 
 				sampleRate = context.SampleRate;
 				capacity = sampleRate * 10;
-				buffer = new Sample[capacity];
+				buffer = new Vector2[capacity];
 			}
 		}
 
@@ -49,7 +50,7 @@ namespace Flaky
 				this.transform = feedback * 0.5;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var soundValue = sound.Play(context);
 
@@ -73,7 +74,7 @@ namespace Flaky
 
 			state.buffer[writePosition] = result;
 
-			var dryWetValue = dryWet.Play(context).Value;
+			var dryWetValue = dryWet.Play(context).X;
 
 			if (dryWetValue < 0)
 				dryWetValue = 0;
@@ -86,7 +87,7 @@ namespace Flaky
 
 		private int GetWritePosition(IContext context, State state)
 		{
-			var timeValue = (int)(time.Play(context).Value * state.sampleRate);
+			var timeValue = (int)(time.Play(context).X * state.sampleRate);
 
 			if (timeValue <= 0)
 				return state.position;

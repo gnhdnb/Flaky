@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flaky.Benchmark
 {
-	[MemoryDiagnoser]
-	public class StandardWorkload
+	public class Filter
 	{
 		private ContextController contextController;
 		private ISource source;
@@ -19,7 +18,10 @@ namespace Flaky.Benchmark
 		[GlobalSetup]
 		public void Setup()
 		{
-			source = CompilationHelper.CompileFromResource("StandardWorkload.flk");
+			source = CompilationHelper.Compile(
+			@"
+				return 3000 % Osc(1) % LP(0.2, 0.1, ""lp1"");
+			");
 
 			contextController = new ContextController(44100, 120, new Configuration());
 

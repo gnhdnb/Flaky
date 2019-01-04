@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,16 +17,16 @@ namespace Flaky
         { 
         }
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			if (context.MetronomeTick) {
 				if (context.Beat % 4 == 0)
-					return 0.5f;
+					return new Vector2(0.5f, 0.5f);
 				else
-					return 0.2f;
+					return new Vector2(0.2f, 0.2f);
 			}
 
-			return 0f;
+			return new Vector2(0f, 0f);
 		}
 	}
 }

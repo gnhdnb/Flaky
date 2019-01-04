@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,13 +79,13 @@ namespace Flaky
 			theta2 += theta2d * dt;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
-			var m1 = m1Source.Play(context).Value;
-			var m2 = m2Source.Play(context).Value;
-			var l1 = l1Source.Play(context).Value;
-			var l2 = l2Source.Play(context).Value;
-			var g = gSource.Play(context).Value;
+			var m1 = m1Source.Play(context).X;
+			var m2 = m2Source.Play(context).X;
+			var l1 = l1Source.Play(context).X;
+			var l2 = l2Source.Play(context).X;
+			var g = gSource.Play(context).X;
 
 			if(sample == 0)
 				sample = context.Sample;
@@ -92,14 +93,16 @@ namespace Flaky
 			var delta = context.Sample - sample;
 
 			if (delta == 0)
-				return new Sample { Value = 0 };
+				return new Vector2(0, 0);
 
 			sample = context.Sample;
 
 			for(int i=0; i < 10; i++)
 				InternalStep(((float)delta) / 10, context, m1, m2, l1, l2, g);
 
-			return new Sample { Value = (float)((l1 * Math.Sin(theta1) + l2 * Math.Sin(theta2)) / (l1 + l2)) };
+			var output = (float)((l1 * Math.Sin(theta1) + l2 * Math.Sin(theta2)) / (l1 + l2));
+
+			return new Vector2(output, output);
 		}
 
 		public override void Initialize(IContext context)

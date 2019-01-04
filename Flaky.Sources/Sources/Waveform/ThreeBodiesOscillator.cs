@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,9 +35,9 @@ namespace Flaky
 			Initialize(context, timeFactor);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
-			float t = timeFactor.Play(context).Value;
+			float t = timeFactor.Play(context).X;
 
 			for (int i = 0; i < 10; i++)
 			{
@@ -49,10 +50,10 @@ namespace Flaky
 				}
 			}
 
-			return new Sample
+			return new Vector2
 			{
-				Left = (float)bodies[0].Position.X,
-				Right = (float)bodies[0].Position.Y
+				X = (float)bodies[0].Position.X,
+				Y = (float)bodies[0].Position.Y
 			};
 		}
 

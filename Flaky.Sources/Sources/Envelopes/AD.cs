@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,39 +28,41 @@ namespace Flaky
 			this.decay = decay;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var note = source.GetNote(context);
 
 			if (currentNote.Note == null || !note.IsSilent)
 				currentNote = note;
 
-			var attackValue = attack.Play(context).Value;
-			var decayValue = decay.Play(context).Value;
+			var attackValue = attack.Play(context).X;
+			var decayValue = decay.Play(context).X;
 
 			if (attackValue < 0)
-				return new Sample { Value = 0 };
+				return new Vector2(0, 0);
 
 			if (decayValue < 0)
-				return new Sample { Value = 0 };
+				return new Vector2(0, 0);
 
 			if (currentNote.IsSilent)
-				return 0;
+				return new Vector2(0, 0);
 
 			var attackLeft = attackValue - currentNote.CurrentTime(context);
 			var decayLeft = attackValue + decayValue - currentNote.CurrentTime(context);
 
 			if (attackLeft > 0)
 			{
-				return new Sample { Value = (attackValue - attackLeft) / attackValue };
+				var output = (attackValue - attackLeft) / attackValue;
+				return new Vector2(output, output);
 			}
 
 			if (decayLeft > 0)
 			{
-				return new Sample { Value = decayLeft / decayValue };
+				var output = (decayValue - decayLeft) / decayValue;
+				return new Vector2(output, output);
 			}
 
-			return new Sample { Value = 0 };
+			return new Vector2(0, 0);
 		}
 
 		public override void Initialize(IContext context)

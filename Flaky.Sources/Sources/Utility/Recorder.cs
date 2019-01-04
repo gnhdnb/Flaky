@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace Flaky
 			Initialize(context, sources);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			if (!initialized)
 			{
@@ -75,7 +76,7 @@ namespace Flaky
 				initialized = true;
 			}
 
-			Sample result = 0;
+			Vector2 result = new Vector2(0, 0);
 
 			for(int channel = 0; channel < sources.Length; channel++)
 			{

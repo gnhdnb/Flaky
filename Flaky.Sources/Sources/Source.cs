@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace Flaky
 	{
 		private readonly string id;
 
-		private Sample latestSample;
+		private Vector2 latestSample;
 		private long latestSampleIndex = -1;
 
 		protected Source() { }
@@ -20,12 +21,15 @@ namespace Flaky
 			this.id = id;
 		}
 
-		public Sample Play(IContext context)
+		public Vector2 Play(IContext context)
 		{
 			if (context.Sample == latestSampleIndex)
 				return latestSample;
 
 			var result = NextSample(context);
+
+			if (float.IsNaN(result.X))
+				return new Vector2(0, 0);
 
 			latestSample = result;
 			latestSampleIndex = context.Sample;
@@ -33,7 +37,7 @@ namespace Flaky
 			return result;
 		}
 
-		protected abstract Sample NextSample(IContext context);
+		protected abstract Vector2 NextSample(IContext context);
 
 		public abstract void Initialize(IContext context);
 

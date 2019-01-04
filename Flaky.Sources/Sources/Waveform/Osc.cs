@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,12 +46,12 @@ namespace Flaky
 			internal double phase;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			int sampleRate = context.SampleRate;
 
-			float amplitude = Amplitude.Play(context).Value;
-			float frequency = Frequency.Play(context).Value;
+			float amplitude = Amplitude.Play(context).X;
+			float frequency = Frequency.Play(context).X;
 
 			if (frequency < 0)
 				frequency = 0;
@@ -59,7 +60,7 @@ namespace Flaky
 				frequency = sampleRate / 2;
 
 			if (frequency == 0)
-				return 0;
+				return new Vector2(0, 0);
 
 			var delta = context.Sample - state.sample;
 			state.sample = context.Sample;
@@ -68,7 +69,9 @@ namespace Flaky
 			while (state.phase > 1)
 				state.phase -= 1;
 
-			return new Sample { Value = (float)(amplitude * Math.Sin(2 * Math.PI * state.phase)) };
+			float value = (float)(amplitude * Math.Sin(2 * Math.PI * state.phase));
+
+			return new Vector2(value, value);
 		}
 
 		public override void Initialize(IContext context)

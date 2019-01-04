@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,25 +31,21 @@ namespace Flaky
 			Dispose(source, overdrive, lpnoise, hpnoise);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
-			var sample = source.Play(context).Value;
+			var sample = source.Play(context).X;
 			var overdriveValue =
-				overdrive.Play(context).Value 
+				overdrive.Play(context).X 
 				+ 1
-				+ lpnoise.Play(context).Value * Math.Abs(sample) * Math.Abs(sample)
-				+ hpnoise.Play(context).Value * Math.Abs(sample) * Math.Abs(sample) * Math.Abs(sample) * Math.Abs(sample);
+				+ lpnoise.Play(context).X * Math.Abs(sample) * Math.Abs(sample)
+				+ hpnoise.Play(context).X * Math.Abs(sample) * Math.Abs(sample) * Math.Abs(sample) * Math.Abs(sample);
 
 			if (overdriveValue < 1)
 				overdriveValue = 1;
 
 			var result = OD(sample * overdriveValue) / overdriveValue;
 
-			return new Sample
-			{
-				Left = result,
-				Right = result
-			};
+			return new Vector2(result, result);
 		}
 
 		private float OD(float value)

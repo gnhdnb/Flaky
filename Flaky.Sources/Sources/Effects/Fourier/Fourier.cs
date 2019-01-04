@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -22,12 +23,12 @@ namespace Flaky
 			private bool reverse = false;
 			private int effect;
 			public Thread worker;
-			public BlockingCollection<Sample[]> inputQueue = new BlockingCollection<Sample[]>();
-			public BlockingCollection<Sample[]> outputQueue = new BlockingCollection<Sample[]>();
-			public Sample[] latestOutputBuffer = new Sample[framesCount];
-			public Sample[] outputBuffer = new Sample[framesCount];
-			public Sample[] inputBuffer = new Sample[framesCount];
-			public Sample[] secondInputBuffer = new Sample[framesCount];
+			public BlockingCollection<Vector2[]> inputQueue = new BlockingCollection<Vector2[]>();
+			public BlockingCollection<Vector2[]> outputQueue = new BlockingCollection<Vector2[]>();
+			public Vector2[] latestOutputBuffer = new Vector2[framesCount];
+			public Vector2[] outputBuffer = new Vector2[framesCount];
+			public Vector2[] inputBuffer = new Vector2[framesCount];
+			public Vector2[] secondInputBuffer = new Vector2[framesCount];
 			public int currentFrame = 0;
 			public float[] leftInputBuffer = new float[framesCount];
 			public float[] rightInputBuffer = new float[framesCount];
@@ -38,13 +39,13 @@ namespace Flaky
 			public Mdct leftBackward = new Mdct(framesCount, false);
 			public Mdct rightBackward = new Mdct(framesCount, false);
 			public CancellationTokenSource disposing = new CancellationTokenSource();
-			public Sample latestSample;
+			public Vector2 latestSample;
 
 			public State()
 			{
 				worker = new Thread(ProcessNextBatch);
 				worker.Start();
-				outputQueue.Add(new Sample[framesCount]);
+				outputQueue.Add(new Vector2[framesCount]);
 			}
 
 			public void Initialize(float effect)
@@ -121,21 +122,21 @@ namespace Flaky
 				return reverse ? -Math.Abs(value) : Math.Abs(value);
 			}
 
-			private void ImportSamples(Sample[] input, float[] leftBuffer, float[] rightBuffer)
+			private void ImportSamples(Vector2[] input, float[] leftBuffer, float[] rightBuffer)
 			{
 				for (int i = 0; i < framesCount; i++)
 				{
-					leftBuffer[i] = input[i].Left * WindowFunction.KaiserBesselDerived8192.GetValue(i);
-					rightBuffer[i] = input[i].Right * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+					leftBuffer[i] = input[i].X * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+					rightBuffer[i] = input[i].Y * WindowFunction.KaiserBesselDerived8192.GetValue(i);
 				}
 			}
 
-			private void ExportSamples(Sample[] output, float[] leftBuffer, float[] rightBuffer)
+			private void ExportSamples(Vector2[] output, float[] leftBuffer, float[] rightBuffer)
 			{
 				for (int i = 0; i < framesCount; i++)
 				{
-					output[i].Left = leftBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
-					output[i].Right = rightBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+					output[i].X = leftBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
+					output[i].Y = rightBuffer[i] * WindowFunction.KaiserBesselDerived8192.GetValue(i);
 				}
 			}
 
@@ -167,13 +168,13 @@ namespace Flaky
 			this.effect = effect;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
 			var d = 1 / (float)oversampling;
 
 			var inputSample = input.Play(context);
 
-			Sample outputSample = 0;
+			Vector2 outputSample = new Vector2(0);
 
 			for(int step = 1; step <= oversampling; step++)
 			{
@@ -189,7 +190,7 @@ namespace Flaky
 			return outputSample * d;
 		}
 
-		private Sample Step(Sample inputSample)
+		private Vector2 Step(Vector2 inputSample)
 		{ 
 			const int chunkSize = State.framesCount / 2;
 

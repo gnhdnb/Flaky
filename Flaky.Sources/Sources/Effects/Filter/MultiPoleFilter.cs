@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace Flaky
 {
@@ -38,23 +39,23 @@ namespace Flaky
 			Dispose(cutoff, source, filterChain, feedbackChain, resonance);
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
-			var cutoffValue = cutoff.Play(context).Value;
+			var cutoffValue = cutoff.Play(context);
 			filterChainCutoffInput.Sample = cutoffValue;
 
 			input.Sample = source.Play(context) + feedbackChain.Play(context);
 
 			var output = filterChain.Play(context);
-			var resonanceValue = resonance.Play(context).Value;
+			var resonanceValue = resonance.Play(context).X;
 
-			if (Math.Abs(output.Left) > 100)
-				output.Left = 100 * Math.Sign(output.Left);
+			if (Math.Abs(output.X) > 100)
+				output.X = 100 * Math.Sign(output.X);
 
-			if (Math.Abs(output.Right) > 100)
-				output.Right = 100 * Math.Sign(output.Right);
+			if (Math.Abs(output.Y) > 100)
+				output.Y = 100 * Math.Sign(output.Y);
 
-			feedbackInput.Sample = output * -GetResonance(resonanceValue, cutoffValue);
+			feedbackInput.Sample = output * -GetResonance(resonanceValue, cutoffValue.X);
 
 			return output * 4;
 		}

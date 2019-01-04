@@ -83,8 +83,8 @@ namespace Flaky
 					for (int n = 0; n < 13230; n += 2)
 					{
 						var value = source.Play(new Context(controller));
-						buffer[n] = value.Left;
-						buffer[n + 1] = value.Right;
+						buffer[n] = value.X;
+						buffer[n + 1] = value.Y;
 						controller.NextSample();
 					}
 				}

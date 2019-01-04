@@ -35,7 +35,7 @@ namespace Flaky
 		public override PlayingNote GetNote(IContext context)
 		{
 			var note = mainSource.GetNote(context);
-			var probabilityValue = probability.Play(context).Value;
+			var probabilityValue = probability.Play(context).X;
 
 			if (note.StartSample != state.latestNoteStartSample)
 			{

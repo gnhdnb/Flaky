@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,10 +21,10 @@ namespace Flaky
 			this.width = width;
 		}
 
-		protected override Sample NextSample(IContext context)
+		protected override Vector2 NextSample(IContext context)
 		{
-			var positionValue = position.Play(context).Value;
-			var widthValue = width.Play(context).Value;
+			var positionValue = position.Play(context).X;
+			var widthValue = width.Play(context).X;
 			var soundValue = sound.Play(context);
 
 			if (positionValue > 1)
@@ -51,14 +52,14 @@ namespace Flaky
 			Dispose(sound, position, width);
 		}
 
-		internal static Sample Perform(Sample sound, float position, float width)
+		internal static Vector2 Perform(Vector2 sound, float position, float width)
 		{
-			var average = (sound.Left + sound.Right) / 2;
+			var average = (sound.X + sound.Y) / 2;
 
-			return new Sample
+			return new Vector2
 			{
-				Left = (sound.Left * width + average * (1 - width)) * (1 - position),
-				Right = (sound.Right * width + average * (1 - width)) * (1 + position)
+				X = (sound.X * width + average * (1 - width)) * (1 - position),
+				Y = (sound.Y * width + average * (1 - width)) * (1 + position)
 			};
 		}
 
