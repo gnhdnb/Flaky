@@ -81,7 +81,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Apc40\Apc40MixerAdapter.cs" />
     <Compile Include="NAudio\MultipleWaveReader.cs" />
     <Compile Include="NAudio\WaveAdapter.cs" />
     <Compile Include="NAudio\WaveWriter.cs" />
@@ -95,10 +94,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Apc40Controller\Apc40Controller.csproj">
-      <Project>{eec8fca3-e893-4386-b9c5-27e2e0611454}</Project>
-      <Name>Apc40Controller</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
       <Project>{4cea5444-f875-4561-82a3-77d467f37ae8}</Project>
       <Name>Flaky.Interfaces</Name>
