@@ -39,7 +39,7 @@ namespace Flaky
 			public Mdct leftBackward = new Mdct(framesCount, false);
 			public Mdct rightBackward = new Mdct(framesCount, false);
 			public CancellationTokenSource disposing = new CancellationTokenSource();
-			public Sample latestSample;
+			public Vector2 latestSample;
 
 			public State()
 			{
@@ -174,7 +174,7 @@ namespace Flaky
 
 			var inputSample = input.Play(context);
 
-			Sample outputSample = 0;
+			Vector2 outputSample = new Vector2(0);
 
 			for(int step = 1; step <= oversampling; step++)
 			{
@@ -190,7 +190,7 @@ namespace Flaky
 			return outputSample * d;
 		}
 
-		private Sample Step(Sample inputSample)
+		private Vector2 Step(Vector2 inputSample)
 		{ 
 			const int chunkSize = State.framesCount / 2;
 
