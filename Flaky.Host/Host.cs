@@ -23,7 +23,11 @@ namespace Flaky
 			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory());
 			configuration.Register<IWaveWriterFactory>(new WaveWriterFactory());
 
-			Compiler = new Compiler(typeof(Source).Assembly);
+			Compiler = new Compiler(new[] {
+				typeof(Source).Assembly,
+				typeof(Mixer).Assembly
+			});
+
 			Device = new WaveOut();
 			Mixer = new Mixer(channelsCount, configuration);
 			Adapter = new WaveAdapter(Mixer);
