@@ -211,6 +211,10 @@
       <Project>{8163f0fc-8c2d-4ca2-8377-826aabe9a82e}</Project>
       <Name>Flaky.Adapters</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Flaky.Compiler\Flaky.Compiler.csproj">
+      <Project>{7193fbe2-1f0a-4383-a41e-663651d4a1cc}</Project>
+      <Name>Flaky.Compiler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Flaky.Core\Flaky.Core.csproj">
       <Project>{a17ed290-1530-45f7-aaf7-8364e1a5e0a1}</Project>
       <Name>Flaky.Core</Name>

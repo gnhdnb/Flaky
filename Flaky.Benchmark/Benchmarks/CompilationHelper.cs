@@ -12,7 +12,11 @@ namespace Flaky.Benchmark
 	{
 		public static ISource Compile(string code)
 		{
-			var compiler = new Compiler(typeof(Source).Assembly);
+			var compiler = new Compiler(new[] {
+				typeof(Source).Assembly,
+				typeof(Mixer).Assembly
+			});
+
 			var result = compiler.Compile(code);
 
 			return result.Player.CreateSource();

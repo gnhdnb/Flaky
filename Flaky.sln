@@ -13,11 +13,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Benchmark", "Flaky.Be
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flaky.Interfaces", "Flaky.Interfaces\Flaky.Interfaces.csproj", "{48679CBB-D62F-40C8-B6EC-4E6528266166}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Core", "Flaky.Core\Flaky.Core.csproj", "{A17ED290-1530-45F7-AAF7-8364E1A5E0A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flaky.Core", "Flaky.Core\Flaky.Core.csproj", "{A17ED290-1530-45F7-AAF7-8364E1A5E0A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Sources", "Flaky.Sources\Flaky.Sources.csproj", "{CA1ADF22-6C85-421D-94E0-714CB3164A2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flaky.Sources", "Flaky.Sources\Flaky.Sources.csproj", "{CA1ADF22-6C85-421D-94E0-714CB3164A2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Adapters", "Flaky.Adapters\Flaky.Adapters.csproj", "{8163F0FC-8C2D-4CA2-8377-826AABE9A82E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flaky.Adapters", "Flaky.Adapters\Flaky.Adapters.csproj", "{8163F0FC-8C2D-4CA2-8377-826AABE9A82E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flaky.Compiler", "Flaky.Compiler\Flaky.Compiler.csproj", "{7193FBE2-1F0A-4383-A41E-663651D4A1CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,14 @@ Global
 		{8163F0FC-8C2D-4CA2-8377-826AABE9A82E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8163F0FC-8C2D-4CA2-8377-826AABE9A82E}.Release|x64.ActiveCfg = Release|Any CPU
 		{8163F0FC-8C2D-4CA2-8377-826AABE9A82E}.Release|x64.Build.0 = Release|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Debug|x64.Build.0 = Debug|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Release|x64.ActiveCfg = Release|Any CPU
+		{7193FBE2-1F0A-4383-A41E-663651D4A1CC}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

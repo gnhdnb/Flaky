@@ -23,15 +23,16 @@ namespace Flaky
 
 		private readonly ClassTemplate classTemplate;
 
-		public Compiler(Assembly sourcesAssembly)
+		public Compiler(IEnumerable<Assembly> sourceAssemblies)
 		{
 			var assemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
 
 			references = new List<MetadataReference>()
 			{
 				MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-				MetadataReference.CreateFromFile(sourcesAssembly.Location)
 			}
+			.Concat(sourceAssemblies
+				.Select(a => MetadataReference.CreateFromFile(a.Location)))
 			.Concat(assemblies
 				.Select(a => Assembly.ReflectionOnlyLoad(a.FullName).Location)
 				.Select(l => MetadataReference.CreateFromFile(l)));
