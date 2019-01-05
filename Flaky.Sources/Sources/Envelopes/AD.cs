@@ -58,7 +58,7 @@ namespace Flaky
 
 			if (decayLeft > 0)
 			{
-				var output = (decayValue - decayLeft) / decayValue;
+				var output = decayLeft / decayValue;
 				return new Vector2(output, output);
 			}
 
@@ -70,9 +70,9 @@ namespace Flaky
 			Initialize(context, source, attack, decay);
 		}
 
-        public override void Dispose()
-        {
-            Dispose(source, attack, decay);
-        }
-    }
+		public override void Dispose()
+		{
+			Dispose(source, attack, decay);
+		}
+	}
 }

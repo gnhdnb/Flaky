@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sources\Envelopes\ADTests.cs" />
     <Compile Include="Sources\Notes\FixLengthSequenceTests.cs" />
     <Compile Include="Sources\Notes\SequentialNoteCollectionTests.cs" />
     <Compile Include="Sources\StubContext.cs" />
