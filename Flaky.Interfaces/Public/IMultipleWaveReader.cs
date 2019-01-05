@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IBufferedSource
+	public interface IMultipleWaveReader
 	{
-		float[] ReadNextBatch();
-		int SampleRate { get; }
+		Vector2? Read(int wave, long index);
+		long Length(int wave);
+		int Waves { get; }
 	}
 }

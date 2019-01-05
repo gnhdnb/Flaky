@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public interface IMixerController
+	public interface IWaveWriter : IDisposable
 	{
-		EventHandler<IChannelVolume> OnMixerChange { get; set; }
+		void Write(Vector2 sample);
 	}
 }

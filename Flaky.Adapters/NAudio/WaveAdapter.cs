@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class WaveAdapter : IWaveProvider
+	public class WaveAdapter : IWaveProvider
 	{
 		private WaveFormat waveFormat;
 		private readonly IBufferedSource source;

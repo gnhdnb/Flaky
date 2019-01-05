@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IWaveReader
+	public interface IWaveReader
 	{
 		Vector2? Read(long index);
 		long Length { get; }

@@ -11,8 +11,24 @@ namespace Flaky.Benchmark
 	{
 		static void Main(string[] args)
 		{
-			BenchmarkRunner.Run<StandardWorkload>();
+#if DEBUG
+			RunDebug();
+#else
+			RunRelease();
+#endif
 			Console.ReadLine();
+		}
+
+		static void RunRelease()
+		{
+			BenchmarkRunner.Run<StandardWorkload>();
+		}
+
+		static void RunDebug()
+		{
+			var s = new StandardWorkload();
+			s.Setup();
+			s.StandardWorkloadTest();
 		}
 	}
 }

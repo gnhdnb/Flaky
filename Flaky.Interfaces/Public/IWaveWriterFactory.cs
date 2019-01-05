@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Flaky
 {
-	interface IWaveWriter : IDisposable
+	public interface IWaveWriterFactory
 	{
-		void Write(Vector2 sample);
+		IWaveWriter Create(string fileName, int sampleRate);
 	}
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class WaveRecorder : IWaveProvider, IDisposable
+	public class WaveRecorder : IWaveProvider, IDisposable
 	{
 		private WaveFileWriter writer;
 		private IWaveProvider source;

@@ -100,6 +100,9 @@
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Reflection">
       <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
       <Private>True</Private>
@@ -205,15 +208,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flaky.Core\Flaky.Core.csproj">
-      <Project>{16d91bac-575e-4075-9697-9f49414c4171}</Project>
+      <Project>{a17ed290-1530-45f7-aaf7-8364e1a5e0a1}</Project>
       <Name>Flaky.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
-      <Project>{4cea5444-f875-4561-82a3-77d467f37ae8}</Project>
+      <Project>{48679cbb-d62f-40c8-b6ec-4e6528266166}</Project>
       <Name>Flaky.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\Flaky.Sources\Flaky.Sources.csproj">
-      <Project>{0fa2ceca-75a3-4ca2-af2d-25ca9dc3906b}</Project>
+      <Project>{ca1adf22-6c85-421d-94e0-714cb3164a2f}</Project>
       <Name>Flaky.Sources</Name>
     </ProjectReference>
   </ItemGroup>

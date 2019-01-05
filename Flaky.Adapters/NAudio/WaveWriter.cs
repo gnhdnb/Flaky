@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class WaveWriter : IWaveWriter
+	public class WaveWriter : IWaveWriter
 	{
 		private readonly WaveFileWriter writer;
 

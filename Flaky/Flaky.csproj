@@ -69,6 +69,10 @@
       <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\System.Windows.Controls.Input.Toolkit.dll</HintPath>
       <Private>True</Private>
@@ -153,6 +157,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -163,25 +168,9 @@
     <EmbeddedResource Include="Resources\demo.flk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Flaky.Adapters\Flaky.Adapters.csproj">
-      <Project>{807d2e09-3c18-4ded-b582-ace81ff3c54d}</Project>
-      <Name>Flaky.Adapters</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Flaky.Core\Flaky.Core.csproj">
-      <Project>{16d91bac-575e-4075-9697-9f49414c4171}</Project>
-      <Name>Flaky.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Flaky.Host\Flaky.Host.csproj">
       <Project>{2F7AA2C3-CE12-4EC1-A6BC-DF3BDAB21D19}</Project>
       <Name>Flaky.Host</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj">
-      <Project>{4cea5444-f875-4561-82a3-77d467f37ae8}</Project>
-      <Name>Flaky.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Flaky.Sources\Flaky.Sources.csproj">
-      <Project>{0fa2ceca-75a3-4ca2-af2d-25ca9dc3906b}</Project>
-      <Name>Flaky.Sources</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

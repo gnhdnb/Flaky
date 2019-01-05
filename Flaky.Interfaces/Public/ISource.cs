@@ -4,7 +4,12 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Flaky.Adapters")]
+[assembly: InternalsVisibleTo("Flaky.Core")]
+[assembly: InternalsVisibleTo("Flaky.Tests")]
+[assembly: InternalsVisibleTo("Flaky.Sources")]
 namespace Flaky
 {
 	public interface ISource : IDisposable
