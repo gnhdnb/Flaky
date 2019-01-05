@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class WaveReaderFactory : IWaveReaderFactory
+	public class WaveReaderFactory : IWaveReaderFactory
 	{
 		private readonly Dictionary<string, IWaveReader> 
 			waveReaderCache = new Dictionary<string, IWaveReader>();

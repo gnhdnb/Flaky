@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IBufferedSource
+	public interface IBufferedSource
 	{
 		float[] ReadNextBatch();
 		int SampleRate { get; }

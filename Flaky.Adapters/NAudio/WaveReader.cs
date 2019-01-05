@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal class WaveReader : IWaveReader
+	public class WaveReader : IWaveReader
 	{
 		private readonly Vector2[] sample;
 
