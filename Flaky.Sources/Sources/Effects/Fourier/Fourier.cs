@@ -72,6 +72,8 @@ namespace Flaky
 					while (true)
 					{
 						var samples = inputQueue.Take(disposing.Token);
+						disposing.Token.ThrowIfCancellationRequested();
+
 						ImportSamples(samples, leftInputBuffer, rightInputBuffer);
 						leftForward.Forward(leftInputBuffer, leftOutputBuffer);
 						rightForward.Forward(rightInputBuffer, rightOutputBuffer);

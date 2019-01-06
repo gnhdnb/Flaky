@@ -196,7 +196,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarks\CompilationHelper.cs" />
-    <Compile Include="Benchmarks\Filter.cs" />
+    <Compile Include="Benchmarks\FilterWorkload.cs" />
+    <Compile Include="Benchmarks\FourierWorkload.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Benchmarks\StandardWorkload.cs" />

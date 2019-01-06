@@ -16,12 +16,13 @@ namespace Flaky.Benchmark
 #else
 			RunRelease();
 #endif
-			Console.ReadLine();
 		}
 
 		static void RunRelease()
 		{
 			BenchmarkRunner.Run<StandardWorkload>();
+			BenchmarkRunner.Run<FilterWorkload>();
+			BenchmarkRunner.Run<FourierWorkload>();
 		}
 
 		static void RunDebug()
@@ -29,6 +30,14 @@ namespace Flaky.Benchmark
 			var s = new StandardWorkload();
 			s.Setup();
 			s.StandardWorkloadTest();
+
+			var filter = new FilterWorkload();
+			filter.Setup();
+			filter.FilterWorkloadTest();
+
+			var fourier = new FourierWorkload();
+			fourier.Setup();
+			fourier.FourierWorkloadTest();
 		}
 	}
 }
