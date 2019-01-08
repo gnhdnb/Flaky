@@ -69,7 +69,7 @@ namespace Flaky
 
 				private double Drive(double value)
 				{
-					return Math.Sign(value) * (1 - (float)Math.Pow(Math.E, -Math.Abs(value)));
+					return Math.Sign(value) * (1 - (float)Math.Exp(-Math.Abs(value)));
 				}
 			}
 		}
