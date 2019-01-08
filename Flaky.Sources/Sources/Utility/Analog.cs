@@ -69,7 +69,7 @@ namespace Flaky
 
 				private float Drive(float value)
 				{
-					return 1.2f * Math.Sign(value) * (1 - 1 / (1 + 0.9f * Math.Abs(value)));
+					return 1.2f * Math.Sign(value) * (1 - 1 / (1 + Math.Abs(value)));
 				}
 			}
 		}
