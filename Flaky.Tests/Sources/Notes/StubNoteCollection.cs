@@ -15,7 +15,7 @@
 			return NextNote;
 		}
 
-		public void Initialize(IFlakyContext context)
+		public void Initialize(ISource parent, IFlakyContext context)
 		{
 			Initialized = true;
 		}

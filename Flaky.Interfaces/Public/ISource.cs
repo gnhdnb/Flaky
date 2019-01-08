@@ -15,6 +15,6 @@ namespace Flaky
 	public interface ISource : IDisposable
 	{
 		Vector2 Play(IContext context);
-		void Initialize(IContext context);
+		void Initialize(ISource parent, IContext context);
 	}
 }

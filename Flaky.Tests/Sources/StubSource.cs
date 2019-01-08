@@ -14,7 +14,7 @@ namespace Flaky.Tests
 			Disposed = true;
 		}
 
-		public void Initialize(IContext context)
+		public void Initialize(ISource parent, IContext context)
 		{
 			Initialized = true;
 		}

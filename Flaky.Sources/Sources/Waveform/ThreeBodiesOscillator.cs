@@ -28,7 +28,7 @@ namespace Flaky
 			Dispose(timeFactor);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Reset();
 

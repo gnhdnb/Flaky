@@ -74,7 +74,7 @@ namespace Flaky
 			return new Vector2(value, value);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			Initialize(context, Frequency, Amplitude);

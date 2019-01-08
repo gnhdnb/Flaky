@@ -11,7 +11,7 @@ namespace Flaky
 	{
 		private static Random random = new Random();
 
-		public override void Initialize(IContext context) { }
+		protected override void Initialize(IContext context) { }
 
 		public override void Dispose() { }
 

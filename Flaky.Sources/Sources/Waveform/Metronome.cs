@@ -9,7 +9,7 @@ namespace Flaky
 {
 	public class Met : Source
 	{
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 		}
 

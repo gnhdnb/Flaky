@@ -49,7 +49,7 @@ namespace Flaky
 			return new PlayingNote(currentNote, mainNote.StartSample);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, mainSource, deltaSource);
 		}

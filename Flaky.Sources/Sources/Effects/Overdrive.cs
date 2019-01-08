@@ -21,7 +21,7 @@ namespace Flaky
 			this.hpnoise = new OnePoleHPFilter(new Noise(), 1, $"{id}_hpnoise") * 0.3f;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, source, overdrive, lpnoise, hpnoise);
 		}

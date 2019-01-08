@@ -99,7 +99,7 @@ namespace Flaky
 			Dispose(hpNoiseSum, hpNoiseDiff, source, lfo, hold, analog);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<DetonationState>(context);
 			Initialize(context, hpNoiseSum, hpNoiseDiff, source, lfo, analog, hold);

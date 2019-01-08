@@ -12,7 +12,7 @@ namespace Flaky.Tests
 			var collection = new SequentialNoteCollection("0-5dd2u", "parent1");
 			var context = new StubContext();
 
-			collection.Initialize(context);
+			collection.Initialize(null, context);
 
 			collection.Update(context);
 			Assert.AreEqual(0, collection.GetNextNote().Number);

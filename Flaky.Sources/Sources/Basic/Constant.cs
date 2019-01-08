@@ -21,7 +21,7 @@ namespace Flaky
 			return new Vector2(value, value);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			// do nothing
 		}

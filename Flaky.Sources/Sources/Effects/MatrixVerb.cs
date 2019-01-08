@@ -26,16 +26,15 @@ namespace Flaky
 			this.viscosity = viscosity;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
-			source.Initialize(context);
-			viscosity.Initialize(context);
+			Initialize(context, source, viscosity);
 		}
 
 		public override void Dispose()
-        {
-            Dispose(source, viscosity);
-        }
+		{
+			Dispose(source, viscosity);
+		}
 
 		protected override Vector2 NextSample(IContext context)
 		{

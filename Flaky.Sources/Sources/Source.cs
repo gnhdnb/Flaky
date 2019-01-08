@@ -41,7 +41,12 @@ namespace Flaky
 
 		protected abstract Vector2 NextSample(IContext context);
 
-		public abstract void Initialize(IContext context);
+		public void Initialize(ISource parent, IContext context)
+		{
+			Initialize(context);
+		}
+
+		protected abstract void Initialize(IContext context);
 
 		protected TState GetOrCreate<TState>(IContext context) where TState : class, new()
 		{
@@ -58,7 +63,7 @@ namespace Flaky
 			foreach (var source in sources)
 			{
 				if (source != null)
-					source.Initialize(context);
+					source.Initialize(this, context);
 			}
 		}
 

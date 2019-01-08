@@ -98,7 +98,7 @@ namespace Flaky
 
 		internal Chr(string id) : base(id) { }
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			state.Initialize(context);

@@ -65,7 +65,7 @@ namespace Flaky
 			return new Vector2(0, 0);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, source, attack, decay);
 		}
