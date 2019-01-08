@@ -17,12 +17,15 @@ namespace Flaky
 		private readonly Semaphore buffersCounter = new Semaphore(0, 3);
 		private bool disposed = false;
 		private int codeVersion = 0;
-		private readonly float[] nullBuffer = new float[13230];
+		private readonly float[] nullBuffer;
+		private readonly int bufferSize;
 
-		internal Channel(int sampleRate, Configuration configuration)
+		internal Channel(int sampleRate, int bufferSize, int bpm, Configuration configuration)
 		{
-			controller = new ContextController(sampleRate, 120, configuration);
+			controller = new ContextController(sampleRate, bpm, configuration);
 			source = null;
+			nullBuffer = new float[bufferSize];
+			this.bufferSize = bufferSize;
 			worker = new Thread(Play);
 			worker.Priority = ThreadPriority.Highest;
 			worker.Start();
@@ -76,11 +79,11 @@ namespace Flaky
 						continue;
 				}
 
-				var buffer = new float[13230];
+				var buffer = new float[bufferSize];
 
 				if (source != null)
 				{
-					for (int n = 0; n < 13230; n += 2)
+					for (int n = 0; n < bufferSize; n += 2)
 					{
 						var value = source.Play(new Context(controller));
 						buffer[n] = value.X;

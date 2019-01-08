@@ -29,7 +29,7 @@ namespace Flaky
 			});
 
 			Device = new WaveOut();
-			Mixer = new Mixer(channelsCount, configuration);
+			Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
 			Adapter = new WaveAdapter(Mixer);
 
 			if (outputWaveFilePath != null)

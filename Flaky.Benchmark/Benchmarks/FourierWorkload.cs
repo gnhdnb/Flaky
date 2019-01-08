@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flaky.Benchmark
 {
-	public class Filter
+	public class FourierWorkload
 	{
 		private ContextController contextController;
 		private ISource source;
@@ -20,7 +20,7 @@ namespace Flaky.Benchmark
 		{
 			source = CompilationHelper.Compile(
 			@"
-				return 3000 % Osc(1) % LP(0.2, 0.1, ""lp1"");
+				return 300 % Saw(1) % Fourier(0.2f, ""lp1"");
 			");
 
 			contextController = new ContextController(44100, 120, new Configuration());
@@ -29,9 +29,8 @@ namespace Flaky.Benchmark
 		}
 
 		[Benchmark]
-		public void StandardWorkloadTest()
+		public void FourierWorkloadTest()
 		{
-
 			for (long i = 0; i < 44100; i++)
 			{
 				contextController.NextSample();
@@ -43,6 +42,7 @@ namespace Flaky.Benchmark
 		[GlobalCleanup]
 		public void Cleanup()
 		{
+			contextController.Dispose();
 			source.Dispose();
 		}
 	}

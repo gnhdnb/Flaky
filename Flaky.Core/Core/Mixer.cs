@@ -12,19 +12,25 @@ namespace Flaky
 		private Channel[] channels;
 		private volatile float[] expectedVolume;
 		private volatile float[] volume;
-		private const int sampleRate = 44100;
+		private readonly int sampleRate;
 
-		public Mixer(int channelsCount, Configuration configuration)
+		public Mixer(
+			int channelsCount, 
+			int sampleRate,
+			int bufferSize, 
+			int bpm, Configuration configuration)
 		{
 			if (channelsCount <= 0 || channelsCount > 8)
 				throw new ArgumentOutOfRangeException(nameof(channelsCount));
+
+			this.sampleRate = sampleRate;
 
 			volume = new float[channelsCount];
 			expectedVolume = new float[channelsCount];
 
 			channels = Enumerable
 				.Range(0, channelsCount)
-				.Select(i => new Channel(sampleRate, configuration))
+				.Select(i => new Channel(sampleRate, bufferSize, bpm, configuration))
 				.ToArray();
 		}
 
