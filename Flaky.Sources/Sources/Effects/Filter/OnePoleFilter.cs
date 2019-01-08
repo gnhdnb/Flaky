@@ -90,7 +90,5 @@ namespace Flaky
 		{
 			this.source = mainSource;
 		}
-
-		protected abstract Vector2 GetResult(Vector2 lp, Vector2 hp);
 	}
 }
