@@ -69,7 +69,7 @@ namespace Flaky
 			return state.chord[voiceNumber];
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			if (!initialized)
 			{
@@ -102,7 +102,7 @@ namespace Flaky
 				return aggregator.GetNote(context, voiceNumber);
 			}
 
-			public override void Initialize(IContext context)
+			protected override void Initialize(IContext context)
 			{
 				aggregator.Initialize(context);
 			}

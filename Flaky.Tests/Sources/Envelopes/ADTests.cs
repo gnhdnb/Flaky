@@ -23,8 +23,8 @@ namespace Flaky.Tests
 
 			var context = new StubContext();
 
-			sequence.Initialize(context);
-			ad.Initialize(context);
+			sequence.Initialize(null, context);
+			ad.Initialize(null, context);
 
 			context.Beat = 0;
 

@@ -7,7 +7,7 @@ namespace Flaky
 	{
 		Note GetNextNote();
 		void Reset();
-		void Initialize(IFlakyContext context);
+		void Initialize(ISource parent, IFlakyContext context);
 
 		void Update(IContext context);
 
@@ -79,7 +79,7 @@ namespace Flaky
 
 		protected abstract int GetNextNoteIndex(int currentNoteIndex);
 
-		public virtual void Initialize(IFlakyContext context)
+		public virtual void Initialize(ISource parent, IFlakyContext context)
 		{
 			state = context.GetOrCreateState<State>(parentId);
 		}

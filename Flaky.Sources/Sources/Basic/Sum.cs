@@ -26,7 +26,7 @@ namespace Flaky
 			return aValue + bValue;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, a, b);
 		}

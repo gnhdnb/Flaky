@@ -143,7 +143,7 @@ namespace Flaky
 			Dispose(source, pitch);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			Initialize(context, trigger, source, pitch);

@@ -23,7 +23,7 @@ namespace Flaky
 
 		public Hold(string id) : base(id) { }
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 		}

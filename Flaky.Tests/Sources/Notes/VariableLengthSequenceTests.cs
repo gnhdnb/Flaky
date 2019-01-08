@@ -19,7 +19,7 @@ namespace Flaky.Tests
 			var sequence = new VariableLengthSequence(noteCollection, lengthSource, false, "id1");
 			var context = new StubContext();
 
-			sequence.Initialize(context);
+			sequence.Initialize(null, context);
 
 			var notes = new[] {
 				new Note(5),

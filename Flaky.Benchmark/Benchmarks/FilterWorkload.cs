@@ -25,7 +25,7 @@ namespace Flaky.Benchmark
 
 			contextController = new ContextController(44100, 120, new Configuration());
 
-			source.Initialize(new Context(contextController));
+			source.Initialize(null, new Context(contextController));
 		}
 
 		[Benchmark]

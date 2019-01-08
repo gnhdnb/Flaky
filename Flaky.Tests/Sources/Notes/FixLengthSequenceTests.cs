@@ -12,7 +12,7 @@ namespace Flaky.Tests
 			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
 			var context = new StubContext();
 
-			sequence.Initialize(context);
+			sequence.Initialize(null, context);
 
 			Assert.IsTrue(noteCollection.Initialized);
 		}
@@ -24,7 +24,7 @@ namespace Flaky.Tests
 			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
 			var context = new StubContext();
 
-			sequence.Initialize(context);
+			sequence.Initialize(null, context);
 
 			context.Beat = 3;
 
@@ -48,7 +48,7 @@ namespace Flaky.Tests
 			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
 			var context = new StubContext();
 
-			sequence.Initialize(context);
+			sequence.Initialize(null, context);
 
 			var notes = new[] {
 				new Note(5),
@@ -92,7 +92,7 @@ namespace Flaky.Tests
 
 			var context = new StubContext();
 
-			sequence.Initialize(context);
+			sequence.Initialize(null, context);
 
 			context.Beat = 0;
 

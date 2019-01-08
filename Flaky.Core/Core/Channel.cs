@@ -49,7 +49,7 @@ namespace Flaky
 
 			var source = player.CreateSource();
 			codeVersion++;
-			source.Initialize(new Context(controller, codeVersion));
+			source.Initialize(null, new Context(controller, codeVersion));
 			sourceToDispose = this.source;
 			this.source = source;
 		}

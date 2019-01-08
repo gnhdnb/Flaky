@@ -71,7 +71,7 @@ namespace Flaky
 			length.Play(context);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			base.Initialize(context);
 
@@ -174,13 +174,13 @@ namespace Flaky
 
 		internal abstract bool NextNoteRequired(IContext context);
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			Initialize(context, resetSource);
 
 			state = GetOrCreate<State>(context);
 
-			noteCollection.Initialize((IFlakyContext)context);
+			noteCollection.Initialize(this, (IFlakyContext)context);
 		}
 
 		public override void Dispose()

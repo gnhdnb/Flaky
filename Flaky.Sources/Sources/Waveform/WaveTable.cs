@@ -95,7 +95,7 @@ namespace Flaky
 			Dispose(selector, pitch);
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			state.Init(pack, Get<IWaveReaderFactory>(context));

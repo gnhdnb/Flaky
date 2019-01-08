@@ -28,7 +28,7 @@ namespace Flaky
 			this.cutoff = cutoff;
 		}
 
-		public override void Initialize(IContext context)
+		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
 			Initialize(context, source, cutoff);

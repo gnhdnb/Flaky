@@ -8,11 +8,11 @@ namespace Flaky
 		private readonly ZigguratGaussianDistribution distribution =
 			new ZigguratGaussianDistribution(0, 1);
 
-		private readonly Source deviation;
+		private readonly ISource deviation;
 
 		private float deviationValue = 0;
 
-		public RandomWalkNoteCollection(string sequence, Source deviation, string parentId) : base(sequence, parentId)
+		public RandomWalkNoteCollection(string sequence, ISource deviation, string parentId) : base(sequence, parentId)
 		{
 			this.deviation = deviation ?? throw new ArgumentNullException();
 		}
@@ -40,11 +40,11 @@ namespace Flaky
 			deviationValue = deviation.Play(context).X;
 		}
 
-		public override void Initialize(IFlakyContext context)
+		public override void Initialize(ISource parent, IFlakyContext context)
 		{
-			base.Initialize(context);
+			base.Initialize(parent, context);
 
-			deviation.Initialize(context);
+			deviation.Initialize(parent, context);
 		}
 
 		public override void Dispose()
