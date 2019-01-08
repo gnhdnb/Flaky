@@ -25,16 +25,16 @@ namespace Flaky
 			private class Effect
 			{
 				const int preeffectBufferSize = 15;
-				private double velocity = 0;
-				private double velocity2 = 0;
-				private double current = 0;
-				private double[] preeffectBuffer = new double[preeffectBufferSize];
+				private float velocity = 0;
+				private float velocity2 = 0;
+				private float current = 0;
+				private float[] preeffectBuffer = new float[preeffectBufferSize];
 				private int preeffectBufferCounter = 0;
-				private double preeffectAverage = 0;
-				private double hpIntegrator = 0;
-				private double lpIntegrator = 0;
+				private float preeffectAverage = 0;
+				private float hpIntegrator = 0;
+				private float lpIntegrator = 0;
 
-				public double NextSample(double input)
+				public float NextSample(float input)
 				{
 					var tunedSample = Drive(input * 8) * 0.25f * 0.07f;
 
@@ -67,7 +67,7 @@ namespace Flaky
 					return lpIntegrator * 10;
 				}
 
-				private double Drive(double value)
+				private float Drive(float value)
 				{
 					return Math.Sign(value) * (1 - (float)Math.Exp(-Math.Abs(value)));
 				}
