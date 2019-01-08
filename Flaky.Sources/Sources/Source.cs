@@ -15,6 +15,8 @@ namespace Flaky
 
 		private Vector2 latestSample;
 		private long latestSampleIndex = -1;
+		private bool initialized = false;
+		private bool hasMultipleParents = false;
 
 		protected Source() { }
 
@@ -25,7 +27,7 @@ namespace Flaky
 
 		public Vector2 Play(IContext context)
 		{
-			if (context.Sample == latestSampleIndex)
+			if (hasMultipleParents && context.Sample == latestSampleIndex)
 				return latestSample;
 
 			var result = NextSample(context);
@@ -33,8 +35,11 @@ namespace Flaky
 			if (float.IsNaN(result.X))
 				return new Vector2(0, 0);
 
-			latestSample = result;
-			latestSampleIndex = context.Sample;
+			if (hasMultipleParents)
+			{
+				latestSample = result;
+				latestSampleIndex = context.Sample;
+			}
 
 			return result;
 		}
@@ -43,6 +48,10 @@ namespace Flaky
 
 		public void Initialize(ISource parent, IContext context)
 		{
+			if (initialized)
+				hasMultipleParents = true;
+
+			initialized = true;
 			Initialize(context);
 		}
 
