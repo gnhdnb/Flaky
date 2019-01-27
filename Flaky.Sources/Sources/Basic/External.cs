@@ -22,7 +22,7 @@ namespace Flaky
 		{
 			var delta = Value - state.Value;
 
-			state.Value += delta / 22050;
+			state.Value += delta / 2200;
 
 			return new Vector2(state.Value, state.Value);
 		}
