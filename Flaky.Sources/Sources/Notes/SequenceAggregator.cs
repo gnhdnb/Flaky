@@ -8,7 +8,7 @@ namespace Flaky
 {
 	public class SequenceAggregator : PolyphonicNoteSource, IPipingSource<NoteSource>
 	{
-		private NoteSource mainSource;
+		private INoteSource mainSource;
 		private SequenceAggregatorVoice[] voices;
 		private bool initialized;
 		private State state;

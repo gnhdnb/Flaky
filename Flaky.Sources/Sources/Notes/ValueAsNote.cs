@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Flaky
 {
-	public class ValueAsNote : NoteSource, IPipingSource
+	public class ValueAsNote : NoteSource, IPipingSource<ISource>
 	{
 		private State state;
-		private Source source;
+		private ISource source;
 		private int multipliter;
 
 		internal ValueAsNote(int multipliter, string id) : base(id)
@@ -42,7 +42,7 @@ namespace Flaky
 			Dispose(source);
 		}
 
-		public void SetMainSource(Source mainSource)
+		public void SetMainSource(ISource mainSource)
 		{
 			source = mainSource;
 		}

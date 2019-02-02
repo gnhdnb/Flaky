@@ -10,7 +10,7 @@ namespace Flaky
 	public class Sampler : Source, IPipingSource<NoteSource>
 	{
 		private readonly string sample;
-		private NoteSource noteSource;
+		private INoteSource noteSource;
 		private readonly Source pitchSource;
 		private IWaveReader reader;
 		private State state;

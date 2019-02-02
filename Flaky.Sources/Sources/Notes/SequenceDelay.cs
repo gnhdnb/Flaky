@@ -8,7 +8,7 @@ namespace Flaky
 {
 	public class SequenceDelay : NoteSource, IPipingSource<NoteSource>
 	{
-		private NoteSource source;
+		private INoteSource source;
 		private State state;
 		private readonly int delay;
 

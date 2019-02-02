@@ -10,7 +10,7 @@ namespace Flaky
 	public class DR : Source, IPipingSource<NoteSource>
 	{
 		private string[] samples;
-		private NoteSource noteSource;
+		private INoteSource noteSource;
 		private IWaveReader[] readers;
 
 		internal DR(params string[] samples)

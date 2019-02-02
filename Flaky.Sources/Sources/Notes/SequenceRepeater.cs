@@ -8,7 +8,7 @@ namespace Flaky
 {
 	public class SequenceRepeater : NoteSource, IPipingSource<NoteSource>
 	{
-		private NoteSource mainSource;
+		private INoteSource mainSource;
 		private readonly int blockSize;
 		private readonly int repetitions;
 		private State state;

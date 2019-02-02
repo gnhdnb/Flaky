@@ -146,8 +146,8 @@ namespace Flaky
 		protected PipingSourceWrapper<NoteSource, PolyphonicNoteSource> SA(int voices, string id)
 			{ return Pipe<NoteSource, PolyphonicNoteSource>(new SequenceAggregator(voices, id)); }
 
-		protected PipingSourceWrapper<Source, NoteSource> VAN(int multiplier, string id)
-			{ return Pipe<Source, NoteSource>(new ValueAsNote(multiplier, id)); }
+		protected PipingSourceWrapper<ISource, NoteSource> VAN(int multiplier, string id)
+			{ return Pipe<ISource, NoteSource>(new ValueAsNote(multiplier, id)); }
 
 		protected PipingSourceWrapper<NoteSource, NoteSource> H(string scale, string id)
 			{ return Pipe<NoteSource, NoteSource>(new Harmonize(scale, id)); }
@@ -197,7 +197,7 @@ namespace Flaky
 		}
 
 		private PipingSourceWrapper<TSource, TResult> Pipe<TSource, TResult>(IPipingSource<TSource> source) 
-			where TSource : Source
+			where TSource : ISource
 			where TResult : Source
 		{
 			return new PipingSourceWrapper<TSource, TResult>(source);
