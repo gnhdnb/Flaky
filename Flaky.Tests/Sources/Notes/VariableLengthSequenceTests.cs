@@ -12,7 +12,7 @@ namespace Flaky.Tests
 	public class VariableLengthSequenceTests
 	{
 		[TestMethod]
-		public void Sequencing()
+		public void VariableLengthSequenceSequencing()
 		{
 			var noteCollection = new StubNoteCollection();
 			var lengthSource = new StubSource();

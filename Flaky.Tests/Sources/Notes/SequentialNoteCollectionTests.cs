@@ -7,7 +7,7 @@ namespace Flaky.Tests
 	public class SequentialNoteCollectionTests
 	{
 		[TestMethod]
-		public void Sequencing()
+		public void SequentialNoteCollectionSequencing()
 		{
 			var collection = new SequentialNoteCollection("0-5dd2u", "parent1");
 			var context = new StubContext();

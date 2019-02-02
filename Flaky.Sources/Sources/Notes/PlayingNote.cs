@@ -42,5 +42,15 @@ namespace Flaky
 		{
 			get { return note; }
 		}
+
+		public static bool operator==(PlayingNote a, PlayingNote b)
+		{
+			return a.note == b.note && a.startSample == b.startSample;
+		}
+
+		public static bool operator!=(PlayingNote a, PlayingNote b)
+		{
+			return !(a == b);
+		}
 	}
 }

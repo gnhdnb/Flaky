@@ -6,7 +6,7 @@ namespace Flaky.Tests
 	public class FixLengthSequenceTests
 	{
 		[TestMethod]
-		public void Initialization()
+		public void FixLengthSequenceInitialization()
 		{
 			var noteCollection = new StubNoteCollection();
 			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
@@ -18,7 +18,7 @@ namespace Flaky.Tests
 		}
 
 		[TestMethod]
-		public void QuantizedSequenceStart()
+		public void FixLengthSequenceQuantizedSequenceStart()
 		{
 			var noteCollection = new StubNoteCollection();
 			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
@@ -42,7 +42,7 @@ namespace Flaky.Tests
 		}
 
 		[TestMethod]
-		public void Sequencing()
+		public void FixLengthSequenceSequencing()
 		{
 			var noteCollection = new StubNoteCollection();
 			var sequence = new FixLengthSequence(noteCollection, 4, false, "id1");
@@ -74,7 +74,7 @@ namespace Flaky.Tests
 		}
 
 		[TestMethod]
-		public void SequenceReset()
+		public void FixLengthSequenceReset()
 		{
 			var noteCollection = new StubNoteCollection();
 			var resetSequence = new FixLengthSequence(
