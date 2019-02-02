@@ -10,7 +10,7 @@ namespace Flaky
 	public class SampleAndHold : Source, IPipingSource
 	{
 		private readonly Source trigger;
-		private readonly NoteSource noteTrigger;
+		private readonly INoteSource noteTrigger;
 		private Source source;
 		private State state;
 

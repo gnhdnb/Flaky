@@ -12,7 +12,7 @@ namespace Flaky
 		private int range;
 		private bool empty;
 
-		private NoteSource source;
+		private INoteSource source;
 		private PlayingNote lastSourceNote;
 		private PlayingNote currentNote;
 

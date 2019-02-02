@@ -9,7 +9,7 @@ namespace Flaky
 {
 	public class Rep : Source, IPipingSource
 	{
-		private readonly NoteSource feed;
+		private readonly INoteSource feed;
 		private Source source;
 		private State state;
 		private readonly float multiplier;
@@ -35,7 +35,7 @@ namespace Flaky
 			}
 		}
 
-		internal Rep(NoteSource feed, float multiplier, float dry, float wet, string id) : base(id)
+		internal Rep(INoteSource feed, float multiplier, float dry, float wet, string id) : base(id)
 		{
 			this.feed = feed;
 
@@ -53,7 +53,7 @@ namespace Flaky
 			this.dry = dry;
 		}
 
-		public Rep(NoteSource feed, string id) : this(feed, 1, 1, 0.5f, id) { }
+		public Rep(INoteSource feed, string id) : this(feed, 1, 1, 0.5f, id) { }
 
 		protected override Vector2 NextSample(IContext context)
 		{

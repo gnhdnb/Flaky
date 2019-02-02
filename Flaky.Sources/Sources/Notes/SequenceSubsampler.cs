@@ -9,7 +9,7 @@ namespace Flaky
 {
 	public class SequenceSubsampler : NoteSource, IPipingSource<NoteSource>
 	{
-		private NoteSource mainSource;
+		private INoteSource mainSource;
 		private Source probability;
 		private State state;
 		private XorShiftRandom random = new XorShiftRandom();

@@ -8,9 +8,9 @@ namespace Flaky
 {
 	public class SequenceTranspose : NoteSource, IPipingSource<NoteSource>
 	{
-		private NoteSource mainSource;
+		private INoteSource mainSource;
 		private int? delta;
-		private NoteSource deltaSource;
+		private INoteSource deltaSource;
 		private Note currentNote;
 
 		public SequenceTranspose(int delta)

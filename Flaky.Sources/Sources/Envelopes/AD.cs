@@ -9,7 +9,7 @@ namespace Flaky
 {
 	public class AD : Source
 	{
-		private NoteSource source;
+		private INoteSource source;
 		private Source attack;
 		private Source decay;
 		private PlayingNote currentNote;

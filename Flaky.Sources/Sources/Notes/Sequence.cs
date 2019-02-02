@@ -91,7 +91,7 @@ namespace Flaky
 	public abstract class Sequence : NoteSource, IPipingSource<NoteSource>
 	{
 		private INoteCollection noteCollection;
-		private NoteSource resetSource;
+		private INoteSource resetSource;
 		private bool skipSilentNotes;
 		protected State state;
 
