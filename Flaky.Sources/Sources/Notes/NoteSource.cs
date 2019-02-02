@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public abstract class NoteSource : Source
+	public abstract class NoteSource : Source, INoteSource
 	{
 		protected NoteSource() : base() { }
 

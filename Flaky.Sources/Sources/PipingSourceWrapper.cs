@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	internal interface IPipingSource<T> where T : Source
+	internal interface IPipingSource<T> where T : ISource
 	{
 		void SetMainSource(T mainSource);
 	}
 
 	internal interface IPipingSource : IPipingSource<Source> { }
 
-	public class PipingSourceWrapper<TSource, TResult> where TSource: Source where TResult: Source
+	public class PipingSourceWrapper<TSource, TResult> where TSource: ISource where TResult: ISource
 	{
 		private readonly IPipingSource<TSource> pipingSource;
 
