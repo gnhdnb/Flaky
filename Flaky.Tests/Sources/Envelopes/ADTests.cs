@@ -11,7 +11,7 @@ namespace Flaky.Tests
 	public class ADTests
 	{
 		[TestMethod]
-		public void NonZeroAttackNonZeroDecay()
+		public void ADNonZeroAttackNonZeroDecay()
 		{
 			var sequence = new FixLengthSequence(
 				new SequentialNoteCollection("0", "id1"), 
