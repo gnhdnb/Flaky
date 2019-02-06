@@ -155,7 +155,9 @@ namespace Flaky
 		protected PipingSourceWrapper<NoteSource, Source> DR(params string[] samples)
 			{ return Pipe<NoteSource, Source>(new DR(samples)); }
 		protected PipingSourceWrapper<NoteSource, Source> Sampler(string sample, string id)
-			{ return Pipe<NoteSource, Source>(new Sampler(sample, id)); }
+			{ return Pipe<NoteSource, Source>(new Sampler(sample, 1, id)); }
+		protected PipingSourceWrapper<NoteSource, Source> Sampler(string sample, float pitch, string id)
+			{ return Pipe<NoteSource, Source>(new Sampler(sample, pitch, id)); }
 
 		protected Met Met()
 			{ return new Met(); }

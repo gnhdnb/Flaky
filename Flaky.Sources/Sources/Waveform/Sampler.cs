@@ -11,7 +11,7 @@ namespace Flaky
 	{
 		private readonly string sample;
 		private INoteSource noteSource;
-		private readonly Source pitchSource;
+		private readonly float pitch;
 		private IWaveReader reader;
 		private State state;
 
@@ -21,9 +21,10 @@ namespace Flaky
 			public double LatestSamplerSample;
 		}
 
-		internal Sampler(string sample, string id) : base(id)
+		internal Sampler(string sample, float pitch, string id) : base(id)
 		{
 			this.sample = sample;
+			this.pitch = pitch;
 		}
 
 		protected override Vector2 NextSample(IContext context)
@@ -38,9 +39,9 @@ namespace Flaky
 			}
 			else
 			{
-				var pitch = note.Note?.ToPitch() ?? 0;
+				var notePitch = note.Note?.ToPitch() ?? 0;
 
-				state.LatestSamplerSample = state.LatestSamplerSample + delta * pitch;
+				state.LatestSamplerSample = state.LatestSamplerSample + delta * notePitch * pitch;
 			}
 
 			var result = reader.Read((long)state.LatestSamplerSample);
@@ -57,12 +58,12 @@ namespace Flaky
 
 			reader = factory.Create(sample);
 
-			Initialize(context, noteSource, pitchSource);
+			Initialize(context, noteSource);
 		}
 
 		public override void Dispose()
 		{
-			Dispose(noteSource, pitchSource);
+			Dispose(noteSource);
 		}
 
 		void IPipingSource<NoteSource>.SetMainSource(NoteSource mainSource)

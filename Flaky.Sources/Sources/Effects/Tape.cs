@@ -10,8 +10,8 @@ namespace Flaky
 	public class Tape : Source, IPipingSource
 	{
 		private Source source;
-		private Source hpNoiseSum;
-		private Source hpNoiseDiff;
+		private Source hpNoiseX;
+		private Source hpNoiseY;
 		private Osc lfo;
 		private DetonationState state;
 		private Analog analog;
@@ -80,8 +80,8 @@ namespace Flaky
 			this.noiseLevel = noiseLevel;
 
 			lfo = new Osc(5, 1, $"{id}_lfo");
-			hpNoiseSum = CreateNoiseChain($"{id}_hpNoiseSum");
-			hpNoiseDiff = CreateNoiseChain($"{id}_hpNoiseDiff");
+			hpNoiseX = CreateNoiseChain($"{id}_hpNoiseX");
+			hpNoiseY = CreateNoiseChain($"{id}_hpNoiseY");
 			hold = new Hold($"{id}_hold");
 			analog = new Analog(hold, $"{id}_analog");
 		}
@@ -96,29 +96,26 @@ namespace Flaky
 
 		public override void Dispose()
 		{
-			Dispose(hpNoiseSum, hpNoiseDiff, source, lfo, hold, analog);
+			Dispose(hpNoiseX, hpNoiseY, source, lfo, hold, analog);
 		}
 
 		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<DetonationState>(context);
-			Initialize(context, hpNoiseSum, hpNoiseDiff, source, lfo, analog, hold);
+			Initialize(context, hpNoiseX, hpNoiseY, source, lfo, analog, hold);
 		}
 
 		protected override Vector2 NextSample(IContext context)
 		{
 			var inputSample = source.Play(context);
-			var sumNoiseSample = hpNoiseSum.Play(context);
-			var diffNoiseSample = hpNoiseDiff.Play(context);
+			var xSample = hpNoiseX.Play(context);
+			var ySample = hpNoiseY.Play(context);
 			var lfoSample = lfo.Play(context);
-
-			var sum = inputSample.X + inputSample.Y + sumNoiseSample.X * 0.00004f * noiseLevel;
-			var difference = inputSample.X - inputSample.Y + diffNoiseSample.X * 0.00001f * noiseLevel;
 
 			hold.Sample = new Vector2
 			{
-				X = sum,
-				Y = difference
+				X = inputSample.X + xSample.X * 0.00003f * noiseLevel,
+				Y = inputSample.Y + ySample.X * 0.00003f * noiseLevel
 			};
 
 			var result = analog.Play(context);
@@ -126,8 +123,8 @@ namespace Flaky
 			return state.NextSample(
 				new Vector2
 				{
-					X = (result.X + result.Y) / 2,
-					Y = (result.X - result.Y) / 2,
+					X = result.X,
+					Y = result.Y,
 				},
 				lfoSample.X);
 		}
