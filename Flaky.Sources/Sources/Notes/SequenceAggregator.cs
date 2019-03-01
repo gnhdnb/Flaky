@@ -53,7 +53,7 @@ namespace Flaky
 					if (state.notes.Count >= voices.Length)
 					{
 						state.chord = state.notes
-							.Where(n => n != null)
+							.Where(n => !n.IsSilent)
 							.Distinct()
 							.Select(n => new PlayingNote(n, context.Sample))
 							.ToArray();
@@ -64,7 +64,7 @@ namespace Flaky
 			}
 
 			if (voiceNumber >= state.chord.Length)
-				return new PlayingNote(null, context.Sample);
+				return new PlayingNote(Note.Silent, context.Sample);
 
 			return state.chord[voiceNumber];
 		}

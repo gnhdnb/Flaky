@@ -32,7 +32,7 @@ namespace Flaky
 		{
 			var note = source.GetNote(context);
 
-			if (currentNote.Note == null || !note.IsSilent)
+			if (currentNote.Note.IsSilent || !note.IsSilent)
 				currentNote = note;
 
 			var attackValue = attack.Play(context).X;

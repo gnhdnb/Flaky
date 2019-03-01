@@ -20,11 +20,11 @@ namespace Flaky
 
 		public static implicit operator Vector2(PlayingNote n)
 		{
-			var freq = n.note?.ToFrequency() ?? 0;
+			var freq = n.note.ToFrequency();
 			return new Vector2(freq, freq);
 		}
 
-		public bool IsSilent { get { return note == null; } }
+		public bool IsSilent { get { return note.IsSilent; } }
 
 		public float CurrentTime(IContext context)
 		{
