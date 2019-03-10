@@ -18,9 +18,9 @@ namespace Flaky
 		public Note(int number, bool isSilent = false)
 		{
 			this.isNotSilent = !isSilent;
-			this.number = isSilent ? number : 0;
-			pitch = isSilent ? (float)Math.Pow(ratio, number) : 0;
-			frequency = isSilent ? (float)(BaselineFrequency * Math.Pow(ratio, number)) : 0;
+			this.number = isNotSilent ? number : 0;
+			pitch = isNotSilent ? (float)Math.Pow(ratio, number) : 0;
+			frequency = isNotSilent ? (float)(BaselineFrequency * Math.Pow(ratio, number)) : 0;
 		}
 
 		internal float ToFrequency()

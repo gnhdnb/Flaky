@@ -17,7 +17,7 @@ namespace Flaky.Tests
 			collection.Update(context);
 			Assert.AreEqual(0, collection.GetNextNote().Number);
 			collection.Update(context);
-			Assert.AreEqual(null, collection.GetNextNote());
+			Assert.AreEqual(Note.Silent, collection.GetNextNote());
 			collection.Update(context);
 			Assert.AreEqual(-19, collection.GetNextNote().Number);
 			collection.Update(context);
