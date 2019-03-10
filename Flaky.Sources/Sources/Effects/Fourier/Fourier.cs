@@ -83,11 +83,22 @@ namespace Flaky
 
 						for (int i = 0; i < framesCount; i++)
 						{
+							leftOutputBuffer[i] =
+								Math.Sign(rightOutputBuffer[i])
+								*
+								Math.Max(
+									Math.Abs(rightOutputBuffer[i] + leftOutputBuffer[i]),
+									Math.Abs(rightOutputBuffer[i] - leftOutputBuffer[i]));
+
+							rightOutputBuffer[i] = leftOutputBuffer[i];
+							
+							/*
 							if (Power(leftOutputBuffer[i]) >= leftThreshold)
 								leftOutputBuffer[i] = 0;
 
 							if (Power(rightOutputBuffer[i]) >= rightThreshold)
 								rightOutputBuffer[i] = 0;
+							*/
 						}
 
 						leftBackward.Backward(leftOutputBuffer, leftInputBuffer);
