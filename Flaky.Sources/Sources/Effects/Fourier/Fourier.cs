@@ -83,6 +83,13 @@ namespace Flaky
 
 						for (int i = 0; i < framesCount; i++)
 						{
+							/*
+							if(i < 40 || i > 120)
+							{
+								leftOutputBuffer[i] = 0;
+								rightOutputBuffer[i] = 0;
+							}*/
+
 							if (Power(leftOutputBuffer[i]) >= leftThreshold)
 								leftOutputBuffer[i] = 0;
 
