@@ -89,7 +89,7 @@ namespace Flaky
 
 					for (int j = 0; j < State.bandsCount; j++)
 					{
-						state.decisionBuffer[j] *= 0.95f;
+						state.decisionBuffer[j] *= 0.99f;
 
 						state.decisionBuffer[j] =
 							Math.Max(state.decisionBuffer[j], Math.Abs(state.freqBuffer[j]));
@@ -97,26 +97,24 @@ namespace Flaky
 						sum += Math.Abs(state.freqBuffer[j]);
 					}
 
-					state.skip = sum < 0.001;
+					state.skip = sum < 0.01;
 				}
-
-				var matrix = Matrix.Create(
-					State.bandsCount,
-					states.states.Where(s => !s.skip).Count(),
-					states.states
-						.Where(s => !s.skip)
-						.SelectMany(s => s.decisionBuffer)
-						.Select(v => Math.Abs((double)v))
-						.ToArray(),
-					MatrixElementOrder.ColumnMajor);
 
 				var master = Extreme.Mathematics.Vector.Create(states.states[0].masterSpectrum);
 
-				var x = matrix.LeastSquaresSolve(master);
-
-				for(int j = 0; j < x.Length; j++)
+				foreach (var state in states.states.Where(s => !s.skip))
 				{
-					states.states.Where(s => !s.skip).ToList()[j].desiredVolume = (float)x[j];
+					var matrix = Matrix.Create(
+						State.bandsCount,
+						1,
+						state.decisionBuffer
+							.Select(v => Math.Abs((double)v))
+							.ToArray(),
+						MatrixElementOrder.ColumnMajor);
+
+					var x = matrix.LeastSquaresSolve(master);
+
+					state.desiredVolume = (float)x[0];
 				}
 
 				states.states[0].currentFrame = 0;
@@ -126,8 +124,8 @@ namespace Flaky
 
 			for(int i = 0; i < sources.Count(); i++)
 			{
-				if (states.states[i].desiredVolume > 1)
-					states.states[i].desiredVolume = 1;
+				/*if (states.states[i].desiredVolume > 1)
+					states.states[i].desiredVolume = 1;*/
 
 				states.states[i].volume += 
 					(states.states[i].desiredVolume - states.states[i].volume)
