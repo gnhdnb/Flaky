@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class WaveTable : Source, IPipingSource
+	public class WaveTable : Source, IPipingSource<NoteSource>
 	{
 		private readonly Source selector;
 		private readonly string pack;
-		private Source pitch;
+		private NoteSource pitch;
 		private State state;
+		private bool oneshot;
 
 		private class State
 		{
@@ -30,7 +31,7 @@ namespace Flaky
 				waveReader = readerFactory.Create("waveforms", pack);
 			}
 
-			public Vector2 Read(float pitch, float selector)
+			public Vector2 Read(float pitch, float selector, bool oneshot)
 			{
 				if (pitch < 0)
 					pitch = -pitch;
@@ -42,7 +43,7 @@ namespace Flaky
 				if (selector < 0)
 					selector += 1;
 
-				var index = waveReader.Waves * selector;
+				var index = (waveReader.Waves - 1) * selector;
 
 				var index1 = (int)Math.Floor(index);
 				var index2 = (int)Math.Ceiling(index);
@@ -57,12 +58,23 @@ namespace Flaky
 						waveReader.Length(index2));
 
 				if (position > maxLength)
-					position %= maxLength;
+				{
+					if (!oneshot)
+						position %= maxLength;
+					else
+						return Vector2.Zero;
+				}
+					
 
 				var sample1 = Read(waveReader, index1, position);
 				var sample2 = Read(waveReader, index2, position);
 
 				return sample2 * crossfade + sample1 * (1 - crossfade);
+			}
+
+			public void Reset()
+			{
+				position = 0;
 			}
 
 			private Vector2 Read(IMultipleWaveReader reader, int wave, double position)
@@ -84,10 +96,11 @@ namespace Flaky
 			}
 		}
 
-		public WaveTable(string pack, Source selector, string id) : base(id)
+		public WaveTable(string pack, Source selector, bool oneshot, string id) : base(id)
 		{
 			this.pack = pack;
 			this.selector = selector;
+			this.oneshot = oneshot;
 		}
 
 		public override void Dispose()
@@ -105,12 +118,18 @@ namespace Flaky
 
 		protected override Vector2 NextSample(IContext context)
 		{
+			var playingNote = pitch.GetNote(context);
+
+			if (playingNote.CurrentSample(context) == 0 && oneshot)
+				state.Reset();
+
 			return state.Read(
-				pitch.Play(context).X,
-				selector.Play(context).X);
+				playingNote.Note?.ToFrequency() ?? 0,
+				selector.Play(context).X,
+				oneshot);
 		}
 
-		void IPipingSource<Source>.SetMainSource(Source mainSource)
+		void IPipingSource<NoteSource>.SetMainSource(NoteSource mainSource)
 		{
 			pitch = mainSource;
 		}
