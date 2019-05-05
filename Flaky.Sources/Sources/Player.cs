@@ -25,6 +25,10 @@ namespace Flaky
 			{ return Pipe(new Fourier(effect, 1, id)); }
 		protected PipingSourceWrapper Fourier(float effect, int oversampling, string id)
 			{ return Pipe(new Fourier(effect, oversampling, id)); }
+
+		protected PipingSourceWrapper FourierLP(Source effect, int oversampling, string id)
+			{ return Pipe(new FourierLP(effect, oversampling, id)); }
+
 		protected PipingSourceWrapper Trans(Source pitch, string id)
 			{ return Pipe(new Transient(pitch, id)); }
 		protected PipingSourceWrapper Trans(NoteSource pitch, string id)
