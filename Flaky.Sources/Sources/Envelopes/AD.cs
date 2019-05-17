@@ -13,6 +13,12 @@ namespace Flaky
 		private Source attack;
 		private Source decay;
 		private PlayingNote currentNote;
+		private State state;
+
+		private class State
+		{
+			public float value;
+		}
 
 		public AD(NoteSource source, Source decay)
 		{
@@ -22,6 +28,13 @@ namespace Flaky
 		}
 
 		public AD(NoteSource source, Source attack, Source decay)
+		{
+			this.source = source;
+			this.attack = attack;
+			this.decay = decay;
+		}
+
+		public AD(NoteSource source, Source attack, Source decay, string id) : base(id)
 		{
 			this.source = source;
 			this.attack = attack;
@@ -53,12 +66,25 @@ namespace Flaky
 			if (attackLeft > 0)
 			{
 				var output = (attackValue - attackLeft) / attackValue;
-				return new Vector2(output, output);
+
+				if (output < state.value)
+				{
+					return new Vector2(state.value, state.value);
+				}
+				else
+				{
+					state.value = output;
+
+					return new Vector2(output, output);
+				}
 			}
 
 			if (decayLeft > 0)
 			{
 				var output = decayLeft / decayValue;
+
+				state.value = output;
+
 				return new Vector2(output, output);
 			}
 
@@ -68,6 +94,8 @@ namespace Flaky
 		protected override void Initialize(IContext context)
 		{
 			Initialize(context, source, attack, decay);
+
+			state = GetOrCreate<State>(context);
 		}
 
 		public override void Dispose()

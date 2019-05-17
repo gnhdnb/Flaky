@@ -92,6 +92,8 @@ namespace Flaky
 			{ return new FI(time, id); }
 		protected FO FO(float time, string id)
 			{ return new FO(time, id); }
+		protected Source WebExternal(string url, string id)
+			{ return new WebExternal(url, id); }
 
 		protected PSeq PSeq(string sequence, int size, string id)
 			{ return new PSeq(sequence, size, id); }
@@ -183,6 +185,10 @@ namespace Flaky
 
 		protected PipingSourceWrapper<NoteSource, Source> WT(string pack, Source selector, bool oneshot, string id)
 			{ return Pipe<NoteSource, Source>(new WaveTable(pack, selector, oneshot, id)); }
+
+		protected PipingSourceWrapper<NoteSource, Source> GR(string pack, Source modulation, float pitch, string id)
+			{ return Pipe<NoteSource, Source>(new Grains(pack, modulation, pitch, id)); }
+
 
 		protected PipingSourceWrapper Saw()
 			{ return Pipe(new Saw()); }
