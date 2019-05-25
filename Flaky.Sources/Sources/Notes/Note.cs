@@ -6,19 +6,21 @@ using System.Threading.Tasks;
 
 namespace Flaky
 {
-	public class Note : IEquatable<Note>
+	public struct Note : IEquatable<Note>
 	{
 		private readonly int number;
 		private readonly static double ratio = Math.Pow(2, 1d / 12d);
 		public const float BaselineFrequency = 440;
 		private readonly float frequency;
 		private readonly float pitch;
+		private readonly bool isNotSilent;
 
-		public Note(int number)
+		public Note(int number, bool isSilent = false)
 		{
-			this.number = number;
-			pitch = (float)Math.Pow(ratio, number);
-			frequency = (float)(BaselineFrequency * Math.Pow(ratio, number));
+			this.isNotSilent = !isSilent;
+			this.number = isNotSilent ? number : 0;
+			pitch = isNotSilent ? (float)Math.Pow(ratio, number) : 0;
+			frequency = isNotSilent ? (float)(BaselineFrequency * Math.Pow(ratio, number)) : 0;
 		}
 
 		internal float ToFrequency()
@@ -33,10 +35,20 @@ namespace Flaky
 
 		public bool Equals(Note other)
 		{
-			if (other == null)
-				return false;
+			if (other.IsSilent && IsSilent)
+				return true;
 
 			return this.number == other.number;
+		}
+
+		public static bool operator ==(Note a, Note b)
+		{
+			return a.Equals(b);
+		}
+
+		public static bool operator !=(Note a, Note b)
+		{
+			return !a.Equals(b);
 		}
 
 		internal int Number
@@ -44,9 +56,19 @@ namespace Flaky
 			get { return number; }
 		}
 
+		internal bool IsSilent
+		{
+			get { return !isNotSilent; }
+		}
+
 		public static implicit operator Note(int d)
 		{
 			return new Note(d);
+		}
+
+		public static Note Silent
+		{
+			get { return new Note(0, true); }
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace Flaky
 			}
 			else
 			{
-				var notePitch = note.Note?.ToPitch() ?? 0;
+				var notePitch = note.Note.IsSilent ? 0 : note.Note.ToPitch();
 
 				state.LatestSamplerSample = state.LatestSamplerSample + delta * notePitch * pitch;
 			}

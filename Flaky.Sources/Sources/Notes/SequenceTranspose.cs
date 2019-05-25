@@ -32,15 +32,15 @@ namespace Flaky
 		{
 			var mainNote = mainSource.GetNote(context);
 
-			if (mainNote.Note == null)
+			if (mainNote.Note.IsSilent)
 				return mainNote;
 
 			var d =
 				delta != null
 				? delta.Value
-				: deltaSource.GetNote(context).Note?.Number ?? 0;
+				: deltaSource.GetNote(context).Note.Number;
 
-			if(currentNote == null
+			if(currentNote.IsSilent
 				|| currentNote.Number != mainNote.Note.Number + d)
 			{
 				currentNote = new Note(mainNote.Note.Number + d);

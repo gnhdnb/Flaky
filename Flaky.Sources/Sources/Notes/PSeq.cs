@@ -65,7 +65,7 @@ namespace Flaky
 			var notes = GetNotes(context);
 
 			if (notes.Length == 0)
-				return new PlayingNote(null, 0);
+				return new PlayingNote(Note.Silent, 0);
 
 			return notes[0];
 		}

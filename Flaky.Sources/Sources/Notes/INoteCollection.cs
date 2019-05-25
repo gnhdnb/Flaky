@@ -72,7 +72,7 @@ namespace Flaky
 			state.currentNoteIndex = GetNextNoteIndex(state.currentNoteIndex);
 
 			if (state.currentNoteIndex < 0)
-				return null;
+				return Note.Silent;
 
 			return sequence[state.currentNoteIndex];
 		}
@@ -111,7 +111,7 @@ namespace Flaky
 				var key = sequence[i].ToString();
 
 				if (key == "-")
-					result.Add(null);
+					result.Add(Note.Silent);
 
 				if (keys.ContainsKey(key))
 				{

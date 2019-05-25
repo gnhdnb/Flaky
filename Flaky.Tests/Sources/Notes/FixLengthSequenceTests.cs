@@ -32,7 +32,7 @@ namespace Flaky.Tests
 
 			var playingNote = sequence.GetNote(context);
 
-			Assert.AreEqual(null, playingNote.Note);
+			Assert.IsTrue(playingNote.Note.IsSilent);
 
 			context.Beat = 4;
 
@@ -98,25 +98,25 @@ namespace Flaky.Tests
 
 			var playingNote = sequence.GetNote(context);
 
-			Assert.AreEqual(0, playingNote.Note?.Number);
+			Assert.AreEqual(0, playingNote.Note.Number);
 
 			context.Beat = 1;
 
 			playingNote = sequence.GetNote(context);
 
-			Assert.AreEqual(1, playingNote.Note?.Number);
+			Assert.AreEqual(1, playingNote.Note.Number);
 
 			context.Beat = 2;
 
 			playingNote = sequence.GetNote(context);
 
-			Assert.AreEqual(0, playingNote.Note?.Number);
+			Assert.AreEqual(0, playingNote.Note.Number);
 
 			context.Beat = 3;
 
 			playingNote = sequence.GetNote(context);
 
-			Assert.AreEqual(1, playingNote.Note?.Number);
+			Assert.AreEqual(1, playingNote.Note.Number);
 		}
 	}
 }
