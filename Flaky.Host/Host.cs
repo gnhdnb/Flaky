@@ -16,11 +16,11 @@ namespace Flaky
 		private WaveAdapter Adapter { get; }
 		private WaveRecorder Recorder { get; }
 
-		public Host(int channelsCount, string outputWaveFilePath = null)
+		public Host(int channelsCount, string libraryPath, string outputWaveFilePath = null)
 		{
 			var configuration = new Configuration();
 
-			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory());
+			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory(libraryPath));
 			configuration.Register<IWaveWriterFactory>(new WaveWriterFactory());
 
 			Compiler = new Compiler(new[] {

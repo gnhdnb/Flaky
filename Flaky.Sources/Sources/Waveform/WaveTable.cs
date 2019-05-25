@@ -124,7 +124,7 @@ namespace Flaky
 				state.Reset();
 
 			return state.Read(
-				playingNote.Note?.ToFrequency() ?? 0,
+				playingNote.Note.ToFrequency(),
 				selector.Play(context).X,
 				oneshot);
 		}

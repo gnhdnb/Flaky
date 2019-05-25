@@ -11,27 +11,35 @@ namespace Flaky
     {
 		private static Host host;
 		private static FileSystemWatcher watcher;
+		private static string codeFilePath;
 
 		static void Main(string[] args)
         {
+			if (args.Length != 2)
+			{
+				Console.WriteLine(@"Usage: flaky.exe [sampleLibrariesPath] [codefile]");
+			}
+
+			var libraryPath = args[0];
+			codeFilePath = args[1];
+
 			SetProcessPriority();
 
-			host = new Host(1, Path.Combine(GetLocation(), "flaky.wav"));
+			using (host = new Host(1, libraryPath ?? GetLocation(), Path.Combine(GetLocation(), "flaky.wav")))
+			{
+				Recompile();
+				Watch();
 
-			Recompile();
-			Watch();
-
-			host.Play();
+				host.Play();
+			}
 		}
 
 		private static void Watch()
 		{
 			watcher = new FileSystemWatcher();
 
-			var temporaryCodePath = GetTemporaryCodeFilePath();
-
-			watcher.Path = Path.GetDirectoryName(temporaryCodePath);
-			watcher.Filter = Path.GetFileName(temporaryCodePath);
+			watcher.Path = Path.GetDirectoryName(codeFilePath);
+			watcher.Filter = Path.GetFileName(codeFilePath);
 
 			watcher.Changed += new FileSystemEventHandler(OnCodeChange);
 
@@ -70,8 +78,6 @@ namespace Flaky
 
 		private static string Load()
 		{
-			var codeFilePath = GetTemporaryCodeFilePath();
-
 			if (!File.Exists(codeFilePath))
 			{
 				using (var file = File.Open(codeFilePath, FileMode.Create))
@@ -86,7 +92,7 @@ namespace Flaky
 			Exception exception = null;
 			int counter = 0;
 
-			while (counter < 3)
+			while (counter < 25)
 			{
 				try
 				{
@@ -107,11 +113,6 @@ namespace Flaky
 			}
 
 			throw exception;
-		}
-
-		private static string GetTemporaryCodeFilePath()
-		{
-			return Path.Combine(GetLocation(), "temp.cs");
 		}
 
 		private static string GetLocation()

@@ -10,11 +10,18 @@ namespace Flaky
 {
 	public class WaveReaderFactory : IWaveReaderFactory
 	{
+		private readonly string libraryPath;
+
 		private readonly Dictionary<string, IWaveReader> 
 			waveReaderCache = new Dictionary<string, IWaveReader>();
 
 		private readonly Dictionary<string, IMultipleWaveReader>
 			multipleWaveReaderCache = new Dictionary<string, IMultipleWaveReader>();
+
+		public WaveReaderFactory(string libraryPath)
+		{
+			this.libraryPath = libraryPath;
+		}
 
 		public IWaveReader Create(string fileName)
 		{
@@ -36,9 +43,9 @@ namespace Flaky
 			return multipleWaveReaderCache[pack];
 		}
 
-		private static string GetLocation()
+		private string GetLocation()
 		{
-			return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			return libraryPath;
 		}
 	}
 }
