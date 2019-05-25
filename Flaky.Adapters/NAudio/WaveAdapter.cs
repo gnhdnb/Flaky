@@ -12,6 +12,8 @@ namespace Flaky
 	{
 		private WaveFormat waveFormat;
 		private readonly IBufferedSource source;
+		private float[] internalBuffer;
+		private int internalBufferIndex = 0;
 
 		public WaveAdapter(IBufferedSource source)
 		{
@@ -37,20 +39,22 @@ namespace Flaky
 
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
-			float[] internalBuffer = source.ReadNextBatch();
-
-			if (sampleCount != internalBuffer.Length)
-				throw new InvalidOperationException("Buffer size mismatch.");
-
-			if (internalBuffer != null)
+			for (int i = 0; i < sampleCount; i++)
 			{
-				for(int i = 0; i< internalBuffer.Length; i++)
+				if (internalBuffer == null || internalBufferIndex >= internalBuffer.Length)
 				{
-					buffer[i + offset] = internalBuffer[i];
+					internalBuffer = source.ReadNextBatch();
+
+					internalBufferIndex = 0;
 				}
+
+				if (internalBuffer != null)
+					buffer[i + offset] = internalBuffer[internalBufferIndex];
+
+				internalBufferIndex++;
 			}
 
-			return internalBuffer.Length;
+			return sampleCount;
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace Flaky
 	public class Host : IDisposable
 	{
 		private Compiler Compiler { get; }
-		private WaveOut Device { get; }
+		private WasapiOut Device { get; }
 		private Mixer Mixer { get; }
 		private WaveAdapter Adapter { get; }
 		private WaveRecorder Recorder { get; }
@@ -28,7 +28,7 @@ namespace Flaky
 				typeof(Mixer).Assembly
 			});
 
-			Device = new WaveOut();
+			Device = new WasapiOut();
 			Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
 			Adapter = new WaveAdapter(Mixer);
 

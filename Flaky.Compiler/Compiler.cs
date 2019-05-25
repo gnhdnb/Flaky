@@ -27,14 +27,17 @@ namespace Flaky
 		{
 			var assemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
 
+			var runtimeName = new AssemblyName("System.Runtime");
+
 			references = new List<MetadataReference>()
 			{
 				MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+				MetadataReference.CreateFromFile(Assembly.Load(runtimeName).Location)
 			}
 			.Concat(sourceAssemblies
 				.Select(a => MetadataReference.CreateFromFile(a.Location)))
 			.Concat(assemblies
-				.Select(a => Assembly.ReflectionOnlyLoad(a.FullName).Location)
+				.Select(a => Assembly.Load(a.FullName).Location)
 				.Select(l => MetadataReference.CreateFromFile(l)));
 
 			classTemplate = ClassTemplate.FromEmbededResource("Player.tmp");
