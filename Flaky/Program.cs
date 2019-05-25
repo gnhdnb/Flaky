@@ -18,6 +18,7 @@ namespace Flaky
 			if (args.Length != 2)
 			{
 				Console.WriteLine(@"Usage: flaky.exe [sampleLibrariesPath] [codefile]");
+				return;
 			}
 
 			var libraryPath = args[0];
@@ -25,12 +26,28 @@ namespace Flaky
 
 			SetProcessPriority();
 
-			using (host = new Host(1, libraryPath ?? GetLocation(), Path.Combine(GetLocation(), "flaky.wav")))
+			try
 			{
-				Recompile();
-				Watch();
+				using (host = new Host(1, libraryPath ?? GetLocation(), Path.Combine(GetLocation(), "flaky.wav")))
+				{
+					Recompile();
+					Watch();
 
-				host.Play();
+					host.Play();
+
+					while(true)
+					{
+						var key = Console.ReadKey();
+
+						if (key.Key == ConsoleKey.C
+							&& (key.Modifiers & ConsoleModifiers.Control) != 0)
+							break;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
 			}
 		}
 
@@ -53,6 +70,8 @@ namespace Flaky
 
 		private static void Recompile()
 		{
+			Console.Clear();
+
 			var code = Load();
 			var errors = host.Recompile(0, code);
 
