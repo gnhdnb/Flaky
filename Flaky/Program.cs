@@ -15,6 +15,12 @@ namespace Flaky
 
 		static void Main(string[] args)
         {
+			new OpenTKAudioWrapper().Do();
+
+			Console.ReadKey();
+
+			return;
+
 			if (args.Length != 2)
 			{
 				Console.WriteLine(@"Usage: flaky.exe [sampleLibrariesPath] [codefile]");
