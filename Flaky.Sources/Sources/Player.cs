@@ -84,6 +84,11 @@ namespace Flaky
 		protected PipingSourceWrapper Rep(
 				NoteSource feed, float multiplier, float dry, float wet, string id)
 			{ return Pipe(new Rep(feed, multiplier, dry, wet, id)); }
+
+		protected PipingSourceWrapper<NoteSource, Source> Grains(
+				string pack, Source modulation, float pitch, string id)
+			{ return Pipe<NoteSource, Source>(new Grains(pack, modulation, pitch, id)); }
+
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }
 		protected AD AD(NoteSource source, Source attack, Source decay)
