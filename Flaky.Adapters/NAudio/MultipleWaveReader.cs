@@ -15,10 +15,10 @@ namespace Flaky
 
 		public MultipleWaveReader(string folder, string pack)
 		{
-			waves = 
+			waves =
 				GetAllWavefiles(Path.Combine(folder, pack))
 				.Select(f => new WaveReader(f))
-				.ToList();
+				.ToList(); 
 		}
 
 		public int Waves => waves.Count;
@@ -31,6 +31,11 @@ namespace Flaky
 		public Vector2? Read(int wave, long index)
 		{
 			return waves[wave].Read(index);
+		}
+
+		public Vector2[] Wave(int index)
+		{
+			return waves[index].Sample;
 		}
 
 		private List<string> GetAllWavefiles(string folder)

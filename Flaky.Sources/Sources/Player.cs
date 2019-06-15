@@ -183,6 +183,9 @@ namespace Flaky
 		protected PipingSourceWrapper Osc(Source amplitude, string id)
 			{ return Pipe(new Osc(amplitude, id)); }
 
+		protected PipingSourceWrapper<NoteSource, Source> VWT(string pack, Source selector, string id)
+			{ return Pipe<NoteSource, Source>(new VariationalWaveTable(pack, selector, id)); }
+
 		protected PipingSourceWrapper<NoteSource, Source> WT(string pack, Source selector, string id)
 			{ return Pipe<NoteSource, Source>(new WaveTable(pack, selector, false, id)); }
 
