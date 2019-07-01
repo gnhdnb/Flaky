@@ -11,10 +11,8 @@ namespace Flaky
 	public class Host : IDisposable
 	{
 		private Compiler Compiler { get; }
-		private WasapiOut Device { get; }
 		private Mixer Mixer { get; }
-		private WaveAdapter Adapter { get; }
-		private WaveRecorder Recorder { get; }
+		private IAudioDevice Device { get; }
 
 		public Host(int channelsCount, string libraryPath, string outputWaveFilePath = null)
 		{
@@ -28,19 +26,10 @@ namespace Flaky
 				typeof(Mixer).Assembly
 			});
 
-			Device = new WasapiOut();
+			Device = new NAudioDevice();
 			Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
-			Adapter = new WaveAdapter(Mixer);
 
-			if (outputWaveFilePath != null)
-			{
-				Recorder = new WaveRecorder(Adapter, outputWaveFilePath);
-				Device.Init(Recorder);
-			}
-			else
-			{
-				Device.Init(Adapter);
-			}
+			Device.Init(Mixer, outputWaveFilePath);
 		}
 
 		public string[] Recompile(int channel, string code)
@@ -67,7 +56,6 @@ namespace Flaky
 		public void Dispose()
 		{
 			Device.Dispose();
-			Recorder?.Dispose();
 			Mixer.Dispose();
 		}
 	}

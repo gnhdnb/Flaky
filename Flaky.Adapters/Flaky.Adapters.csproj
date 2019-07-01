@@ -7,10 +7,15 @@
 
   <ItemGroup>
     <PackageReference Include="NAudio" Version="1.9.0" />
+    <PackageReference Include="OpenTK.NetStandard" Version="1.0.7-prerelease" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OpenTK\" />
   </ItemGroup>
 
 </Project>
