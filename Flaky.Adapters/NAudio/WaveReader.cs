@@ -50,6 +50,8 @@ namespace Flaky
 				return null;
 		}
 
+		internal Vector2[] Sample { get { return sample; } }
+
 		public long Length
 		{
 			get

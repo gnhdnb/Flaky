@@ -12,5 +12,6 @@ namespace Flaky
 		Vector2? Read(int wave, long index);
 		long Length(int wave);
 		int Waves { get; }
+		Vector2[] Wave(int index);
 	}
 }

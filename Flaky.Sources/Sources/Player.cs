@@ -84,6 +84,11 @@ namespace Flaky
 		protected PipingSourceWrapper Rep(
 				NoteSource feed, float multiplier, float dry, float wet, string id)
 			{ return Pipe(new Rep(feed, multiplier, dry, wet, id)); }
+
+		protected PipingSourceWrapper<NoteSource, Source> Grains(
+				string pack, Source modulation, float pitch, string id)
+			{ return Pipe<NoteSource, Source>(new Grains(pack, modulation, pitch, id)); }
+
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }
 		protected AD AD(NoteSource source, Source attack, Source decay)
@@ -92,6 +97,8 @@ namespace Flaky
 			{ return new FI(time, id); }
 		protected FO FO(float time, string id)
 			{ return new FO(time, id); }
+		protected PipingSourceWrapper GL(Source velocity, string id)
+			{ return Pipe(new Glide(velocity, id)); }
 
 		protected PSeq PSeq(string sequence, int size, string id)
 			{ return new PSeq(sequence, size, id); }
@@ -177,6 +184,9 @@ namespace Flaky
 			{ return Pipe(new Osc(amplitude)); }
 		protected PipingSourceWrapper Osc(Source amplitude, string id)
 			{ return Pipe(new Osc(amplitude, id)); }
+
+		protected PipingSourceWrapper<Source, Source> VWT(string pack, Source selector, string id)
+			{ return Pipe<Source, Source>(new VariationalWaveTable(pack, selector, id)); }
 
 		protected PipingSourceWrapper<NoteSource, Source> WT(string pack, Source selector, string id)
 			{ return Pipe<NoteSource, Source>(new WaveTable(pack, selector, false, id)); }

@@ -45,7 +45,7 @@ namespace Flaky
 					{
 						var key = Console.ReadKey();
 
-						if (key.Key == ConsoleKey.C
+						if (key.Key == ConsoleKey.E
 							&& (key.Modifiers & ConsoleModifiers.Control) != 0)
 							break;
 					}
