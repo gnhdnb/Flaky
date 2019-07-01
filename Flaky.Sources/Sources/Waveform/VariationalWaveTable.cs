@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Flaky
 {
-	public class VariationalWaveTable : Source, IPipingSource<NoteSource>
+	public class VariationalWaveTable : Source, IPipingSource<Source>
 	{
 		private readonly Source selector;
 		private readonly string pack;
-		private NoteSource pitch;
+		private Source pitch;
 		private State state;
 
 		internal VariationalWaveTable(string pack, Source selector, string id) : base(id)
@@ -147,10 +147,10 @@ namespace Flaky
 
 		protected override Vector2 NextSample(IContext context)
 		{
-			var playingNote = pitch.GetNote(context);
+			var freq = pitch.Play(context).X;
 
 			return state.Read(
-				playingNote.Note.ToFrequency(),
+				freq,
 				selector.Play(context).X);
 		}
 
@@ -168,7 +168,7 @@ namespace Flaky
 			Dispose(pitch, selector);
 		}
 
-		void IPipingSource<NoteSource>.SetMainSource(NoteSource mainSource)
+		void IPipingSource<Source>.SetMainSource(Source mainSource)
 		{
 			pitch = mainSource;
 		}
