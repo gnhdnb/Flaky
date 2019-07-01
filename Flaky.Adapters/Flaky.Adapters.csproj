@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Flaky.Interfaces\Flaky.Interfaces.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="OpenTK\" />
-  </ItemGroup>
-
 </Project>
