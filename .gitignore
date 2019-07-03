@@ -252,3 +252,4 @@ paket-files/
 /nuget.exe
 /Flaky/Properties/launchSettings.json
 /Library
+.DS_Store

@@ -46,6 +46,7 @@ namespace Flaky
 				.Concat(
 					Directory.GetFiles(folder)
 					.Where(f => f.EndsWith(".wav")))
+                .OrderBy(f => f)
 				.ToList();
 		}
 	}

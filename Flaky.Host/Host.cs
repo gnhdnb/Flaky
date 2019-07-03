@@ -26,8 +26,8 @@ namespace Flaky
 				typeof(Mixer).Assembly
 			});
 
-			Device = new NAudioDevice();
-			Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
+			Device = PlatformDependant.GetAudioDevice();
+            Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
 
 			Device.Init(Mixer, outputWaveFilePath);
 		}
