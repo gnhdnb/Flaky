@@ -23,22 +23,22 @@ namespace Flaky
 			this.libraryPath = libraryPath;
 		}
 
-		public IWaveReader Create(string fileName)
+		public IWaveReader Create(IContext context, string fileName)
 		{
-			var fullPath = Path.Combine(GetLocation(), $@"samples\{fileName}.wav");
+			var fullPath = Path.Combine(GetLocation(), "samples", $"{fileName}.wav");
 
 			if (!waveReaderCache.ContainsKey(fileName))
-				return waveReaderCache[fileName] = new WaveReader(fullPath);
+				return waveReaderCache[fileName] = new WaveReader((IFlakyContext)context, fullPath);
 
 			return waveReaderCache[fileName];
 		}
 
-		public IMultipleWaveReader Create(string folder, string pack)
+		public IMultipleWaveReader Create(IContext context, string folder, string pack)
 		{
 			var fullPath = Path.Combine(GetLocation(), folder);
 
 			if (!multipleWaveReaderCache.ContainsKey(pack))
-				multipleWaveReaderCache[pack] = new MultipleWaveReader(fullPath, pack);
+				multipleWaveReaderCache[pack] = new MultipleWaveReader((IFlakyContext)context, fullPath, pack);
 
 			return multipleWaveReaderCache[pack];
 		}

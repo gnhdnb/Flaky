@@ -38,18 +38,21 @@ namespace Flaky
 			private readonly ZigguratGaussianDistribution distribution =
 				new ZigguratGaussianDistribution(0, 1);
 
-			public void Init(string pack, IWaveReaderFactory readerFactory)
+			public void Init(IContext context, string pack, IWaveReaderFactory readerFactory)
 			{
 				if (this.pack == pack)
 					return;
 
 				this.pack = pack;
 
-				waveReader = readerFactory.Create("grains", pack);
+				waveReader = readerFactory.Create(context, "grains", pack);
 			}
 
 			internal Vector2 Play(IContext context, float modValue, float pitch)
 			{
+				if (waveReader.Waves == 0)
+					return Vector2.Zero;
+
 				if (modValue < 0)
 					modValue = 0;
 
@@ -125,7 +128,7 @@ namespace Flaky
 		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			state.Init(pack, Get<IWaveReaderFactory>(context));
+			state.Init(context, pack, Get<IWaveReaderFactory>(context));
 
 			Initialize(context, source, modulation);
 		}

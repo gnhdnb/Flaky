@@ -32,19 +32,30 @@ namespace Flaky
 
 			private int[] crossingPointsCache;
 
-			public void Init(string pack, IWaveReaderFactory readerFactory)
+			public void Init(IContext context, string pack, IWaveReaderFactory readerFactory)
 			{
 				if (this.pack == pack)
 					return;
 
 				this.pack = pack;
 
-				waveReader = readerFactory.Create("variationalwaveforms", pack);
-				crossingPointsCache = EvaulateCrossingPointsCache(waveReader);
+				var newReader = readerFactory.Create(context, "variationalwaveforms", pack);
+				crossingPointsCache = EvaulateCrossingPointsCache(newReader);
+				waveReader = newReader;
+
+				currentWaveformPosition = 0;
+				currentCrossfadeStart = 0;
+				currentWaveformLength = 0;
+				currentWaveformIndex = -1;
+				nextWaveformPosition = 0;
+				nextWaveformIndex = 0;
 			}
 
 			public Vector2 Read(float pitch, float selector)
 			{
+				if (waveReader.Waves == 0)
+					return Vector2.Zero;
+
 				if (pitch < 0)
 					pitch = -pitch;
 
@@ -158,7 +169,7 @@ namespace Flaky
 		{
 			state = GetOrCreate<State>(context);
 
-			state.Init(pack, Get<IWaveReaderFactory>(context));
+			state.Init(context, pack, Get<IWaveReaderFactory>(context));
 
 			Initialize(context, pitch, selector);
 		}

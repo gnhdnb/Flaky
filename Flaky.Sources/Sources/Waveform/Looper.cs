@@ -43,7 +43,7 @@ namespace Flaky
 			var factory = Get<IWaveReaderFactory>(context);
 
 			if(state.Reader == null)
-				state.Reader = factory.Create(sample);
+				state.Reader = factory.Create(context, sample);
 		}
 
 		public override void Dispose()

@@ -56,7 +56,7 @@ namespace Flaky
 			state = GetOrCreate<State>(context);
 			var factory = Get<IWaveReaderFactory>(context);
 
-			reader = factory.Create(sample);
+			reader = factory.Create(context, sample);
 
 			Initialize(context, noteSource);
 		}

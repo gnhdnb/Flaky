@@ -14,9 +14,20 @@ namespace Flaky
 	{
 		private readonly Vector2[] sample;
 
-		public WaveReader(string fullPath)
+		internal WaveReader(IFlakyContext context, string fullPath)
 		{
-			var reader = new WaveFileReader(fullPath);
+			WaveFileReader reader;
+
+			try
+			{
+				reader = new WaveFileReader(fullPath);
+			}
+			catch(Exception ex)
+			{
+				context.ShowError(ex.ToString());
+				this.sample = new Vector2[1024];
+				return;
+			}
 
 			List<Vector2> sample = new List<Vector2>();
 			float[] frame;
@@ -25,7 +36,7 @@ namespace Flaky
 				frame = reader.ReadNextSampleFrame();
 				if (frame != null)
 				{
-					if(frame.Length >1)
+					if(frame.Length > 1)
 						sample.Add(new Vector2 {
 							X = frame[0],
 							Y = frame[1]
