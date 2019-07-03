@@ -10,5 +10,6 @@ namespace Flaky
 	{
 		float[] ReadNextBatch();
 		int SampleRate { get; }
+        int BufferSize { get; }
 	}
 }

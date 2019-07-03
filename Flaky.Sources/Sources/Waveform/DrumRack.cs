@@ -43,7 +43,7 @@ namespace Flaky
 		{
 			var factory = Get<IWaveReaderFactory>(context);
 
-			readers = samples.Select(s => factory.Create(s)).ToArray();
+			readers = samples.Select(s => factory.Create(context, s)).ToArray();
 
 			Initialize(context, noteSource);
 		}

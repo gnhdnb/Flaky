@@ -39,7 +39,7 @@ namespace Flaky
 			}
 		}
 
-		public void ChangePlayer(IPlayer player)
+		public string[] ChangePlayer(IPlayer player)
 		{
 			if (sourceToDispose != null)
 			{
@@ -47,11 +47,22 @@ namespace Flaky
 				sourceToDispose = null;
 			}
 
-			var source = player.CreateSource();
+			ISource source;
+
+			try
+			{
+				source = player.CreateSource();
+			} catch (Exception ex)
+			{
+				return new[] { ex.ToString() };
+			}
+
 			codeVersion++;
 			source.Initialize(null, new Context(controller, codeVersion));
 			sourceToDispose = this.source;
 			this.source = source;
+
+			return new string[0];
 		}
 
 		internal float[] ReadNextBatch()

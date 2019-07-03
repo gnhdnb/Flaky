@@ -45,6 +45,11 @@ namespace Flaky.Tests
 			return (TState)states[key];
 		}
 
+		public void ShowError(string error)
+		{
+			// do nothing
+		}
+
 		private readonly Dictionary<(Type, string), object> states
 			= new Dictionary<(Type, string), object>();
 	}

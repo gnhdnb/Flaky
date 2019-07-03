@@ -25,6 +25,12 @@ namespace Flaky
 		internal int BPM { get; private set; }
 
 		internal int Beat { get; private set; }
+
+		internal void ShowError(string error)
+		{
+			configuration.Get<IErrorOutput>().WriteLine(error);
+		}
+
 		internal bool MetronomeTick { get; private set; } = true;
 
 		internal long Sample { get { return sample; } }

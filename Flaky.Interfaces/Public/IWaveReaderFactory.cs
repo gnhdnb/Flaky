@@ -8,8 +8,8 @@ namespace Flaky
 {
 	public interface IWaveReaderFactory
 	{
-		IWaveReader Create(string fileName);
+		IWaveReader Create(IContext context, string fileName);
 
-		IMultipleWaveReader Create(string folder, string pack);
+		IMultipleWaveReader Create(IContext context, string folder, string pack);
 	}
 }

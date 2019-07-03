@@ -13,6 +13,7 @@ namespace Flaky
 		private volatile float[] expectedVolume;
 		private volatile float[] volume;
 		private readonly int sampleRate;
+		private readonly int bufferSize;
 
 		public Mixer(
 			int channelsCount, 
@@ -24,6 +25,7 @@ namespace Flaky
 				throw new ArgumentOutOfRangeException(nameof(channelsCount));
 
 			this.sampleRate = sampleRate;
+			this.bufferSize = bufferSize;
 
 			volume = new float[channelsCount];
 			expectedVolume = new float[channelsCount];
@@ -32,6 +34,14 @@ namespace Flaky
 				.Range(0, channelsCount)
 				.Select(i => new Channel(sampleRate, bufferSize, bpm, configuration))
 				.ToArray();
+		}
+
+		public int BufferSize
+		{
+			get
+			{
+				return bufferSize;
+			}
 		}
 
 		public int SampleRate
@@ -64,9 +74,9 @@ namespace Flaky
 			return result;
 		}
 
-		public void ChangePlayer(int channel, IPlayer player)
+		public string[] ChangePlayer(int channel, IPlayer player)
 		{
-			channels[channel].ChangePlayer(player);
+			return channels[channel].ChangePlayer(player);
 		}
 
 		public void SetVolume(int channel, float volume)

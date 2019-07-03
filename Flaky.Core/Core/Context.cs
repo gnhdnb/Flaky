@@ -30,6 +30,11 @@ namespace Flaky
 			return controller.Get<TFactory>();
 		}
 
+		public void ShowError(string error)
+		{
+			controller.ShowError(error);
+		}
+
 		internal Context(ContextController controller)
 		{
 			Sample = controller.Sample;

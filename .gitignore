@@ -59,7 +59,6 @@ artifacts/
 *.tlb
 *.tli
 *.tlh
-*.tmp
 *.tmp_proj
 *.log
 *.vspscc
@@ -253,3 +252,4 @@ paket-files/
 /nuget.exe
 /Flaky/Properties/launchSettings.json
 /Library
+.DS_Store

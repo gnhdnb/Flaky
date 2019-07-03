@@ -13,11 +13,11 @@ namespace Flaky
 	{
 		private readonly List<WaveReader> waves;
 
-		public MultipleWaveReader(string folder, string pack)
+		internal MultipleWaveReader(IFlakyContext context, string folder, string pack)
 		{
 			waves =
-				GetAllWavefiles(Path.Combine(folder, pack))
-				.Select(f => new WaveReader(f))
+				GetAllWavefiles(context, Path.Combine(folder, pack))
+				.Select(f => new WaveReader(context, f))
 				.ToList(); 
 		}
 
@@ -38,14 +38,22 @@ namespace Flaky
 			return waves[index].Sample;
 		}
 
-		private List<string> GetAllWavefiles(string folder)
+		private List<string> GetAllWavefiles(IFlakyContext context, string folder)
 		{
+			if(!Directory.Exists(folder))
+			{
+				context.ShowError($"{folder} does not exist");
+
+				return new List<string>();
+			}
+
 			return Directory
 				.GetDirectories(folder)
-				.SelectMany(d => GetAllWavefiles(d))
+				.SelectMany(d => GetAllWavefiles(context, d))
 				.Concat(
 					Directory.GetFiles(folder)
 					.Where(f => f.EndsWith(".wav")))
+				.OrderBy(f => f)
 				.ToList();
 		}
 	}

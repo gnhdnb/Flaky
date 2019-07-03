@@ -21,18 +21,22 @@ namespace Flaky
 			private string pack;
 			private double position;
 
-			public void Init(string pack, IWaveReaderFactory readerFactory)
+			public void Init(IContext context, string pack, IWaveReaderFactory readerFactory)
 			{
 				if (this.pack == pack)
 					return;
 
 				this.pack = pack;
 
-				waveReader = readerFactory.Create("waveforms", pack);
+				waveReader = readerFactory.Create(context, "waveforms", pack);
+				position = 0;
 			}
 
 			public Vector2 Read(float pitch, float selector, bool oneshot)
 			{
+				if (waveReader.Waves == 0)
+					return Vector2.Zero;
+
 				if (pitch < 0)
 					pitch = -pitch;
 
@@ -111,7 +115,7 @@ namespace Flaky
 		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			state.Init(pack, Get<IWaveReaderFactory>(context));
+			state.Init(context, pack, Get<IWaveReaderFactory>(context));
 
 			Initialize(context, pitch, selector);
 		}

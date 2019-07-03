@@ -11,5 +11,7 @@ namespace Flaky
 		TState GetOrCreateState<TState>(string id) where TState : class, new();
 
 		TFactory Get<TFactory>() where TFactory : class;
+
+		void ShowError(string error);
 	}
 }

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NAudio" Version="1.9.0" />
+    <PackageReference Include="OpenAL-Soft" Version="1.16.0" />
   </ItemGroup>
 
   <ItemGroup>
