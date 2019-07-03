@@ -1,12 +1,12 @@
-﻿	using System;
-	using System.Collections.Generic;
-	using System.Text;
-	using System.Threading;
-	using OpenTK.Audio;
-	using OpenTK.Audio.OpenAL;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using OpenTK.Audio;
+using OpenTK.Audio.OpenAL;
 
-	namespace Flaky
-	{
+namespace Flaky
+{
 	public class OpenTKAudioDevice : IAudioDevice
 	{
 		private Thread worker;
@@ -39,7 +39,11 @@
 		public void Stop()
 		{
 			running = false;
-			worker.Join();
+
+			try
+			{
+				worker.Join();
+			} catch(ThreadStateException) { }
 		}
 
 		private void Run()
@@ -108,4 +112,4 @@
 			return result;
 		}
 	}
-	}
+}
