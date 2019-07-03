@@ -4,7 +4,7 @@
 
 	namespace Flaky
 	{
-	public static class PlatformDependant
+	public static class PlatformDependent
 	{
 		public static void SetProcessPriority()
 		{

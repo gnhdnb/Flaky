@@ -27,7 +27,7 @@
 				typeof(Mixer).Assembly
 			});
 
-			Device = PlatformDependant.GetAudioDevice();
+			Device = PlatformDependent.GetAudioDevice();
 			Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
 
 			Device.Init(Mixer, outputWaveFilePath);

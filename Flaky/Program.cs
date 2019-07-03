@@ -26,7 +26,7 @@ namespace Flaky
 			var libraryPath = args[0];
 			codeFilePath = args[1];
 
-			PlatformDependant.SetProcessPriority();
+			PlatformDependent.SetProcessPriority();
 
 			try
 			{
