@@ -7,16 +7,16 @@ using System.Threading;
 
 namespace Flaky
 {
-    class Program
-    {
+	class Program
+	{
 		private static Host host;
 		private static FileSystemWatcher watcher;
 		private static string codeFilePath;
-        private static Timer codeWatch;
-        private static DateTime lastRecompilationDateTime = new DateTime(0);
+		private static Timer codeWatch;
+		private static DateTime lastRecompilationDateTime = new DateTime(0);
 
 		static void Main(string[] args)
-        {
+		{
 			if (args.Length != 2)
 			{
 				Console.WriteLine(@"Usage: flaky.exe [sampleLibrariesPath] [codefile]");
@@ -26,9 +26,9 @@ namespace Flaky
 			var libraryPath = args[0];
 			codeFilePath = args[1];
 
-            PlatformDependant.SetProcessPriority();
+			PlatformDependant.SetProcessPriority();
 
-            try
+			try
 			{
 				using (host = new Host(1, libraryPath ?? GetLocation(), Path.Combine(GetLocation(), "flaky.wav")))
 				{
@@ -55,19 +55,19 @@ namespace Flaky
 
 		private static void Watch()
 		{
-            lastRecompilationDateTime = DateTime.UtcNow;
-            codeWatch = new Timer(CheckForCodeChange, null, 0, 100);
-        }
+			lastRecompilationDateTime = DateTime.UtcNow;
+			codeWatch = new Timer(CheckForCodeChange, null, 0, 100);
+		}
 
 		private static void CheckForCodeChange(object state)
 		{
-            var lastWriteTime = File.GetLastWriteTimeUtc(codeFilePath);
+			var lastWriteTime = File.GetLastWriteTimeUtc(codeFilePath);
 
-            if (lastRecompilationDateTime < lastWriteTime)
-            {
-                lastRecompilationDateTime = lastWriteTime;
-                Recompile();
-            }
+			if (lastRecompilationDateTime < lastWriteTime)
+			{
+				lastRecompilationDateTime = lastWriteTime;
+				Recompile();
+			}
 		}
 
 		private static void Recompile()
