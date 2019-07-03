@@ -1,13 +1,13 @@
-﻿using NAudio.Midi;
-using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿	using NAudio.Midi;
+	using NAudio.Wave;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+	using System.Threading.Tasks;
 
-namespace Flaky
-{
+	namespace Flaky
+	{
 	public class Host : IDisposable
 	{
 		private Compiler Compiler { get; }
@@ -27,7 +27,7 @@ namespace Flaky
 			});
 
 			Device = PlatformDependant.GetAudioDevice();
-            Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
+			Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
 
 			Device.Init(Mixer, outputWaveFilePath);
 		}
@@ -59,4 +59,4 @@ namespace Flaky
 			Mixer.Dispose();
 		}
 	}
-}
+	}
