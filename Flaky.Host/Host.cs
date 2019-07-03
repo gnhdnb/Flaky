@@ -34,12 +34,25 @@
 
 		public string[] Recompile(int channel, string code)
 		{
-			var result = Compiler.Compile(code);
+			CompilationResult result;
+
+			try
+			{
+				result = Compiler.Compile(code);
+			}
+			catch (Exception ex)
+			{
+				return new[] { ex.ToString() };
+			}
 
 			if (!result.Success)
 				return result.Messages;
 
-			Mixer.ChangePlayer(channel, result.Player);
+			var initErrors = Mixer.ChangePlayer(channel, result.Player);
+
+			if (initErrors.Any())
+				return initErrors;
+
 			return new string[0];
 		}
 
