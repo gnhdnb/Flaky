@@ -34,7 +34,7 @@ namespace Flaky
 
 			public Vector2 Read(float pitch, float selector, bool oneshot)
 			{
-				if (waveReader.Waves == 0)
+				if (waveReader == null || waveReader.Waves == 0)
 					return Vector2.Zero;
 
 				if (pitch < 0)
