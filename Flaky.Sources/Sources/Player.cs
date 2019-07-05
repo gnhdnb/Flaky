@@ -46,6 +46,10 @@ namespace Flaky
 		protected PipingSourceWrapper Chr(string id)
 			{ return Pipe(new Chr(id)); }
 
+		protected PipingSourceWrapper Comp(Source threshold, Source attack, Source release, string id)
+			{ return Pipe(new Compressor(threshold, attack, release, null, id)); }
+		protected PipingSourceWrapper Comp(Source threshold, Source attack, Source release, Source sidechain, string id)
+			{ return Pipe(new Compressor(threshold, attack, release, sidechain, id)); }
 		protected PipingSourceWrapper Delay(Source time, string id)
 			{ return Pipe(new Delay(time, id)); }
 		protected PipingSourceWrapper Delay(Source time, Func<Source, Source> transform, string id)
