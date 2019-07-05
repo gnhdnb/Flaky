@@ -123,6 +123,8 @@ namespace Flaky
 			{ return new VariableLengthSequence(new RandomNoteCollection(sequence, id), length, skipSilentNotes, id); }
 		protected Sequence RS(string sequence, int size, string id)
 			{ return new FixLengthSequence(new RandomNoteCollection(sequence, id), size, false, id); }
+		protected Sequence RS(string sequence, int size, bool skipSilentNotes, string id)
+			{ return new FixLengthSequence(new RandomNoteCollection(sequence, id), size, skipSilentNotes, id); }
 
 		protected Sequence RW(string sequence, Source deviation, Source length, string id)
 			{ return new VariableLengthSequence(new RandomWalkNoteCollection(sequence, deviation, id), length, false, id); }
@@ -130,6 +132,8 @@ namespace Flaky
 			{ return new FixLengthSequence(new RandomWalkNoteCollection(sequence, deviation, id), size, false, id); }
 		protected Sequence RW(string sequence, Source deviation, Source length, bool skipSilentNotes, string id)
 			{ return new VariableLengthSequence(new RandomWalkNoteCollection(sequence, deviation, id), length, skipSilentNotes, id); }
+		protected Sequence RW(string sequence, Source deviation, int size, bool skipSilentNotes, string id)
+			{ return new FixLengthSequence(new RandomWalkNoteCollection(sequence, deviation, id), size, skipSilentNotes, id); }
 
 		protected PipingSourceWrapper<NoteSource, NoteSource> DSeq(int delay, string id)
 			{ return Pipe<NoteSource, NoteSource>(new SequenceDelay(delay, id)); }
