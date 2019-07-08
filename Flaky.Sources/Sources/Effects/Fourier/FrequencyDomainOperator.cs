@@ -16,7 +16,7 @@ namespace Flaky
 		private Source input;
 		private State state;
 
-		private class State : IDisposable
+		internal class State : IDisposable
 		{
 			public const int framesCount = 8192;
 			public Thread worker;
