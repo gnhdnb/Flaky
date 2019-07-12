@@ -101,8 +101,8 @@ namespace Flaky
 
 				var crossfade = (float)(position % 1);
 
-				var sample1 = reader.Read(wave, index1).Value;
-				var sample2 = reader.Read(wave, index2).Value;
+				var sample1 = reader.Read(wave % reader.Waves, index1).Value;
+				var sample2 = reader.Read(wave % reader.Waves, index2).Value;
 
 				return sample2 * crossfade + sample1 * (1 - crossfade);
 			}

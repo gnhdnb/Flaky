@@ -69,11 +69,11 @@ namespace Flaky
 
 		protected override void Initialize(IContext context)
 		{
-			base.Initialize(context);
+			Initialize(context, length);
 
 			state = GetOrCreate<State>(context);
 
-			Initialize(context, length);
+			base.Initialize(context);
 		}
 	}
 }
