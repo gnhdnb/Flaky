@@ -59,7 +59,12 @@ namespace Flaky
 				if (pitch < 0)
 					pitch = -pitch;
 
-				if(currentWaveformIndex == -1)
+				selector %= 1;
+
+				if (selector < 0)
+					selector += 1;
+
+				if (currentWaveformIndex == -1)
 				{
 					SwitchWaveform(selector);
 					SwitchWaveform(selector);
@@ -67,11 +72,6 @@ namespace Flaky
 
 				currentWaveformPosition += pitch / 73.5f;
 				nextWaveformPosition += pitch / 73.5f;
-
-				selector %= 1;
-
-				if (selector < 0)
-					selector += 1;
 
 				if (currentWaveformPosition >= currentWaveformLength)
 					SwitchWaveform(selector);
