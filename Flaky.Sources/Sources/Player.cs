@@ -60,6 +60,9 @@ namespace Flaky
 		protected PipingSourceWrapper Delay(Source time, Func<Source, Source> transform, Source dryWet, string id)
 			{ return Pipe(new Delay(time, transform, dryWet, id)); }
 
+
+		protected PipingSourceWrapper MF(Source cutoff, string id)
+			{ return Pipe(new MedianFilter(cutoff, id)); }
 		protected PipingSourceWrapper LP(Source cutoff, Source resonance, string id)
 			{ return Pipe(new LPFilter(cutoff, resonance, id)); }
 		protected PipingSourceWrapper BP(Source cutoff, Source resonance, string id)
