@@ -33,6 +33,16 @@
 			Device.Init(Mixer, outputWaveFilePath);
 		}
 
+		public string[] SetPlayer(int channel, IPlayer player)
+		{
+			var initErrors = Mixer.ChangePlayer(channel, player);
+
+			if (initErrors.Any())
+				return initErrors;
+
+			return new string[0];
+		}
+
 		public string[] Recompile(int channel, string code)
 		{
 			CompilationResult result;
@@ -49,12 +59,7 @@
 			if (!result.Success)
 				return result.Messages;
 
-			var initErrors = Mixer.ChangePlayer(channel, result.Player);
-
-			if (initErrors.Any())
-				return initErrors;
-
-			return new string[0];
+			return SetPlayer(channel, result.Player);
 		}
 
 		public void Play()
