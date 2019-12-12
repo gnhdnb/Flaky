@@ -14,7 +14,11 @@
 		private Mixer Mixer { get; }
 		private IAudioDevice Device { get; }
 
-		public Host(int channelsCount, string libraryPath, string outputWaveFilePath = null)
+		public Host(
+			int channelsCount,
+			string libraryPath,
+			string outputWaveFilePath = null,
+			int bufferSize = 13230)
 		{
 			var configuration = new Configuration();
 
@@ -28,7 +32,7 @@
 			});
 
 			Device = PlatformDependent.GetAudioDevice();
-			Mixer = new Mixer(channelsCount, 44100, 13230, 120, configuration);
+			Mixer = new Mixer(channelsCount, 44100, bufferSize, 120, configuration);
 
 			Device.Init(Mixer, outputWaveFilePath);
 		}
