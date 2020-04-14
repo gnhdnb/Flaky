@@ -25,6 +25,8 @@
 			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory(libraryPath));
 			configuration.Register<IWaveWriterFactory>(new WaveWriterFactory());
 			configuration.Register<IErrorOutput>(new ConsoleErrorOutput());
+			configuration.Register<IWebClient>(new WebClient());
+			configuration.Register<IAudioStreamReader>(new AudioStreamReader());
 
 			Compiler = new Compiler(new[] {
 				typeof(Source).Assembly,
