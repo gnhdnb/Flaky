@@ -11,10 +11,12 @@ namespace Flaky
 		private State state;
 		private Source modulation;
 		private string url;
+		private string mode;
 
-		public Tacotron(string url, Source modulation, string id) : base(id)
+		public Tacotron(string url, string mode, Source modulation, string id) : base(id)
 		{
 			this.url = url;
+			this.mode = mode;
 			this.modulation = modulation;
 		}
 
@@ -28,6 +30,7 @@ namespace Flaky
 			private volatile float[] buffer2 = new float[22050];
 			private volatile bool nextChunkNeeded = false;
 			private volatile float mod = 0;
+			private volatile string mode = "";
 			private ManualResetEvent nextChunk = new ManualResetEvent(false);
 
 			private bool initialized = false;
@@ -47,7 +50,7 @@ namespace Flaky
 
 						try
 						{
-							using (var chunk = webClient.Get(url + $"?mod={mod}"))
+							using (var chunk = webClient.Get(url + $"?mod={mod}&mode={mode}"))
 							{
 								//buffer2 = vorbisReader.ReadVorbis(chunk);
 								buffer2 = vorbisReader.ReadWav(chunk);
@@ -94,9 +97,10 @@ namespace Flaky
 				return new Vector2(value, value);
 			}
 
-			public void Initialize(IFlakyContext context, string url)
+			public void Initialize(IFlakyContext context, string url, string mode)
 			{
 				this.url = url;
+				this.mode = mode;
 
 				if (initialized)
 					return;
@@ -127,7 +131,7 @@ namespace Flaky
 		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			state.Initialize((IFlakyContext)context, url);
+			state.Initialize((IFlakyContext)context, url, mode);
 
 			Initialize(context, modulation);
 		}

@@ -253,3 +253,4 @@ paket-files/
 /Flaky/Properties/launchSettings.json
 /Library
 .DS_Store
+/live.txt
