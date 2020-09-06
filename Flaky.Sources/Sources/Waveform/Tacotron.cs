@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Numerics;
 using System.Text;
 using System.Threading;
@@ -50,7 +51,8 @@ namespace Flaky
 
 						try
 						{
-							using (var chunk = webClient.Get(url + $"?mod={mod}&mode={mode}"))
+							using (var chunk = webClient.Get(url +
+								$"?mod={mod.ToString(CultureInfo.InvariantCulture)}&mode={mode}"))
 							{
 								//buffer2 = vorbisReader.ReadVorbis(chunk);
 								buffer2 = vorbisReader.ReadWav(chunk);
