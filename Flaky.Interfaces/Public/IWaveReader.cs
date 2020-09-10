@@ -10,6 +10,7 @@ namespace Flaky
 	public interface IWaveReader
 	{
 		Vector2? Read(long index);
+		Vector2? Read(float index);
 		long Length { get; }
 	}
 }

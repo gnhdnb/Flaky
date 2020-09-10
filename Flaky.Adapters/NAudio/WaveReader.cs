@@ -61,6 +61,18 @@ namespace Flaky
 				return null;
 		}
 
+		public Vector2? Read(float index)
+		{
+			var cf = index % 1;
+			var i1 = (int)Math.Floor(index);
+			var i2 = i1 + 1;
+
+			i2 = i2 % sample.Length;
+			i1 = i1 % sample.Length;
+
+			return sample[i1] * (1 - cf) + sample[i2] * cf;
+		}
+
 		internal Vector2[] Sample { get { return sample; } }
 
 		public long Length
