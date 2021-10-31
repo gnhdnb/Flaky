@@ -11,7 +11,7 @@ namespace Flaky
 {
 	public abstract class Source : ISource
 	{
-		private readonly string id;
+		protected readonly string id;
 
 		private Vector2 latestSample;
 		private long latestSampleIndex = -1;

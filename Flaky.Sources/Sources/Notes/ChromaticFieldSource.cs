@@ -25,30 +25,24 @@ namespace Flaky
 
 	public class WebFieldSource : ChromaticFieldSource
 	{
-		private List<WebTask> tasks;
+		private bool visualize = false;
 
-		private class WebTask
-		{
-			public int Point1Batch { get; set; }
-			public int Point1Roll { get; set; }
-			public int Point2Batch { get; set; }
-			public int Point2Roll { get; set; }
-			public float Lerp { get; set; }
-			public float Amp { get; set; }
-			public float S1 { get; set; }
-			public float S2 { get; set; }
-			public float S3 { get; set; }
-			public float S4 { get; set; }
-			public float S5 { get; set; }
-		}
+		private ISource s1;
+		private ISource s2;
+		private ISource s3;
+		private ISource s4;
+		private ISource s5;
 
 		private class State : IDisposable
 		{
 			private string url;
 			private Thread worker;
+			private bool visualize;
 
 			private float[,] currentBar = new float[60, 60];
 			private float[,] nextBar = new float[60, 60];
+			private float[,] currentInputFeatures = new float[60, 5];
+			private float[,] nextInputFeatures = new float[60, 5];
 			private volatile bool nextChunkNeeded = false;
 			private ManualResetEvent nextChunk = new ManualResetEvent(false);
 
@@ -62,16 +56,13 @@ namespace Flaky
 			private long readerStartSample = 0;
 			private int readerPosition = 0;
 
-			private int currentTaskIndex = 0;
-			private List<WebTask> tasks = new List<WebTask>();
-
 			public void Initialize(
 				IFlakyContext context,
 				string url,
-				List<WebTask> tasks)
+				bool visualize)
 			{
 				this.url = url;
-				this.tasks = tasks;
+				this.visualize = visualize;
 
 				if (initialized)
 					return;
@@ -95,51 +86,16 @@ namespace Flaky
 						nextChunk.Reset();
 						nextChunkNeeded = false;
 
-						WebTask task;
-
-						if (tasks.Count > 0)
-						{
-							currentTaskIndex = currentTaskIndex % tasks.Count;
-							task = tasks[currentTaskIndex];
-							currentTaskIndex++;
-						} else
-						{
-							currentTaskIndex = 0;
-
-							task = new WebTask
-							{
-								Point1Batch = 1,
-								Point1Roll = 0,
-								Point2Batch = 1,
-								Point2Roll = 0,
-								Lerp = 0,
-								Amp = 1
-							};
-						}
-
 						try
 						{
-							var requestUri =
-								$"{url}?p1b={task.Point1Batch.ToString(CultureInfo.InvariantCulture)}" +
-								$"&p1r={task.Point1Roll.ToString(CultureInfo.InvariantCulture)}" +
-								$"&p2b={task.Point2Batch.ToString(CultureInfo.InvariantCulture)}" +
-								$"&p2r={task.Point2Roll.ToString(CultureInfo.InvariantCulture)}" +
-								$"&lerp={task.Lerp.ToString(CultureInfo.InvariantCulture)}" +
-								$"&amp={task.Amp.ToString(CultureInfo.InvariantCulture)}" +
-								$"&s1={task.S1.ToString(CultureInfo.InvariantCulture)}" +
-								$"&s2={task.S2.ToString(CultureInfo.InvariantCulture)}" +
-								$"&s3={task.S3.ToString(CultureInfo.InvariantCulture)}" +
-								$"&s4={task.S4.ToString(CultureInfo.InvariantCulture)}" +
-								$"&s5={task.S5.ToString(CultureInfo.InvariantCulture)}";
-
-							using (var chunk = webClient.Get(requestUri))
+							using (var chunk = webClient.Post(url, currentInputFeatures))
 							using (var reader = new StreamReader(chunk))
 							{
 								var data = reader.ReadToEnd().Split(',');
 
 								for(int i = 0; i < 60; i++)
 									for(int j = 0; j < 60; j++)
-										nextBar[j, i] = float.Parse(data[i * 60 + j], CultureInfo.InvariantCulture);
+										nextBar[i, j] = float.Parse(data[i * 60 + j], CultureInfo.InvariantCulture);
 							}
 						}
 						catch (Exception ex)
@@ -156,7 +112,14 @@ namespace Flaky
 			{
 				if (!nextChunkNeeded)
 				{
+					var tempBar = currentBar;
 					currentBar = nextBar;
+					nextBar = tempBar;
+
+					var tempFeatures = currentInputFeatures;
+					currentInputFeatures = nextInputFeatures;
+					nextInputFeatures = tempFeatures;
+
 					nextChunkNeeded = true;
 					nextChunk.Set();
 				}
@@ -168,26 +131,37 @@ namespace Flaky
 				worker.Join();
 			}
 
-			public float[] GetField(IContext context)
+			public float[] GetField(IContext context,
+				float s1Value,
+				float s2Value,
+				float s3Value,
+				float s4Value,
+				float s5Value)
 			{
 				if (context.Sample <= currentSample)
 					return currentField;
 
 				currentSample = context.Sample;
 
-				if (context.Sample > readerStartSample + 2210)
+				if (context.Sample > readerStartSample + 221 * 4)
 				{
 					readerStartSample = context.Sample;
 
 					readerPosition++;
 
-					if(readerPosition >= 60)
+					if (readerPosition >= 60)
 					{
 						NextChunk();
 						readerPosition = 0;
 					}
 
-					for(int i = 0; i < 60; i++)
+					nextInputFeatures[readerPosition, 0] = s1Value;
+					nextInputFeatures[readerPosition, 1] = s2Value;
+					nextInputFeatures[readerPosition, 2] = s3Value;
+					nextInputFeatures[readerPosition, 3] = s4Value;
+					nextInputFeatures[readerPosition, 4] = s5Value;
+
+					for (int i = 0; i < 60; i++)
 					{
 						currentField[i] = currentBar[readerPosition, i];
 					}
@@ -200,39 +174,45 @@ namespace Flaky
 		private State state;
 		private string url;
 
-		public WebFieldSource(string url, IEnumerable<(int, int, int, int, float, float, float[])> tasks, string id) : base(id)
+		public WebFieldSource(string url, bool visualize,
+			ISource s1,
+			ISource s2,
+			ISource s3,
+			ISource s4,
+			ISource s5,
+			string id) : base(id)
 		{
 			this.url = url;
-			this.tasks = tasks.Select(t => new WebTask
-			{
-				Point1Batch = t.Item1,
-				Point1Roll = t.Item2,
-				Point2Batch = t.Item3,
-				Point2Roll = t.Item4,
-				Lerp = t.Item5,
-				Amp = t.Item6,
-				S1 = t.Item7[0],
-				S2 = t.Item7[1],
-				S3 = t.Item7[2],
-				S4 = t.Item7[3],
-				S5 = t.Item7[4]
-			}).ToList();
+			this.visualize = visualize;
+			this.s1 = s1;
+			this.s2 = s2;
+			this.s3 = s3;
+			this.s4 = s4;
+			this.s5 = s5;
 		}
 
 		public override void Dispose()
 		{
-			
+			Dispose(s1, s2, s3, s4, s5);
 		}
 
 		public override float[] GetField(IContext context)
 		{
-			return state.GetField(context);
+			var s1Value = s1.Play(context).X;
+			var s2Value = s2.Play(context).X;
+			var s3Value = s3.Play(context).X;
+			var s4Value = s4.Play(context).X;
+			var s5Value = s5.Play(context).X;
+
+			return state.GetField(
+				context, s1Value, s2Value, s3Value, s4Value, s5Value);
 		}
 
 		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
-			state.Initialize((IFlakyContext)context, url, tasks);
+			Initialize(context, s1, s2, s3, s4, s5);
+			state.Initialize((IFlakyContext)context, url, visualize);
 		}
 	}
 

@@ -11,7 +11,11 @@ namespace Flaky
 		protected Recorder Recorder(string id, params Source[] sources)
 			{ return new Recorder(id, sources); }
 		protected Looper Looper(string sample, string id)
-			{ return new Looper(sample, id); }
+			{ return new Looper(sample, 1, id); }
+		protected Looper Looper(string sample, float delta, string id)
+			{ return new Looper(sample, delta, id); }
+		protected RandomLooper RL(string sample, int repetitions, float delta, string id)
+			{ return new RandomLooper(sample, repetitions, delta, id); }
 
 		protected ThreeBodiesOscillator TBO()
 			{ return new ThreeBodiesOscillator(); }

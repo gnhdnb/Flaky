@@ -8,5 +8,6 @@ namespace Flaky
 	public interface IWebClient
 	{
 		Stream Get(string url);
+		Stream Post(string url, object body);
 	}
 }

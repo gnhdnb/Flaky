@@ -11,6 +11,7 @@ namespace Flaky
 	{
 		private readonly string sample;
 		private State state;
+		private float delta;
 
 		private class State
 		{
@@ -18,21 +19,20 @@ namespace Flaky
 			public IWaveReader Reader;
 		}
 
-		public Looper(string sample, string id) : base(id)
+		public Looper(string sample, float delta, string id) : base(id)
 		{
 			this.sample = sample;
+			this.delta = delta;
 		}
 
 		protected override Vector2 NextSample(IContext context)
 		{
-			var delta = 1;
-
-			state.LatestSamplerSample = state.LatestSamplerSample + delta;
+			state.LatestSamplerSample += delta;
 
 			if (state.LatestSamplerSample >= state.Reader.Length)
 				state.LatestSamplerSample = 0;
 
-			var result = state.Reader.Read((long)state.LatestSamplerSample);
+			var result = state.Reader.Read((float)state.LatestSamplerSample);
 
 			return result ?? new Vector2(0, 0);
 		}

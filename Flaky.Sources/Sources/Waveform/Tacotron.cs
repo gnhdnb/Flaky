@@ -54,8 +54,8 @@ namespace Flaky
 							using (var chunk = webClient.Get(url +
 								$"?mod={mod.ToString(CultureInfo.InvariantCulture)}&mode={mode}"))
 							{
-								//buffer2 = vorbisReader.ReadVorbis(chunk);
-								buffer2 = vorbisReader.ReadWav(chunk);
+								buffer2 = vorbisReader.ReadVorbis(chunk);
+								//buffer2 = vorbisReader.ReadWav(chunk);
 							}
 						} 
 						catch(Exception ex)

@@ -18,5 +18,18 @@ namespace Flaky
 
 			return new MemoryStream(response.RawBytes);
 		}
+
+		public Stream Post(string url, object body)
+		{
+			var client = new RestClient();
+
+			var request = new RestRequest(url, Method.POST);
+
+			request.AddJsonBody(body);
+
+			var response = client.Execute(request);
+
+			return new MemoryStream(response.RawBytes);
+		}
 	}
 }
