@@ -9,7 +9,7 @@
     <PackageReference Include="NAudio" Version="1.9.0" />
     <PackageReference Include="NVorbis" Version="0.10.0-beta" />
     <PackageReference Include="OpenTK.NetStandard" Version="1.0.7-prerelease" />
-    <PackageReference Include="RestSharp" Version="106.10.2-alpha.0.8" />
+    <PackageReference Include="RestSharp" Version="106.12.0" />
   </ItemGroup>
 
   <ItemGroup>
