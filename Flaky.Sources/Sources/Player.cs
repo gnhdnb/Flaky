@@ -103,6 +103,10 @@ namespace Flaky
 				string pack, Source modulation, float pitch, string id)
 			{ return Pipe<NoteSource, Source>(new Grains(pack, modulation, pitch, id)); }
 
+		protected PipingSourceWrapper<NoteSource, Source> RandomGrains(
+				string pack, Source modulation, Source probability, float pitch, string id)
+			{ return Pipe<NoteSource, Source>(new RandomGrains(pack, modulation, probability, pitch, id)); }
+
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }
 		protected AD AD(NoteSource source, Source attack, Source decay)

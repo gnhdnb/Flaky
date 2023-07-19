@@ -255,3 +255,4 @@ paket-files/
 .DS_Store
 /live.txt
 netseptember.cs
+.vscode/settings.json
