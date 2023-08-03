@@ -11,21 +11,22 @@ namespace Flaky
 		private NoteSource source;
 		private Source modulation;
 		private Source probability;
+		private Source wideness;
 		private State state;
-		private float pitch;
+		private Source pitch;
 		private string pack;
 
-		internal RandomGrains(string pack, Source modulation, Source probability, float pitch, string id) : base(id)
+		internal RandomGrains(
+			string pack, 
+			Source modulation, 
+			Source probability, 
+			Source wideness, 
+			Source pitch, string id) : base(id)
 		{
-			if (pitch < 0)
-				pitch = 0;
-
-			if (pitch > 2)
-				pitch = 2;
-
 			this.pack = pack;
 			this.modulation = modulation;
 			this.probability = probability;
+			this.wideness = wideness;
 			this.pitch = pitch;
 		}
 		
@@ -54,7 +55,7 @@ namespace Flaky
 				waveReader = readerFactory.Create(context, "grains", pack);
 			}
 
-			internal Vector2 Play(IContext context, float modValue, float probValue, float pitch)
+			internal Vector2 Play(IContext context, float modValue, float probValue, float widenessValue, float pitch)
 			{
 				if (waveReader.Waves == 0)
 					return Vector2.Zero;
@@ -85,10 +86,16 @@ namespace Flaky
 					if (probValue < 0.0001f)
 						probValue = 0.0001f;
 
+					if (widenessValue < 0)
+						widenessValue = 0;
+
+					if (widenessValue > 1)
+						widenessValue = 1;
+
 					if (distribution.Sample() > 1 / probValue - 1)
 					{
 						currentGrains.Add(new PlayingGrain {
-							Index = GetGrainIndex(modValue),
+							Index = GetGrainIndex(modValue, widenessValue),
 							Position = 0
 						});
 					}
@@ -113,9 +120,9 @@ namespace Flaky
 				return sample2 * crossfade + sample1 * (1 - crossfade);
 			}
 
-			private int GetGrainIndex(float modValue)
+			private int GetGrainIndex(float modValue, float widenessValue)
 			{
-				var random = distribution.Sample() * 25;
+				var random = distribution.Sample() * 100 * widenessValue;
 
 				int index = (int)Math.Round(waveReader.Waves * modValue + random);
 
@@ -139,7 +146,7 @@ namespace Flaky
 			state = GetOrCreate<State>(context);
 			state.Init(context, pack, Get<IWaveReaderFactory>(context));
 
-			Initialize(context, source, modulation, probability);
+			Initialize(context, source, modulation, probability, wideness, pitch);
 		}
 
 		protected override Vector2 NextSample(IContext context)
@@ -147,14 +154,22 @@ namespace Flaky
 			var playingNote = source.GetNote(context);
 			var modValue = modulation.Play(context).X;
 			var probValue = probability.Play(context).X;
+			var widenessValue = wideness.Play(context).X;
+			var pitchValue = pitch.Play(context).X;
 
-			return state.Play(context, modValue, probValue, this.pitch * playingNote.Note.ToPitch());
+			if (pitchValue < 0)
+				pitchValue = 0;
+
+			if (pitchValue > 2)
+				pitchValue = 2;
+
+			return state.Play(context, modValue, probValue, widenessValue, pitchValue * playingNote.Note.ToPitch());
 			//return state.Play(context, modValue, 1);
 		}
 
 		public override void Dispose()
 		{
-			Dispose(source, modulation, probability);
+			Dispose(source, modulation, probability, wideness, pitch);
 		}
 	}
 }

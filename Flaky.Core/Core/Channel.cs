@@ -82,7 +82,7 @@ namespace Flaky
 		{
 			while (!disposed)
 			{
-				buffersCounter.WaitOne(100);
+				buffersCounter.WaitOne(5);
 
 				lock (buffers)
 				{

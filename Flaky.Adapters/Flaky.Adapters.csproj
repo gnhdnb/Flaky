@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Melanchall.DryWetMidi" Version="7.0.0" />
     <PackageReference Include="NAudio" Version="1.9.0" />
     <PackageReference Include="NVorbis" Version="0.10.0-beta" />
     <PackageReference Include="OpenTK.NetStandard" Version="1.0.7-prerelease" />

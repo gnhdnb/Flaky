@@ -41,7 +41,7 @@ namespace Flaky
 			{
 				var notePitch = note.Note.IsSilent ? 0 : note.Note.ToPitch();
 
-				state.LatestSamplerSample = state.LatestSamplerSample + delta * notePitch * pitch;
+				state.LatestSamplerSample += delta * notePitch * pitch;
 			}
 
 			var result = reader.Read((long)state.LatestSamplerSample);

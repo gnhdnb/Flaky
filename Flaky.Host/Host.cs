@@ -13,20 +13,22 @@
 		private Compiler Compiler { get; }
 		private Mixer Mixer { get; }
 		private IAudioDevice Device { get; }
+		private Configuration Configuration { get; }
 
 		public Host(
 			int channelsCount,
 			string libraryPath,
 			string outputWaveFilePath = null,
-			int bufferSize = 13230)
+			int bufferSize = 882)
 		{
-			var configuration = new Configuration();
+			Configuration = new Configuration();
 
-			configuration.Register<IWaveReaderFactory>(new WaveReaderFactory(libraryPath));
-			configuration.Register<IWaveWriterFactory>(new WaveWriterFactory());
-			configuration.Register<IErrorOutput>(new ConsoleErrorOutput());
-			configuration.Register<IWebClient>(new WebClient());
-			configuration.Register<IAudioStreamReader>(new AudioStreamReader());
+			Configuration.Register<IWaveReaderFactory>(new WaveReaderFactory(libraryPath));
+			Configuration.Register<IWaveWriterFactory>(new WaveWriterFactory());
+			Configuration.Register<IErrorOutput>(new ConsoleErrorOutput());
+			Configuration.Register<IWebClient>(new WebClient());
+			Configuration.Register<IMidiDeviceFactory>(new DryWetMidiDeviceFactory());
+			Configuration.Register<IAudioStreamReader>(new AudioStreamReader());
 
 			Compiler = new Compiler(new[] {
 				typeof(Source).Assembly,
@@ -34,7 +36,7 @@
 			});
 
 			Device = PlatformDependent.GetAudioDevice();
-			Mixer = new Mixer(channelsCount, 44100, bufferSize, 120, configuration);
+			Mixer = new Mixer(channelsCount, 44100, bufferSize, 120, Configuration);
 
 			Device.Init(Mixer, outputWaveFilePath);
 		}
@@ -82,6 +84,7 @@
 		{
 			Device.Dispose();
 			Mixer.Dispose();
+			Configuration.Dispose();
 		}
 	}
 	}

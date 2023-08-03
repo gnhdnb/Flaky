@@ -8,6 +8,8 @@ namespace Flaky
 {
 	public abstract class PlayerBase : IPlayer
 	{
+		protected Midi Midi(string deviceName, int controlNumber, string id)
+			{ return new Midi(deviceName, controlNumber, id); }
 		protected Recorder Recorder(string id, params Source[] sources)
 			{ return new Recorder(id, sources); }
 		protected Looper Looper(string sample, string id)
@@ -104,8 +106,8 @@ namespace Flaky
 			{ return Pipe<NoteSource, Source>(new Grains(pack, modulation, pitch, id)); }
 
 		protected PipingSourceWrapper<NoteSource, Source> RandomGrains(
-				string pack, Source modulation, Source probability, float pitch, string id)
-			{ return Pipe<NoteSource, Source>(new RandomGrains(pack, modulation, probability, pitch, id)); }
+				string pack, Source modulation, Source probability, Source wideness, Source pitch, string id)
+			{ return Pipe<NoteSource, Source>(new RandomGrains(pack, modulation, probability, wideness, pitch, id)); }
 
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }

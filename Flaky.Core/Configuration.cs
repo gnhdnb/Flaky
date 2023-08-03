@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 [assembly: InternalsVisibleTo("Flaky.Benchmark")]
 namespace Flaky
 {
-	public class Configuration
+	public class Configuration : IDisposable
 	{
 		private readonly Dictionary<Type, object> factories = new Dictionary<Type, object>();
 
@@ -20,6 +20,13 @@ namespace Flaky
 		public void Register<TFactory>(TFactory factory)
 		{
 			factories[typeof(TFactory)] = factory;
+		}
+
+		public void Dispose()
+		{
+			foreach (var factory in factories.Values)
+				if (factory is IDisposable disposable)
+					disposable.Dispose();
 		}
 	}
 }
