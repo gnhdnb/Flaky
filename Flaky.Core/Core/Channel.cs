@@ -82,7 +82,7 @@ namespace Flaky
 		{
 			while (!disposed)
 			{
-				buffersCounter.WaitOne(5);
+				buffersCounter.WaitOne(1);
 
 				lock (buffers)
 				{
@@ -91,6 +91,8 @@ namespace Flaky
 				}
 
 				var buffer = new float[bufferSize];
+
+				controller.AlignTimestamp(DateTime.Now);
 
 				if (source != null)
 				{

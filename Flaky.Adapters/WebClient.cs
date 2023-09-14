@@ -29,7 +29,10 @@ namespace Flaky
 
 			var response = client.Execute(request);
 
-			return new MemoryStream(response.RawBytes);
+			if(response.RawBytes != null)
+				return new MemoryStream(response.RawBytes);
+			else
+				return new MemoryStream();
 		}
 	}
 }

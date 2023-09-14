@@ -20,6 +20,8 @@ namespace Flaky
 
 		public int SampleRate { get; private set; }
 
+		public DateTime Timestamp { get { return controller.Timestamp; } }
+
 		public TState GetOrCreateState<TState>(string id) where TState : class, new()
 		{
 			return controller.GetOrCreateState<TState>(id, codeVersion);

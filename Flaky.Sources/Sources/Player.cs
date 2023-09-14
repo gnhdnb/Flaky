@@ -13,9 +13,11 @@ namespace Flaky
 		protected Recorder Recorder(string id, params Source[] sources)
 			{ return new Recorder(id, sources); }
 		protected Looper Looper(string sample, string id)
-			{ return new Looper(sample, 1, id); }
+			{ return new Looper(sample, 1, false, id); }
 		protected Looper Looper(string sample, float delta, string id)
-			{ return new Looper(sample, delta, id); }
+			{ return new Looper(sample, delta, false, id); }
+		protected Looper Looper(string sample, float delta, bool seamless, string id)
+			{ return new Looper(sample, delta, seamless, id); }
 		protected RandomLooper RL(string sample, int repetitions, float delta, string id)
 			{ return new RandomLooper(sample, repetitions, delta, id); }
 
@@ -106,8 +108,13 @@ namespace Flaky
 			{ return Pipe<NoteSource, Source>(new Grains(pack, modulation, pitch, id)); }
 
 		protected PipingSourceWrapper<NoteSource, Source> RandomGrains(
-				string pack, Source modulation, Source probability, Source wideness, Source pitch, string id)
-			{ return Pipe<NoteSource, Source>(new RandomGrains(pack, modulation, probability, wideness, pitch, id)); }
+				string pack, 
+				Source modulation, 
+				Source probability, 
+				Source wideness, 
+				Source pitch, 
+				WebEventOutput eventOutput, string id)
+			{ return Pipe<NoteSource, Source>(new RandomGrains(pack, modulation, probability, wideness, pitch, eventOutput, id)); }
 
 		protected AD AD(NoteSource source, Source decay)
 			{ return new AD(source, decay); }

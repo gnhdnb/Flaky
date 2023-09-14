@@ -13,11 +13,28 @@ namespace Flaky
 		private readonly Dictionary<StateKey, int> versions = new Dictionary<StateKey, int>();
 		private long sample;
 
+		private DateTime alignmentTimestamp;
+		private long alignmentSample;
+
 		internal ContextController(int sampleRate, int bpm, Configuration configuration)
 		{
 			SampleRate = sampleRate;
 			this.BPM = bpm;
 			this.configuration = configuration;
+		}
+
+		internal void AlignTimestamp(DateTime timestamp)
+		{
+			this.alignmentTimestamp = timestamp;
+			this.alignmentSample = sample;
+		}
+
+		internal DateTime Timestamp 
+		{ 
+			get 
+			{ 
+				return this.alignmentTimestamp.AddSeconds((sample - alignmentSample) / ((double)SampleRate)); 
+			} 
 		}
 
 		internal int SampleRate { get; private set; }

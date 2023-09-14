@@ -19,7 +19,7 @@
 			int channelsCount,
 			string libraryPath,
 			string outputWaveFilePath = null,
-			int bufferSize = 882)
+			int bufferSize = 882 * 5)
 		{
 			Configuration = new Configuration();
 

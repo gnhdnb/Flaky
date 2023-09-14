@@ -15,19 +15,23 @@ namespace Flaky
 		private State state;
 		private Source pitch;
 		private string pack;
+		private IEventOutput eventOutput;
 
 		internal RandomGrains(
 			string pack, 
 			Source modulation, 
 			Source probability, 
 			Source wideness, 
-			Source pitch, string id) : base(id)
+			Source pitch, 
+			IEventOutput eventOutput, 
+			string id) : base(id)
 		{
 			this.pack = pack;
 			this.modulation = modulation;
 			this.probability = probability;
 			this.wideness = wideness;
 			this.pitch = pitch;
+			this.eventOutput = eventOutput;
 		}
 		
 		private class PlayingGrain
@@ -45,7 +49,10 @@ namespace Flaky
 			private readonly ZigguratGaussianDistribution distribution =
 				new ZigguratGaussianDistribution(0, 1);
 
-			public void Init(IContext context, string pack, IWaveReaderFactory readerFactory)
+			public void Init(
+				IContext context, 
+				string pack, 
+				IWaveReaderFactory readerFactory)
 			{
 				if (this.pack == pack)
 					return;
@@ -55,7 +62,13 @@ namespace Flaky
 				waveReader = readerFactory.Create(context, "grains", pack);
 			}
 
-			internal Vector2 Play(IContext context, float modValue, float probValue, float widenessValue, float pitch)
+			internal Vector2 Play(
+				IContext context, 
+				float modValue, 
+				float probValue, 
+				float widenessValue, 
+				float pitch,
+				IEventOutput eventOutput)
 			{
 				if (waveReader.Waves == 0)
 					return Vector2.Zero;
@@ -92,12 +105,18 @@ namespace Flaky
 					if (widenessValue > 1)
 						widenessValue = 1;
 
+
+					//if (context.Sample % (4400 * 2) == 0)
 					if (distribution.Sample() > 1 / probValue - 1)
 					{
-						currentGrains.Add(new PlayingGrain {
+						var grain = new PlayingGrain {
 							Index = GetGrainIndex(modValue, widenessValue),
 							Position = 0
-						});
+						};
+
+						currentGrains.Add(grain);
+
+						eventOutput?.Push(context.Timestamp, grain.Index);
 					}
 				}
 
@@ -144,6 +163,9 @@ namespace Flaky
 		protected override void Initialize(IContext context)
 		{
 			state = GetOrCreate<State>(context);
+
+			eventOutput?.Initialize((IFlakyContext)context);
+
 			state.Init(context, pack, Get<IWaveReaderFactory>(context));
 
 			Initialize(context, source, modulation, probability, wideness, pitch);
@@ -160,10 +182,16 @@ namespace Flaky
 			if (pitchValue < 0)
 				pitchValue = 0;
 
-			if (pitchValue > 2)
-				pitchValue = 2;
+			if (pitchValue > 4)
+				pitchValue = 4;
 
-			return state.Play(context, modValue, probValue, widenessValue, pitchValue * playingNote.Note.ToPitch());
+			return state.Play(
+				context, 
+				modValue, 
+				probValue, 
+				widenessValue, 
+				pitchValue * playingNote.Note.ToPitch(),
+				eventOutput);
 			//return state.Play(context, modValue, 1);
 		}
 

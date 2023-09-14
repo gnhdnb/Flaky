@@ -82,7 +82,7 @@ namespace Flaky
 					if(AL.GetSourceState(s) == ALSourceState.Stopped)
 						AL.SourcePlay(s);
 
-					Thread.Sleep(5);
+					Thread.Sleep(1);
 				}
 
 				AL.SourceStop(s);

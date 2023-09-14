@@ -124,56 +124,56 @@ namespace Flaky
 		}
 	}
 
+	internal class LoopedReader : IWaveReader
+	{
+		private Vector2[] sample;
+
+		public LoopedReader(IWaveReader reader)
+		{
+			var length = reader.Length - reader.Length % 2;
+
+			this.sample = new Vector2[length];
+
+			for (long i = 0; i < length; i++)
+			{
+				var cf = (float)(Math.Abs(2 * i - length) / (double)length);
+
+				var a = reader.Read(i).Value;
+				var b = reader.Read((i + length / 2) % length).Value;
+
+				sample[i] = a * (1 - cf) + b * cf;
+			}
+		}
+
+		public long Length => sample.LongLength;
+
+		public Vector2[] Sample => sample;
+
+		public Vector2? Read(long index)
+		{
+			if (index < sample.LongLength)
+				return sample[index];
+			else
+				return null;
+		}
+
+		public Vector2? Read(float index)
+		{
+			var cf = index % 1;
+			var i1 = (int)Math.Floor(index);
+			var i2 = i1 + 1;
+
+			i2 = i2 % sample.Length;
+			i1 = i1 % sample.Length;
+
+			return sample[i1] * (1 - cf) + sample[i2] * cf;
+		}
+	}
+
 	public class Harpsichord
 	{
 		private readonly IWaveReader[] readers;
 		private readonly float[] counters;
-
-		private class LoopedReader : IWaveReader
-		{
-			private Vector2[] sample;
-
-			public LoopedReader(IWaveReader reader)
-			{
-				var length = reader.Length - reader.Length % 2;
-
-				this.sample = new Vector2[length];
-
-				for (long i = 0; i < length; i++)
-				{
-					var cf = (float)(Math.Abs(2 * i - length) / (double)length);
-
-					var a = reader.Read(i).Value;
-					var b = reader.Read((i + length / 2) % length).Value;
-
-					sample[i] = a * (1 - cf) + b * cf;
-				}
-			}
-
-			public long Length => sample.LongLength;
-
-			public Vector2[] Sample => sample;
-
-			public Vector2? Read(long index)
-			{
-				if (index < sample.LongLength)
-					return sample[index];
-				else
-					return null;
-			}
-
-			public Vector2? Read(float index)
-			{
-				var cf = index % 1;
-				var i1 = (int)Math.Floor(index);
-				var i2 = i1 + 1;
-
-				i2 = i2 % sample.Length;
-				i1 = i1 % sample.Length;
-
-				return sample[i1] * (1 - cf) + sample[i2] * cf;
-			}
-		}
 
 		public Harpsichord(string path, IContext context)
 		{

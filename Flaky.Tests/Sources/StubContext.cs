@@ -9,6 +9,8 @@ namespace Flaky.Tests
 
 		public long Sample { get; set; }
 
+		public DateTime Timestamp { get; set; }
+
 		public int SampleRate => 44100;
 
 		public int Beat

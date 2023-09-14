@@ -9,6 +9,7 @@ namespace Flaky
 	public interface IContext
 	{
 		long Sample { get; }
+		DateTime Timestamp { get; }
 		int SampleRate { get; }
 		int Beat { get; }
 		bool MetronomeTick { get; }

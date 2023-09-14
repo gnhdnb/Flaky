@@ -12,6 +12,7 @@ namespace Flaky
 		private readonly string sample;
 		private State state;
 		private float delta;
+		private bool seamless;
 
 		private class State
 		{
@@ -19,10 +20,11 @@ namespace Flaky
 			public IWaveReader Reader;
 		}
 
-		public Looper(string sample, float delta, string id) : base(id)
+		public Looper(string sample, float delta, bool seamless, string id) : base(id)
 		{
 			this.sample = sample;
 			this.delta = delta;
+			this.seamless = seamless;
 		}
 
 		protected override Vector2 NextSample(IContext context)
@@ -43,7 +45,10 @@ namespace Flaky
 			var factory = Get<IWaveReaderFactory>(context);
 
 			if(state.Reader == null)
-				state.Reader = factory.Create(context, sample);
+				if(!seamless)
+					state.Reader = factory.Create(context, sample);
+				else
+					state.Reader = new LoopedReader(factory.Create(context, sample));
 		}
 
 		public override void Dispose()
